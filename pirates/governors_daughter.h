@@ -13,16 +13,16 @@ public:
     // If no one else has a Governor's Daughter, +6 doubloons
     // Otherwise, -3 doubloons
     RetriableMethodResponse endOfVoyageAction() {
-        if (doOtherGovernorsDaughtersExist()) {
-            getOwningPlayer().setDoubloons(getOwningPlayer().getDoubloons() - 3);
-        } else {
+        if (isOnlyGovernorsDaughterInDen()) {
             getOwningPlayer().setDoubloons(getOwningPlayer().getDoubloons() + 6);
+        } else {
+            getOwningPlayer().setDoubloons(getOwningPlayer().getDoubloons() - 3);
         }
         return RetriableMethodResponse::Complete;
     }
 
 private:
-    bool doOtherGovernorsDaughtersExist() {
+    bool isOnlyGovernorsDaughterInDen() {
         Game g = Game::instance();
         for (Player& p : g.getPlayers()) {
             // ignore self
@@ -33,7 +33,7 @@ private:
                 [this](const Pirate& pirate) {
                     return pirate.getRank() == getRank();
             });
-            return found;
+            return !found;
         }
     }
 

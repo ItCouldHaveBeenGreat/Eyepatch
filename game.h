@@ -11,11 +11,11 @@ using namespace std;
 
 class Game {
 public:
-    static Game* getGameState() {
-        if (instance == nullptr) {
-            instance = new Game();
+    static Game instance() {
+        if (instancePointer == nullptr) {
+            instancePointer = new Game();
         }
-        return instance;
+        return *instancePointer;
     }
 
 
@@ -30,7 +30,7 @@ public:
     vector<Player> getPlayers() { return players; }
 
 private:
-    static Game* instance;
+    static Game* instancePointer;
     vector<Player> players;
     
     int voyagesTaken = 0;

@@ -1,25 +1,31 @@
 #pragma once
  
 #include <string>
+#include <vector>
 
 #include "player.h"
-
-class Player;
+#include "pirate_state.h"
+#include "retriable_method_response.h"
 
 using namespace std;
 
+class Player;
+
 class Pirate {
 public:
+    Pirate(const Player&);
+
     virtual string getName() const;
     virtual int getRank() const;
-
-    virtual bool dayAction();
-    virtual bool duskAction();
-    virtual bool nightAction();
-    virtual bool endOfVoyageAction();
-    
     int getSubRank() const { return subRank; }
-    Player* getOwningPlayer() { return owningPlayer; }
+
+    virtual RetriableMethodResponse dayAction();
+    virtual RetriableMethodResponse duskAction();
+    virtual RetriableMethodResponse nightAction();
+    virtual RetriableMethodResponse endOfVoyageAction();
+    
+    PirateState getState() const { return state; }
+    Player getOwningPlayer();
 
     friend bool operator<(const Pirate& a, const Pirate& b) {
         if (a.getRank() == b.getRank()) {
@@ -30,9 +36,13 @@ public:
 
 private:
     Player* owningPlayer;
+    PirateState state;
     int subRank;
+
     bool visible;
     bool unknown;
 
     void claimBooty();
+    
+    virtual int getSubRankFromPlayerId(int playerId);
 };

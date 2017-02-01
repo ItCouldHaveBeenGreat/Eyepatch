@@ -8,14 +8,14 @@ public:
     const int getRank() { return 9; }
     
     // Lose 50% of doubloons
-    virtual bool dayAction() {
+    RetriableMethodResponse dayAction() {
         Player p = *getOwningPlayer();
         p.setDoubloons(p.getDoubloons() / 2);
         
     }
   
     // Gain 10 doubloons
-    virtual bool endOfVoyageAction() {
+    RetriableMethodResponse endOfVoyageAction() {
         Player p = *getOwningPlayer();
         p.setDoubloons(p.getDoubloons() + 10);
     }

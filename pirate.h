@@ -19,10 +19,10 @@ public:
     virtual int getRank() const;
     int getSubRank() const { return subRank; }
 
-    virtual RetriableMethodResponse dayAction();
-    virtual RetriableMethodResponse duskAction();
-    virtual RetriableMethodResponse nightAction();
-    virtual RetriableMethodResponse endOfVoyageAction();
+    virtual RetriableMethodResponse dayAction() { return RetriableMethodResponse::Complete; }
+    virtual RetriableMethodResponse duskAction() { return claimBooty(); }
+    virtual RetriableMethodResponse nightAction() { return RetriableMethodResponse::Complete; }
+    virtual RetriableMethodResponse endOfVoyageAction() { return RetriableMethodResponse::Complete; }
     
     PirateState getState() const { return state; }
     Player getOwningPlayer();
@@ -42,7 +42,7 @@ private:
     bool visible;
     bool unknown;
 
-    void claimBooty();
+    RetriableMethodResponse claimBooty();
     
     virtual int getSubRankFromPlayerId(int playerId);
 };

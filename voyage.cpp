@@ -1,4 +1,4 @@
-
+#include "voyage.h"
 
 RetriableMethodResponse Voyage::attemptProgress() {
     RetriableMethodResponse response = getActiveRound().attemptProgress();

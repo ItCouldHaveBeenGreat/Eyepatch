@@ -1,3 +1,12 @@
+#include "player.h"
+
+#include "pirates/governors_daughter.h"
+
+Player::Player() {
+    id = getNextPlayerId();
+    constructDeck();
+}
+
 vector<Pirate> Player::getPiratesInState(const PirateState state) {
     vector<Pirate> piratesToReturn = vector<Pirate>();
     for (Pirate& p : deck) {
@@ -6,4 +15,8 @@ vector<Pirate> Player::getPiratesInState(const PirateState state) {
         }
     }
     return pirates;
+}
+
+private constructDeck() {
+    deck.push_back(GovernorsDaughter(this));
 }

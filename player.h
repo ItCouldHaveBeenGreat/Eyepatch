@@ -13,9 +13,7 @@ using namespace std;
 class Player {
 public:
 
-    Player() {
-        id = getNextPlayerId();
-    }
+    Player();
 
     void doNightActions() {
         for (Pirate &p : getDen()) {
@@ -31,7 +29,7 @@ public:
 
     void convertBootyIntoDoubloons();
 
-    const vector<Booty> getLoot() const { return loot; }
+    vector<Booty> getLoot() const { return loot; }
 
     vector<Pirate> getDen() const { return getPiratesInState(PirateState::Den); }
     vector<Pirate> getHand() const  { return getPiratesInState(PirateState::Hand); }

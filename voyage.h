@@ -6,7 +6,7 @@
 class Voyage {
     
 public:
-    const int NUMBER_OF_ROUNDS = 6;
+    const static int NUMBER_OF_ROUNDS = 6;
 
     Voyage();
     

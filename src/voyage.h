@@ -1,7 +1,13 @@
 #pragma once
 
+#include <vector>
+
 #include "booty.h"
 #include "game.h"
+#include "retriable_method_response.h"
+#include "round.h"
+
+using namespace std;
 
 class Voyage {
     

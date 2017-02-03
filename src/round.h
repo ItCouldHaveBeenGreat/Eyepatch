@@ -4,11 +4,10 @@
 #include <vector>
 
 #include "booty.h"
+#include "game.h"
+#include "pirate.h"
 #include "player.h"
 #include "retriable_method_response.h"
-
-#include "game.h"
-
 
 using namespace std;
 

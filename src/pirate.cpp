@@ -2,7 +2,7 @@
 
 Pirate::Pirate(const Player& owner) {
     owningPlayer = &owner;
-    subrank = getSubRankFromPlayerId(owner.getId())
+    subRank = getSubRankFromPlayerId(owner.getId());
 }
 
 Player Pirate::getOwner() {

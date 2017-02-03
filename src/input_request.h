@@ -1,13 +1,16 @@
 #pragma once
 
 #include <exception>
-#include <set>
+#include <stdexcept>
+#include <vector>
 
 #include "input_type.h"
 
+using namespace std;
+
 class InputRequest {
 public:
-    InputRequest(int playerId, set<int> possibleValues) : playerId(playerId), possibleValues(possibleValues) {
+    InputRequest(int playerId, vector<int> possibleValues) : playerId(playerId), possibleValues(possibleValues) {
         
     }
     
@@ -44,7 +47,7 @@ public:
 private:
   int playerId;
   InputType type;
-  set<int> possibleValues;
+  vector<int> possibleValues;
   int responseValue;
   bool hasResponded = false;
 };

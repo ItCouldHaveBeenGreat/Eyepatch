@@ -25,7 +25,7 @@ public:
     virtual RetriableMethodResponse endOfVoyageAction() { return RetriableMethodResponse::Complete; }
     
     PirateState getState() const { return state; }
-    Player getOwningPlayer();
+    Player getOwner();
 
     friend bool operator<(const Pirate& a, const Pirate& b) {
         if (a.getRank() == b.getRank()) {
@@ -35,14 +35,13 @@ public:
     }
 
 private:
-    Player* owningPlayer;
-    PirateState state;
-    int subRank;
+    const Player* owningPlayer;
+    const int subRank;
 
+    PirateState state;
     bool visible;
     bool unknown;
 
     RetriableMethodResponse claimBooty();
-    
     virtual int getSubRankFromPlayerId(int playerId);
 };

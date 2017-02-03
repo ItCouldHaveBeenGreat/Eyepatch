@@ -15,18 +15,8 @@ public:
 
     Player();
 
-    void doNightActions() {
-        for (Pirate &p : getDen()) {
-            p.nightAction();
-        }
-    }
-
-    void doEndVoyageActions() {
-        for (Pirate &p : getDen()) {
-            p.endOfVoyageAction();
-        }
-    }
-
+    void doNightActions();
+    void doEndVoyageActions();
     void convertBootyIntoDoubloons();
 
     vector<Booty> getLoot() const { return loot; }

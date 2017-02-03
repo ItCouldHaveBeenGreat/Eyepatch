@@ -17,6 +17,18 @@ vector<Pirate> Player::getPiratesInState(const PirateState state) {
     return pirates;
 }
 
+void Player::doNightActions() {
+    for (Pirate &p : getDen()) {
+        p.nightAction();
+    }
+}
+
+void Player::doEndVoyageActions() {
+    for (Pirate &p : getDen()) {
+        p.endOfVoyageAction();
+    }
+}
+
 private constructDeck() {
     deck.push_back(GovernorsDaughter(this));
 }

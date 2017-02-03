@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+using namespace;
+
 class InputManager {
 public:
     static InputManager instance() {

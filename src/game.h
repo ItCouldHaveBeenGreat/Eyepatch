@@ -2,8 +2,9 @@
 
 #include <vector>
 
-#include "player.h"
 #include "pirate.h"
+#include "player.h"
+#include "round.h"
 #include "voyage.h"
 #include "input_request.h"
 #include "retriable_method_response.h"
@@ -41,8 +42,6 @@ public:
     
     RetriableMethodResponse attemptProgress(bool runUntilBlocked);
     
-    Voyage getActiveVoyage() { return activeVoyage; }
-    Round getActiveRound() { return activeVoyage.getActiveRound(); }
     vector<Player> getPlayers() { return players; }
 
 private:

@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <vector>
 
+#include "pirate.h"
 #include "booty.h"
 #include "game.h"
-#include "pirate.h"
+
 #include "player.h"
 #include "retriable_method_response.h"
 

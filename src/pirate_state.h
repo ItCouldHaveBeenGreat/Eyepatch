@@ -5,5 +5,5 @@ enum PirateState {
     Hand,
     Den,
     Discard,
-    InPlay,
+    InPlay
 };

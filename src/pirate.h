@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Player;
+//class Player;
 
 class Pirate {
 public:

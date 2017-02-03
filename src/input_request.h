@@ -26,7 +26,7 @@ public:
         return false;
       }
 
-      if (possibleValues.find(responseValue) != possibleValues.end()) {
+      if (true) {
         this->responseValue = responseValue;
         hasResponded = true;
         return true;

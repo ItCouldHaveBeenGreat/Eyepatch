@@ -1,8 +1,11 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
-using namespace;
+#include "input_request.h"
+
+using namespace std;
 
 class InputManager {
 public:
@@ -15,24 +18,14 @@ public:
 
     // TODO: idempotent
     // TODO: move to input manager
-    void addInputRequest(InputRequest &request) {
-        
-    }
+    void addInputRequest(InputRequest &request);
     
-    InputRequest getInputRequest(InputRequest &request) {
-        return inputRequests.at(playerId)
-    }
+    InputRequest getInputRequest(InputRequest &request);
+    bool respondToInputRequest(int playerId, int response);
     
-    bool respondToInputRequest(int playerId, int response) {
-    
-    }
-    
-    void resolveInputRequest()
+    void resolveInputRequest();
 
 
 private:
     static InputManager* instancePointer;
-    
-    // TODO: add requestId instead of playerId
-    unordered_map<int, InputRequest> inputRequests;
 };

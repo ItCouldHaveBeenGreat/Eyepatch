@@ -2,46 +2,43 @@
  
 #include <string>
 #include <vector>
+#include <cassert>
 
-#include "player.h"
 #include "pirate_state.h"
 #include "retriable_method_response.h"
 
 using namespace std;
 
-//class Player;
-
 class Pirate {
 public:
-    Pirate(const Player&);
+    Pirate(const int);
 
-    virtual string getName() const;
-    virtual int getRank() const;
-    int getSubRank() const { return subRank; }
+    virtual string getName() = 0 const;
+    virtual int getRank() = 0 const;
+    inline int getSubRank() const { return subRank; }
+    inline PirateState getState() const { return state; }
+    inline int getOwnerId() { return owningPlayerId; }
 
-    virtual RetriableMethodResponse dayAction() { return RetriableMethodResponse::Complete; }
-    virtual RetriableMethodResponse duskAction() { return claimBooty(); }
-    virtual RetriableMethodResponse nightAction() { return RetriableMethodResponse::Complete; }
-    virtual RetriableMethodResponse endOfVoyageAction() { return RetriableMethodResponse::Complete; }
+    virtual RetriableMethodResponse dayAction() = 0;
+    virtual RetriableMethodResponse duskAction() = 0;
+    virtual RetriableMethodResponse nightAction() = 0;
+    virtual RetriableMethodResponse endOfVoyageAction() = 0;
     
-    PirateState getState() const { return state; }
-    Player getOwner();
-
-    friend bool operator<(const Pirate& a, const Pirate& b) {
+    inline friend bool operator<(const Pirate& a, const Pirate& b) {
         if (a.getRank() == b.getRank()) {
             return a.getSubRank() > b.getSubRank();
         }
         return a.getRank() < b.getRank();
     }
-
 private:
-    const Player* owningPlayer;
-    const int subRank;
+    int owningPlayerId;
+    int subRank;
 
     PirateState state;
     bool visible;
     bool unknown;
 
     RetriableMethodResponse claimBooty();
-    virtual int getSubRankFromPlayerId(int playerId);
+    int getSubRankFromPlayerId(int playerId);
+    virtual vector<int> getSubRanks() = 0;
 };

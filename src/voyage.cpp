@@ -8,16 +8,17 @@ RetriableMethodResponse Voyage::attemptProgress() {
         getActiveRound().endRound();
         roundNumber++;
         if (roundNumber >= NUMBER_OF_ROUNDS) {
-            return RetriableMethodResponse::Complete
+            return RetriableMethodResponse::Complete;
         } else {
             activeRound = Round(bootyCollections[roundNumber]);
             return RetriableMethodResponse::MadeProgress;
         }
     }
+    return RetriableMethodResponse::MadeProgress;
 }
 
 void Voyage::endVoyage() {
-    for (Player &p : getGameState()->getPlayers()) {
+    for (Player &p : Game::instance().getPlayers()) {
         p.doEndVoyageActions();
     }
     

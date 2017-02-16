@@ -2,12 +2,9 @@
 
 #include <vector>
 
-#include "pirate.h"
 #include "player.h"
-#include "round.h"
-#include "voyage.h"
-#include "input_request.h"
 #include "retriable_method_response.h"
+#include "voyage.h"
 
 using namespace std;
 
@@ -15,14 +12,14 @@ class Game {
 public:
     const static int NUMBER_OF_VOYAGES = 3;
 
-    static Game instance() {
+    inline static Game instance() {
         if (!instancePtr) {
             throw new domain_error("Game hasn't been initialized!");
         }
         return *instancePtr;
     }
 
-    static Game initialize(const int numPlayers) {
+    inline static Game initialize(const int numPlayers) {
         if (instancePtr) {
             throw new domain_error("Game has already been initialized!");
         }
@@ -42,7 +39,8 @@ public:
     
     RetriableMethodResponse attemptProgress(bool runUntilBlocked);
     
-    vector<Player> getPlayers() { return players; }
+    inline Player getPlayer(int id) { return players[id]; }
+    inline vector<Player> getPlayers() { return players; }
 
 private:
     static Game* instancePtr;
@@ -51,9 +49,7 @@ private:
     int voyagesTaken = 0;
     Voyage activeVoyage;
     
-    void dealPirates(int numberToDeal) {
-        
-    }
-    
     Game();
+    
+    void dealPirates(int);
 };

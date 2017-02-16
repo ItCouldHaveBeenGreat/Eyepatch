@@ -1,39 +1,42 @@
 #include "round.h"
 
 RetriableMethodResponse Round::attemptProgress() {
-    // State: Round hasn't started
-    if (!dayIterator) {
-        // State: Soliciting pirate selection
-        if (Game::getGameState()->getPlayers().size() <= pirates.size()) {
-            // solicit choices from each player
-            return RetriableMethodResponse::PendingInput;
-        } else {
+    // State: Soliciting pirate selection
+    if (pirates.size() < Game::instance().getPlayers().size()) {
+        // solicit choices from each player
+        if (pirates.size() == Game::instance().getPlayers().size()) {
             // State: All players have submitted a pirate, sort them and set dayIterator
             sort(pirates.begin(), pirates.end());
             dayIterator = pirates.begin();
+            return RetriableMethodResponse::MadeProgress;
+        } else {
+            return RetriableMethodResponse::PendingInput;
         }
     }
     
     // State: Iterating through day actions of pirates
     if (dayIterator != pirates.end()) {
-        if (dayIterator->dayAction()) {
+        RetriableMethodResponse response = dayIterator->dayAction();
+        if (response == RetriableMethodResponse::Complete) {
             dayIterator++;
             // State: Finished iterating over day actions, reverse vector and set duskIterator
             if (dayIterator == pirates.end()) {
                 reverse(pirates.begin(), pirates.end());
                 duskIterator = pirates.begin();
+                return RetriableMethodResponse::MadeProgress;
             }
         } else {
-            return RetriableMethodResponse::PendingInput;
+            return response;
         }
     }
     
     // State: Iterating through dusk actions of pirates
     if (duskIterator != pirates.end()) {
-        if (duskIterator->duskAction()) {
+        RetriableMethodResponse response = duskIterator->duskAction();
+        if (response == RetriableMethodResponse::Complete) {
             duskIterator++;
         } else {
-            return RetriableMethodResponse::PendingInput;
+            return response;
         }
     }
 
@@ -48,11 +51,13 @@ RetriableMethodResponse Round::attemptProgress() {
 void Round::endRound() {
     // Move surviving pirates to den
     for (Pirate &p : pirates) {
-        p.getOwningPlayer()->getDen().push_back(p);
+        
+        // TOOD: fix me!
+        Game::instance().getPlayer(p.getOwnerId()).getDen();
     }
     
     // Do night time actions
-    for (Player &p : getGameState()->getPlayers()) {
+    for (Player &p : Game::instance().getPlayers()) {
         p.doNightActions();
     }
 }

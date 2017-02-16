@@ -1,14 +1,11 @@
 TARGET   = eyepatch
 
 CC       = g++
-# compiling flags here
-CFLAGS   = -std=c++11 -Wall -I.
+CFLAGS   = -std=c++11 -w
 
 LINKER   = g++ -o
-# linking flags here
-LFLAGS   = -Wall -I. -lm
+LFLAGS   = -Wall
 
-# change these to proper directories where each file should be
 SRCDIR   = src
 OBJDIR   = obj
 BINDIR   = bin
@@ -18,20 +15,22 @@ INCLUDES := $(wildcard $(SRCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 rm       = rm -f
 
-$(BINDIR)/$(TARGET): $(OBJECTS)
-	@$(LINKER) $@ $(LFLAGS) $(OBJECTS)
-	@echo "Linking complete!"
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
-
-.PHONY: clean
 clean:
-	@$(rm) $(OBJECTS)
-	@echo "Cleanup complete!"
+	rm -rf *.o
+	rm -rf *.gch
 
-.PHONY: remove
-remove: clean
-	@$(rm) $(BINDIR)/$(TARGET)
-	@echo "Executable removed!"
+build: $(SOURCES) $(INCLUDES)
+	$(CC) $(CFLAGS) $(INCLUDES) $(SOURCES) -o eyepatch
+
+game: player.o pirate.o src/game.h src/game.cpp
+	$(CC) $(CFLAGS) -o src/game.h src/game.cpp player.o pirate.o
+	
+player.o: pirate.o src/player.h src/player.cpp src/booty.h
+	$(CC) $(CFLAGS) -o obj/player.o src/player.cpp pirate.o
+	
+pirate.o: src/pirate.h src/pirate.cpp
+	$(CC) $(CFLAGS) -o obj/pirate.o src/pirate.cpp
+
+main.o:
+	g++ $(CFLAGS) -o -c src/main.cpp

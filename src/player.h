@@ -5,8 +5,6 @@
 
 #include "booty.h"
 #include "pirate.h"
-#include "pirate_state.h"
-#include "round.h"
 
 using namespace std;
 
@@ -15,35 +13,34 @@ public:
 
     Player();
 
+    void constructDeck();
+
     void doNightActions();
     void doEndVoyageActions();
     void convertBootyIntoDoubloons();
 
-    vector<Booty> getLoot() const { return loot; }
+    inline vector<Booty> getLoot() const { return loot; }
 
-    vector<Pirate> getDen() const { return getPiratesInState(PirateState::Den); }
-    vector<Pirate> getHand() const  { return getPiratesInState(PirateState::Hand); }
-    vector<Pirate> getDiscard() const { return getPiratesInState(PirateState::Discard); }
+    inline vector<Pirate> getDen() { return getPiratesInState(PirateState::Den); }
+    inline vector<Pirate> getHand()  { return getPiratesInState(PirateState::Hand); }
+    inline vector<Pirate> getDiscard() { return getPiratesInState(PirateState::Discard); }
 
     vector<Pirate> getPiratesInState(const PirateState) const;
 
-    int getId() const { return id; }
-    int getDoubloons() const { return doubloons; }
-    void setDoubloons(int howMany) { doubloons = max(0, howMany); }
+    inline int getId() const { return id; }
+    inline int getDoubloons() const { return doubloons; }
+    inline void setDoubloons(int howMany) { doubloons = max(0, howMany); }
     
-    friend bool operator==(const Player& a, const Player& b) {
+    inline friend bool operator==(const Player& a, const Player& b) {
         return a.id == b.id;
     }
     
+    
+    
 private:
-    vector<Pirate> deck;
-    vector<Booty> loot;
     
-    int doubloons;
-    int points;
-    int id;
     
-    static int getNextPlayerId() {
+    inline static int getNextPlayerId() {
         // post-increment returns the original value
         // 0 = red
         // 1 = blue
@@ -54,4 +51,13 @@ private:
         static int nextPlayerId = 0;
         return nextPlayerId++;
     }
+
+    vector<Pirate> deck;
+    vector<Booty> loot;
+    
+    int doubloons;
+    int points;
+    int id;
+    
+    
 };

@@ -13,10 +13,11 @@ public:
     // If no one else has a Governor's Daughter, +6 doubloons
     // Otherwise, -3 doubloons
     RetriableMethodResponse endOfVoyageAction() {
+        Game g = Game::instance();
         if (isOnlyGovernorsDaughterInDen()) {
-            getOwningPlayer().setDoubloons(getOwningPlayer().getDoubloons() + 6);
+            g.getPlayer(getOwnerId()).setDoubloons(g.getPlayer(getOwnerId()).getDoubloons() + 6);
         } else {
-            getOwningPlayer().setDoubloons(getOwningPlayer().getDoubloons() - 3);
+            g.getPlayer(getOwnerId()).setDoubloons(g.getPlayer(getOwnerId()).getDoubloons() - 3);
         }
         return RetriableMethodResponse::Complete;
     }
@@ -26,7 +27,7 @@ private:
         Game g = Game::instance();
         for (Player& p : g.getPlayers()) {
             // ignore self
-            if (p == getOwningPlayer()) {
+            if (p == g.getPlayer(getOwnerId())) {
                 continue;
             }
             bool found = p.getDen().end() == find_if(p.getDen().begin(), p.getDen().end(),
@@ -37,9 +38,7 @@ private:
         }
     }
 
-    int getSubRankFromPlayerId(int playerId) {
-        assert(playerId >= 0 && playerId < Game::instance().getPlayers().size());
-        static vector<int> subRanksByPlayerId = {4, 5, 3, 6, 1, 2};
-        return subRanksByPlayerId[playerId];
+    vector<int> getSubRanks(int playerId) {
+        return {4, 5, 3, 6, 1, 2};
     }
 };

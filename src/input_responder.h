@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "input_request.h"
+
 using namespace std;
 
 class InputResponder {

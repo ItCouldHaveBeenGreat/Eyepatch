@@ -3,18 +3,16 @@
 #include <algorithm>
 #include <vector>
 
-#include "pirate.h"
 #include "booty.h"
 #include "game.h"
-
+#include "pirate.h"
 #include "player.h"
-#include "retriable_method_response.h"
 
 using namespace std;
 
 class Round {
 public:
-    Round(vector<Booty> &loot) : loot(loot) { } 
+    inline Round(vector<Booty> &loot) : loot(loot) { } 
 
 
     /*

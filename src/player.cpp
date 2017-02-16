@@ -1,20 +1,20 @@
 #include "player.h"
 
-#include "pirates/governors_daughter.h"
+//#include "pirates/governors_daughter.h"
 
 Player::Player() {
     id = getNextPlayerId();
-    constructDeck();
+    this->constructDeck();
 }
 
-vector<Pirate> Player::getPiratesInState(const PirateState state) {
+vector<Pirate> Player::getPiratesInState(const PirateState state) const {
     vector<Pirate> piratesToReturn = vector<Pirate>();
-    for (Pirate& p : deck) {
+    for (const Pirate& p : deck) {
         if (p.getState() == state) {
             piratesToReturn.push_back(p);
         }
     }
-    return pirates;
+    return piratesToReturn;
 }
 
 void Player::doNightActions() {
@@ -29,6 +29,6 @@ void Player::doEndVoyageActions() {
     }
 }
 
-private constructDeck() {
-    deck.push_back(GovernorsDaughter(this));
+void Player::constructDeck() {
+    //deck.push_back(GovernorsDaughter(getId()));
 }

@@ -1,10 +1,30 @@
 #include "pirate.h"
 
-Pirate::Pirate(const Player& owner) {
-    owningPlayer = &owner;
-    subRank = getSubRankFromPlayerId(owner.getId());
+Pirate::Pirate(const int playerId) : owningPlayerId(playerId), subRank(getSubRankFromPlayerId(playerId)) {
+
 }
 
-Player Pirate::getOwner() {
-    return *owningPlayer;
+RetriableMethodResponse Pirate::dayAction() {
+    return RetriableMethodResponse::Complete;
+    
+}
+
+RetriableMethodResponse Pirate::duskAction() {
+    return claimBooty();
+    
+}
+
+RetriableMethodResponse Pirate::nightAction() {
+    return RetriableMethodResponse::Complete;
+    
+}
+
+RetriableMethodResponse Pirate::endOfVoyageAction() {
+    return RetriableMethodResponse::Complete;
+    
+}
+
+int Pirate::getSubRankFromPlayerId(int playerId) {
+    // TODO: validation
+    return getSubRanks()[playerId];
 }

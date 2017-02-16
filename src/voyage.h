@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "booty.h"
-#include "game.h"
+#include "player.h"
 #include "retriable_method_response.h"
 #include "round.h"
 

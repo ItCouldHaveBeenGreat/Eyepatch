@@ -23,6 +23,9 @@
 *.a
 *.lib
 
+# Scala
+*.class
+
 # Executables
 *.exe
 *.out

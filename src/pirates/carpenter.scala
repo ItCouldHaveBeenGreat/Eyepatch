@@ -1,15 +1,16 @@
 class Carpenter(player: Player) extends Pirate(player) {
     val rank = 9
+    val name = "Carpenter"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         player.doubloons = player.doubloons / 2 + player.doubloons % 2
-        println("Pirate: -50% Doubloons")
+        println(tag + ": -50% Doubloons")
         return RetriableMethodResponse.Complete
     }
 
-    override def endOfVoyageAction(): RetriableMethodResponse.Value = {
+    override def endOfVoyageAction: RetriableMethodResponse.Value = {
         player.doubloons += 10
-        println("Carpenter: +10 Doubloons")
+        println(tag + ": +10 Doubloons")
         return RetriableMethodResponse.Complete
     }
     

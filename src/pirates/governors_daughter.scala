@@ -1,13 +1,14 @@
 class GovernorsDaughter(player: Player) extends Pirate(player) {
     val rank = 25
+    val name = "Governor's Daughter"
 
     override def endOfVoyageAction(): RetriableMethodResponse.Value = {
         if (otherGovernorsDaughter) {
             player.doubloons = Math.max(0, player.doubloons - 3)
-            println("Governor's Daughter: -3 Doubloons")
+            println(tag + ": -3 Doubloons")
         } else {
             player.doubloons += 6
-            println("Governor's Daughter: +6 Doubloons")
+            println(tag + ": +6 Doubloons")
         }
         return RetriableMethodResponse.Complete
     }

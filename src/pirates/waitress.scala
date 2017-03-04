@@ -1,5 +1,6 @@
 class Waitress(player: Player) extends Pirate(player) {
     val rank = 8
+    val name = "Waitress"
 
     override def nightAction: RetriableMethodResponse.Value = {
         if (player.booty.contains(Booty.TreasureMap)) {
@@ -13,7 +14,7 @@ class Waitress(player: Player) extends Pirate(player) {
             if (InputManager.getBooleanResponseFromInput(request)) {
                 player.booty -= Booty.TreasureMap
                 player.doubloons += 3
-                println("Waitress: Sold Map for +3 Doubloons")
+                println(tag + ": Sold Map for +3 Doubloons")
             }
         }
         return RetriableMethodResponse.Complete

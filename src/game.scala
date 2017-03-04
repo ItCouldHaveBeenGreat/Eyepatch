@@ -1,11 +1,12 @@
 import scala.util.Random
 
 class Game(numPlayers : Int) {
+    PlayerManager.build(numPlayers)
+    
     var currentVoyage: Voyage = new Voyage(numPlayers)
     var voyagesTaken : Int = 0
     val totalVoyages : Int = 3
-    
-    PlayerManager.build(numPlayers)
+
     dealPirates(9)
     
     def makeProgress() : RetriableMethodResponse.Value = {
@@ -18,6 +19,7 @@ class Game(numPlayers : Int) {
                 println("Game complete")
                 return RetriableMethodResponse.Complete
             } else {
+                dealPirates(6)
                 currentVoyage = new Voyage(numPlayers)
                 return RetriableMethodResponse.MadeProgress
             }

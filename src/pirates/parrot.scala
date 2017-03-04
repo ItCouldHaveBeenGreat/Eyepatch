@@ -1,5 +1,6 @@
 class Parrot(player: Player) extends Pirate(player) {
     val rank = 1
+    val name = "Parrot"
 
    override def dayAction(round : Round): RetriableMethodResponse.Value = {
         val request = InputManager.postAndGetInputRequest(

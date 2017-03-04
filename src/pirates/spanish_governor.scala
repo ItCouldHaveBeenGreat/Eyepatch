@@ -1,5 +1,6 @@
 class SpanishGovernor(player: Player) extends Pirate(player) {
-    val rank = 29
+    val rank = 30
+    val name = "Spanish Governor"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         for (p <- player.pirates) {
@@ -7,7 +8,7 @@ class SpanishGovernor(player: Player) extends Pirate(player) {
                 p.state = PirateState.Discard
             }
         }
-        println("Spanish Governor: Discarded all characters in den")
+        println(tag + ": Discarded all characters in den")
         return RetriableMethodResponse.Complete
     }
     

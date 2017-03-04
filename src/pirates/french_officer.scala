@@ -1,12 +1,13 @@
 class FrenchOfficer(player: Player) extends Pirate(player) {
     val rank = 10
+    val name = "French Officer"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (player.doubloons <= 9) {
-            println("French Officer: +5 Doubloons")
+            println(tag + ": +5 Doubloons")
             player.doubloons += 5
         } else {
-            println("French Officer: did nothing")
+            println(tag + ": did nothing")
         }
         return RetriableMethodResponse.Complete
     }

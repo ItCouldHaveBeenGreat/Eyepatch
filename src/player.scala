@@ -15,16 +15,22 @@ class Player() {
         new Barkeep(this),
         new Carpenter(this),
         new FrenchOfficer(this),
+        new VoodooWitch(this),
+        new FreedSlave(this),
+        new Mutineer(this),
+        new Brute(this),
+        new Gunner(this),
+        new Topman(this),
         new Cook(this),
         new Armorer(this),
+        new Treasurer(this),
+        new Gambler(this),
         new GovernorsDaughter(this),
+        new Quartermaster(this),
+        new GrannyWata(this),
+        new FirstMate(this),
         new Captain(this),
         new SpanishGovernor(this))
-    
-    
-    def startVoyage() = {
-        doubloons = 10
-    }
     
     def dealPirate(pirateId : Int) = {
         pirates(pirateId).state = PirateState.Hand

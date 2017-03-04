@@ -58,10 +58,12 @@ object InputManager {
     }
     
     def getPlayerHandFromPlayer(player: Player) : Seq[String] = {
-        return player.pirates.filter( p => p.state == PirateState.Hand ).map( p => p.rank.toString )
+        return player.pirates.filter( p => p.state == PirateState.Hand )
+                             .map( p => p.rank.toString )
     }
     
         def getPlayerDenFromPlayer(player: Player) : Seq[String] = {
-        return player.pirates.filter( p => p.state == PirateState.Den ).map( p => p.rank.toString )
+        return player.pirates.filter( p => p.state == PirateState.Den )
+                             .map( p => p.rank.toString )
     }
 }

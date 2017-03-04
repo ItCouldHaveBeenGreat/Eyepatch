@@ -1,5 +1,7 @@
 abstract class Pirate(player: Player) {
     val rank : Int
+    val name : String
+    val visible : Boolean = true
     val subRank: Int = getSubRank(player)
 
 
@@ -13,10 +15,10 @@ abstract class Pirate(player: Player) {
     def duskAction(round : Round): RetriableMethodResponse.Value = {
         return claimBooty(round)
     }
-    def nightAction(): RetriableMethodResponse.Value = {
+    def nightAction: RetriableMethodResponse.Value = {
         return RetriableMethodResponse.Complete
     }
-    def endOfVoyageAction(): RetriableMethodResponse.Value = {
+    def endOfVoyageAction: RetriableMethodResponse.Value = {
         return RetriableMethodResponse.Complete
     }
     
@@ -28,9 +30,12 @@ abstract class Pirate(player: Player) {
         } else {
             val b = InputManager.getBootyFromInput(request)
             player.booty += b
+            println("Player " + player.playerId + " claims " + b)
             return RetriableMethodResponse.Complete
         }
     }
+    
+    def tag : String = { return name + "(" + player.playerId + ")" }
     
     protected def getSubRank(player : Player) : Int
 }

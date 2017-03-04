@@ -3,6 +3,7 @@ class Voyage(val numPlayers : Int) {
     var roundsTaken : Int = 0;
     val totalRounds: Int = 6;
     
+    PlayerManager.players.foreach( p => p.doubloons = 10)
     
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentRound.makeProgress()

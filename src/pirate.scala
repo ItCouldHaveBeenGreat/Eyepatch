@@ -1,12 +1,12 @@
-abstract class Pirate(player: Player) {
+import scala.math.Ordered.orderingToOrdered
+
+abstract class Pirate(player: Player) extends Ordered[Pirate] {
     val rank : Int
     val name : String
     val visible : Boolean = true
     val subRank: Int = getSubRank(player)
 
-
     var state : PirateState.Value = PirateState.Deck
-    
     
     // By default, a pirate only claims booty
     def dayAction(round : Round): RetriableMethodResponse.Value = {
@@ -29,10 +29,21 @@ abstract class Pirate(player: Player) {
             return RetriableMethodResponse.PendingInput
         } else {
             val b = InputManager.getBootyFromInput(request)
+            
+            // TODO: saber effect
+            // TODO: spanish officer effect
+            
             player.booty += b
             println("Player " + player.playerId + " claims " + b)
             return RetriableMethodResponse.Complete
         }
+    }
+    
+    def compare(that: Pirate) : Int = {
+        if (rank == that.rank) {
+            return subRank - this.subRank
+        }
+        return rank - that.rank
     }
     
     def tag : String = { return name + "(" + player.playerId + ")" }

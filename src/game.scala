@@ -34,6 +34,7 @@ class Game(numPlayers : Int) {
            val deck = PlayerManager.players.head.pirates.filter( p => p.state == PirateState.Deck)
            val pirateToDraw = deck(Random.nextInt(deck.size)).rank
            for (p <- PlayerManager.players) {
+               // NOTE: Rank is 1 indexed
                p.dealPirate(pirateToDraw)
            }
         }

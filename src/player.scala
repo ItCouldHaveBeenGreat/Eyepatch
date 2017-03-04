@@ -12,7 +12,9 @@ class Player() {
         new Beggar(this),
         new Recruiter(this),
         new CabinBoy(this),
+        new Preacher(this),
         new Barkeep(this),
+        new Waitress(this),
         new Carpenter(this),
         new FrenchOfficer(this),
         new VoodooWitch(this),
@@ -21,8 +23,12 @@ class Player() {
         new Brute(this),
         new Gunner(this),
         new Topman(this),
+        new SpanishSpy(this),
         new Cook(this),
+        new Bosun(this),
         new Armorer(this),
+        new Merchant(this),
+        new Surgeon(this),
         new Treasurer(this),
         new Gambler(this),
         new GovernorsDaughter(this),
@@ -32,8 +38,13 @@ class Player() {
         new Captain(this),
         new SpanishGovernor(this))
     
-    def dealPirate(pirateId : Int) = {
-        pirates(pirateId).state = PirateState.Hand
+    def getPirate(rank : Int) : Pirate = {
+        // Rank is 1 indexed
+        return pirates(rank - 1)
+    }
+    
+    def dealPirate(rank : Int) = {
+        getPirate(rank).state = PirateState.Hand
     }
     
     def endVoyage() = {

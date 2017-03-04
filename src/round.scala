@@ -3,7 +3,7 @@ import scala.collection.mutable.ArrayBuffer
 class Round(val booty : Seq[Booty.Value]) {
     
     var state : RoundState.Value = RoundState.SolicitPirates
-    val pirates : Seq[Pirate] = ArrayBuffer[Pirate]()
+    val pirates : ArrayBuffer[Pirate] = ArrayBuffer[Pirate]()
     
     def makeProgress() : RetriableMethodResponse.Value = {
         if (state == RoundState.SolicitPirates) {
@@ -28,21 +28,33 @@ class Round(val booty : Seq[Booty.Value]) {
     // only code repeats for situations which can have them (inputs)
 
     private def solicitPirates() : RetriableMethodResponse.Value = {
-        var pendingInput : Boolean = false
+        
+        val requests : ArrayBuffer[InputRequest] = ArrayBuffer()
         for (p <- PlayerManager.players) {
-            val request = InputManager.postAndGetInputRequest(
+            requests += InputManager.postAndGetInputRequest(
                 p.playerId,
                 InputRequestType.PlayPirateFromHand,
                 InputManager.getPlayerHandFromPlayer(p))
+        }
+
+        var pendingInput : Boolean = false
+        for (request <- requests) {
             if (!request.answered) {
                 pendingInput = true
+            } else {
+                val pirateRank = InputManager.getPirateIdFromInput(request)
+                val pirateToAdd = PlayerManager.players(request.playerId).getPirate(pirateRank)
+                pirateToAdd.state = PirateState.InPlay
+                pirates += pirateToAdd
             }
         }
+        
         if (pendingInput) {
             println("Waiting for players to select pirates")
             return RetriableMethodResponse.PendingInput
         } else {
-            // load the pirates into the round
+            // Sort ascending for day time
+            pirates.sorted
             state = RoundState.DayActions;
             return RetriableMethodResponse.Complete
         }

@@ -6,6 +6,10 @@ object PlayerManager {
         players = List.fill(numPlayers)(new Player())
     }
     
+    def getPlayer(playerId: Int) : Player = {
+        return players(playerId)
+    }
+    
     def getLeftPlayer(playerId : Int) : Player = {
         return players((playerId + players.size - 1) % players.size)
     }

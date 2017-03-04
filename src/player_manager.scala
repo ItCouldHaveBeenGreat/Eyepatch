@@ -1,16 +1,17 @@
-class PlayerManager(val numPlayers: Int) {
-    val players : List[Player] = List.fill(numPlayers)(new Player())
-}
-
 object PlayerManager {
     // TODO: null is evil
-    private var holder : PlayerManager = null
-    
-    def instance : PlayerManager = {
-        return holder
-    }
+    var players : List[Player] = null
     
     def build(numPlayers: Int) = {
-        holder = new PlayerManager(numPlayers)
+        players = List.fill(numPlayers)(new Player())
+    }
+    
+    def getLeftPlayer(playerId : Int) : Player = {
+        return players((playerId + players.size - 1) % players.size)
+    }
+    
+    def getAdjacentPlayers(playerId : Int) : List[Player] = {
+        return List(players((playerId + 1) % players.size),
+                    players((playerId + players.size - 1) % players.size))
     }
 }

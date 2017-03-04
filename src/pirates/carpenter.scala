@@ -2,7 +2,7 @@ class Carpenter(player: Player) extends Pirate(player) {
     val rank = 9
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        player.doubloons = Math.ceil(player.doubloons.toFloat * 0.5)
+        player.doubloons = player.doubloons / 2 + player.doubloons % 2
         println("Pirate: -50% Doubloons")
         return RetriableMethodResponse.Complete
     }

@@ -13,7 +13,7 @@ class GovernorsDaughter(player: Player) extends Pirate(player) {
     }
     
     private def otherGovernorsDaughter : Boolean = {
-        for (p <- PlayerManager.instance.players) {
+        for (p <- PlayerManager.players) {
             if (p.pirates(rank).state == PirateState.Den) {
                 return true;
             }

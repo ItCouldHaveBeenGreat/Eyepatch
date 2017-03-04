@@ -2,6 +2,7 @@ class InputRequest(val playerId : Int,
                    val inputType : InputRequestType.Value,
                    val validAnswers : Seq[String]) {
     var answer : String = ""
+    var answered : Boolean = false
     
     override def equals(o: Any) = o match {
         case that: InputRequest => that.hashCode.equals(this.hashCode)
@@ -22,5 +23,7 @@ object InputRequestType extends Enumeration {
         KillPirateInAnyDen,
         RevivePirateFromGraveyard,
         RecruitPirateFromDen,
+        DiscardBooty,
+        SellBootySet,
         SellMap = Value
 }

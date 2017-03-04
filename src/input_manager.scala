@@ -21,6 +21,7 @@ object InputManager {
         val request : InputRequest = inputRequests(playerId)
         if (request.validAnswers.contains(inputResponse)) {
             request.answer = inputResponse
+            request.answered = true
             println("Player " + playerId + " answered " + request.answer)
         } else {
             throw new Exception("Invalid answer")
@@ -34,9 +35,33 @@ object InputManager {
             inputRequests += ((playerId, new InputRequest(playerId, requestType, validAnswers)))
         }
         return inputRequests(playerId)
-    }
+                               }
     
     def removeInputRequest(playerId : Int) = {
         inputRequests -= playerId
+    }
+    
+    def getBooleanAnswers : Seq[String] = {
+        return List("0", "1")
+    }
+    
+    def getBooleanResponseFromInput(input : InputRequest) : Boolean = {
+        return input.answer == "0"
+    }
+    
+    def getPirateIdFromInput(input : InputRequest) : Int = {
+        return input.answer.toInt
+    }
+    
+    def getBootyFromInput(input : InputRequest) : Booty.Value = {
+        return Booty(input.answer.toInt)
+    }
+    
+    def getPlayerHandFromPlayer(player: Player) : Seq[String] = {
+        return player.pirates.filter( p => p.state == PirateState.Hand ).map( p => p.rank.toString )
+    }
+    
+        def getPlayerDenFromPlayer(player: Player) : Seq[String] = {
+        return player.pirates.filter( p => p.state == PirateState.Den ).map( p => p.rank.toString )
     }
 }

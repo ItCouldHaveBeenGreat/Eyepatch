@@ -1,9 +1,12 @@
+import scala.util.Random
+
 class Game(numPlayers : Int) {
-    var currentVoyage: Voyage = new Voyage()
+    var currentVoyage: Voyage = new Voyage(numPlayers)
     var voyagesTaken : Int = 0
     val totalVoyages : Int = 3
     
     PlayerManager.build(numPlayers)
+    dealPirates(9)
     
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentVoyage.makeProgress()
@@ -15,12 +18,22 @@ class Game(numPlayers : Int) {
                 println("Game complete")
                 return RetriableMethodResponse.Complete
             } else {
-                currentVoyage = new Voyage()
+                currentVoyage = new Voyage(numPlayers)
                 return RetriableMethodResponse.MadeProgress
             }
         } else {
             // Pass response up if PendingInput or MadeProgress
             return response
+        }
+    }
+    
+    def dealPirates(numPirates : Int) = {
+        for (i <- 1 to numPirates) {
+           val deck = PlayerManager.players.head.pirates.filter( p => p.state == PirateState.Deck)
+           val pirateToDraw = deck(Random.nextInt(deck.size)).rank
+           for (p <- PlayerManager.players) {
+               p.dealPirate(pirateToDraw)
+           }
         }
     }
     

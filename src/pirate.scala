@@ -11,14 +11,25 @@ abstract class Pirate(player: Player) {
         return RetriableMethodResponse.Complete
     }
     def duskAction(round : Round): RetriableMethodResponse.Value = {
-        return RetriableMethodResponse.Complete
-        // return claimBooty()
+        return claimBooty(round)
     }
     def nightAction(): RetriableMethodResponse.Value = {
         return RetriableMethodResponse.Complete
     }
     def endOfVoyageAction(): RetriableMethodResponse.Value = {
         return RetriableMethodResponse.Complete
+    }
+    
+    def claimBooty(round : Round) : RetriableMethodResponse.Value = {
+        val validAnswers = round.booty.map(b => b.id.toString)
+        val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
+        if (request.answered) {
+            return RetriableMethodResponse.PendingInput
+        } else {
+            val b = InputManager.getBootyFromInput(request)
+            player.booty += b
+            return RetriableMethodResponse.Complete
+        }
     }
     
     protected def getSubRank(player : Player) : Int

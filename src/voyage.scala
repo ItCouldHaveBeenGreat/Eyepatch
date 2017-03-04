@@ -1,5 +1,5 @@
-class Voyage() {
-    var currentRound: Round = new Round()
+class Voyage(val numPlayers : Int) {
+    var currentRound: Round = new Round(List(Booty.Goods))
     var roundsTaken : Int = 0;
     val totalRounds: Int = 6;
     
@@ -13,7 +13,7 @@ class Voyage() {
             if (roundsTaken >= totalRounds) {
                 return RetriableMethodResponse.Complete
             } else {
-                currentRound = new Round()
+                currentRound = new Round(List(Booty.Goods))
                 return RetriableMethodResponse.MadeProgress
             }
         } else {

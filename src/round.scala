@@ -1,6 +1,6 @@
 import scala.collection.mutable.ArrayBuffer
 
-class Round() {
+class Round(val booty : Seq[Booty.Value]) {
     
     var state : RoundState.Value = RoundState.SolicitPirates
     val pirates : Seq[Pirate] = ArrayBuffer[Pirate]()
@@ -29,9 +29,12 @@ class Round() {
 
     private def solicitPirates() : RetriableMethodResponse.Value = {
         var pendingInput : Boolean = false
-        for (player <- PlayerManager.instance.players) {
-            val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.PlayPirateFromHand, List("25", "29"))
-            if (request.answer == "") {
+        for (p <- PlayerManager.players) {
+            val request = InputManager.postAndGetInputRequest(
+                p.playerId,
+                InputRequestType.PlayPirateFromHand,
+                InputManager.getPlayerHandFromPlayer(p))
+            if (!request.answered) {
                 pendingInput = true
             }
         }
@@ -39,6 +42,7 @@ class Round() {
             println("Waiting for players to select pirates")
             return RetriableMethodResponse.PendingInput
         } else {
+            // load the pirates into the round
             state = RoundState.DayActions;
             return RetriableMethodResponse.Complete
         }

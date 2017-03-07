@@ -22,9 +22,10 @@ object InputRequestType extends Enumeration {
         KillPirateInAdjacentDen,
         ShouldKillPirateInAnyDen,
         KillPirateInAnyDen,
-        RevivePirateFromGraveyard,
+        RevivePirateFromDiscard,
         RecruitPirateFromDen,
         DiscardBooty,
-        SellBootySet,
+        SellBooty,
+        SellHowManyBooty,
         SellMap = Value
 }

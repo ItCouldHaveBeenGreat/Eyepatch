@@ -65,17 +65,23 @@ object InputManager {
     }
     
     def getPlayerHandFromPlayer(player: Player) : Seq[String] = {
-        return player.pirates.filter( p => p.state == PirateState.Hand )
-                             .map( p => p.rank.toString )
+        return getPlayerPiratesInState(player, PirateState.Hand)
+    }
+
+    def getPlayerDiscardFromPlayer(player: Player) : Seq[String] = {
+        return getPlayerPiratesInState(player, PirateState.Discard)
+    }
+
+    def getPlayerDenFromPlayer(player: Player) : Seq[String] = {
+        return getPlayerPiratesInState(player, PirateState.Den)
     }
     
-    def getPlayerDenFromPlayer(player: Player) : Seq[String] = {
-        return player.pirates.filter( p => p.state == PirateState.Den )
+    def getPlayerPiratesInState(player : Player, state : PirateState.Value) : Seq[String] = {
+        return player.pirates.filter( p => p.state == state )
                              .map( p => p.rank.toString )
     }
     
     def getBootyFromPlayer(player: Player) : Seq[String] = {
-        // Should I be using a set? Maybe
         return player.booty.map(b => b.id.toString).distinct
     }
 }

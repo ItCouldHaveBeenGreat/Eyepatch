@@ -3,8 +3,9 @@ class Brute(player: Player) extends Pirate(player) {
     val name = "Brute"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        // TOOD: Implement sorted round order, ideally with sorted, iterable data structure
-        // TOOD: Implement
+        val pirateToKill = round.pirates.last
+        round.killPirate(pirateToKill)
+        println(tag + ": killed " + pirateToKill.tag)
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {

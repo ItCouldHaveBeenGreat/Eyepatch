@@ -1,6 +1,6 @@
 import scala.math.Ordered.orderingToOrdered
 
-abstract class Pirate(player: Player) extends Ordered[Pirate] {
+abstract class Pirate(val player: Player) extends Ordered[Pirate] {
     val rank : Int
     val name : String
     val visible : Boolean = true

@@ -11,10 +11,6 @@ object BootyBag {
         return drawn
     }
     
-    def draw(howMany : Int) : List[Booty.Value] = {
-        return List.fill(howMany)(draw)
-    }
-    
     def build = {
         bootyBag.clear
         for (i <- 1 to 4) { bootyBag += Booty.Chest }

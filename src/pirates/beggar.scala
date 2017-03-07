@@ -3,8 +3,12 @@ class Beggar(player: Player) extends Pirate(player) {
     val name = "Beggar"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        player.doubloons += 3
-        // TOOD: Implement sorted round order, ideally with sorted, iterable data structure
+        val firstPlayer = round.pirates.last.player
+        val doubloonsToTake = Math.max(3, firstPlayer.doubloons)
+        player.doubloons += doubloonsToTake
+        firstPlayer.doubloons -= doubloonsToTake
+        println(tag + ": stole " + doubloonsToTake + " from " + firstPlayer.playerId)
+
         println(tag + ": +3 Doubloons")
         return RetriableMethodResponse.Complete
     }

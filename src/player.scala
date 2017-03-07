@@ -80,6 +80,7 @@ class Player() {
         
         doubloons = Math.max(0, doubloons + gain)
         booty.clear
+        println("Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
 }
 

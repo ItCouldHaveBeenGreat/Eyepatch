@@ -19,23 +19,30 @@ object InputManager {
     
     def answerInputRequest(playerId: Int, inputResponse : String) = {
         val request : InputRequest = inputRequests(playerId)
+        if (request.answered) {
+            throw new Exception("Already answered request " + playerId)
+        }
         if (request.validAnswers.contains(inputResponse)) {
             request.answer = inputResponse
             request.answered = true
-            println("Player " + playerId + " answered " + request.answer)
+            println("Player " + playerId + " answered " + request.answer + " out of set " + request.validAnswers)
         } else {
-            throw new Exception("Invalid answer")
+            throw new Exception("Invalid answer for request " + playerId)
         }
     }
 
     def postAndGetInputRequest(playerId: Int,
                                requestType: InputRequestType.Value,
                                validAnswers : Seq[String]) : InputRequest = {
+        if (validAnswers.size == 0) {
+            throw new Exception("No valid answers supplied")
+        }
         if (!inputRequests.contains(playerId)) {
+            println("Created request for player " + playerId + " for " + requestType)
             inputRequests += ((playerId, new InputRequest(playerId, requestType, validAnswers)))
         }
         return inputRequests(playerId)
-                               }
+   }
     
     def removeInputRequest(playerId : Int) = {
         inputRequests -= playerId
@@ -62,8 +69,13 @@ object InputManager {
                              .map( p => p.rank.toString )
     }
     
-        def getPlayerDenFromPlayer(player: Player) : Seq[String] = {
+    def getPlayerDenFromPlayer(player: Player) : Seq[String] = {
         return player.pirates.filter( p => p.state == PirateState.Den )
                              .map( p => p.rank.toString )
+    }
+    
+    def getBootyFromPlayer(player: Player) : Seq[String] = {
+        // Should I be using a set? Maybe
+        return player.booty.map(b => b.id.toString).distinct
     }
 }

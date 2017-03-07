@@ -10,8 +10,13 @@ class Parrot(player: Player) extends Pirate(player) {
         if (!request.answered) {
             return RetriableMethodResponse.PendingInput
         }
-        // TODO: add to round
-        state = PirateState.Discard
+        val pirateRank = InputManager.getPirateIdFromInput(request)
+        InputManager.removeInputRequest(request.playerId)
+        
+        val pirateToAdd = PlayerManager.players(request.playerId).getPirate(pirateRank)
+        round.addPirate(pirateToAdd)
+        round.killPirate(this)
+
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {

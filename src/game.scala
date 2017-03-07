@@ -5,7 +5,7 @@ class Game(numPlayers : Int) {
     
     var currentVoyage: Voyage = new Voyage(numPlayers)
     var voyagesTaken : Int = 0
-    val totalVoyages : Int = 3
+    val totalVoyages : Int = 1
 
     dealPirates(9)
     
@@ -13,7 +13,6 @@ class Game(numPlayers : Int) {
         var response = currentVoyage.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
             println("Voyage " + voyagesTaken + " complete")
-            currentVoyage.endVoyage()
             voyagesTaken += 1
             if (voyagesTaken >= totalVoyages) {
                 println("Game complete")
@@ -37,6 +36,7 @@ class Game(numPlayers : Int) {
                // NOTE: Rank is 1 indexed
                p.dealPirate(pirateToDraw)
            }
+           println("Game dealt pirate " + pirateToDraw)
         }
     }
     

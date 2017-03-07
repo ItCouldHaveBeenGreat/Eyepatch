@@ -3,7 +3,7 @@ class GrannyWata(player: Player) extends Pirate(player) {
     val name = "Granny Wata"
 
     override def nightAction(): RetriableMethodResponse.Value = {
-        val grannyWatas = getAllGrannyWatasInDen
+        val grannyWatas = getAllGrannyWatasInDen()
         if (grannyWatas.size > 1) {
             grannyWatas.foreach(gw => gw.state = PirateState.Discard)
             println(tag + ": All " + name + " discarded")
@@ -14,8 +14,8 @@ class GrannyWata(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
     
-    private def getAllGrannyWatasInDen : List[Pirate] = {
-        return PlayerManager.players.map( p => p.pirates(rank))
+    private def getAllGrannyWatasInDen() : List[Pirate] = {
+        return PlayerManager.players.map( p => p.getPirate(rank))
                                     .filter( p => p.state == PirateState.Den)
     }
     

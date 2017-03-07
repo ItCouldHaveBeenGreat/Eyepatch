@@ -18,22 +18,26 @@ abstract class Pirate(player: Player) extends Ordered[Pirate] {
     def nightAction: RetriableMethodResponse.Value = {
         return RetriableMethodResponse.Complete
     }
-    def endOfVoyageAction: RetriableMethodResponse.Value = {
-        return RetriableMethodResponse.Complete
-    }
+    def endOfVoyageAction = { }
     
     def claimBooty(round : Round) : RetriableMethodResponse.Value = {
+        if (round.booty.size == 0) {
+            println("Player " + player.playerId + " had no booty to claim")
+            return RetriableMethodResponse.Complete
+        }
         val validAnswers = round.booty.map(b => b.id.toString)
         val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
-        if (request.answered) {
+        if (!request.answered) {
             return RetriableMethodResponse.PendingInput
         } else {
             val b = InputManager.getBootyFromInput(request)
+            InputManager.removeInputRequest(request.playerId)
             
             // TODO: saber effect
             // TODO: spanish officer effect
             
             player.booty += b
+            round.booty -= b
             println("Player " + player.playerId + " claims " + b)
             return RetriableMethodResponse.Complete
         }

@@ -8,11 +8,10 @@ class Captain(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
 
-    override def endOfVoyageAction: RetriableMethodResponse.Value = {
+    override def endOfVoyageAction = {
         val numCursedRelics = player.booty.count(b => b == Booty.CursedMask)
         player.doubloons = Math.max(0, player.doubloons - numCursedRelics * 3)
         println(tag + ": -" + numCursedRelics * 3 + " Doubloons")
-        return RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {

@@ -1,20 +1,25 @@
+import scala.collection.mutable.ArrayBuffer
+
 class Voyage(val numPlayers : Int) {
-    var currentRound: Round = new Round(List(Booty.Goods))
-    var roundsTaken : Int = 0;
     val totalRounds: Int = 6;
     
+    BootyBag.build
+    val bootySets = ArrayBuffer.fill(totalRounds)( ArrayBuffer.fill(numPlayers)( BootyBag.draw ) )
+    var currentRound = new Round(bootySets(0))
+    var roundsTaken : Int = 0;
+
     PlayerManager.players.foreach( p => p.doubloons = 10)
     
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentRound.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
             println("Round " + roundsTaken + " complete")
-            currentRound.endRound()
             roundsTaken += 1
             if (roundsTaken >= totalRounds) {
+                endVoyage()
                 return RetriableMethodResponse.Complete
             } else {
-                currentRound = new Round(List(Booty.Goods))
+                currentRound = new Round(bootySets(roundsTaken))
                 return RetriableMethodResponse.MadeProgress
             }
         } else {
@@ -24,6 +29,6 @@ class Voyage(val numPlayers : Int) {
     }
     
     def endVoyage() = {
-        
+        PlayerManager.players.foreach ( p => p.endVoyage )
     }
 }

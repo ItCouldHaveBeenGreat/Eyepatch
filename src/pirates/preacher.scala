@@ -7,21 +7,22 @@ class Preacher(player: Player) extends Pirate(player) {
             val request = InputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.DiscardBooty,
-                InputManager.getPlayerHandFromPlayer(player))
+                InputManager.getBootyFromPlayer(player))
             if (!request.answered) {
                 return RetriableMethodResponse.PendingInput
+            } else {
+                val b = InputManager.getBootyFromInput(request)
+                InputManager.removeInputRequest(request.playerId)
+                player.booty -= b
+                println("Player " + player.playerId + " discarded " + b)
             }
-            val b = InputManager.getBootyFromInput(request)
-            player.booty -= b
-            println("Player " + player.playerId + " discarded " + b)
         }
         return RetriableMethodResponse.Complete
     }
 
-    override def endOfVoyageAction(): RetriableMethodResponse.Value = {
+    override def endOfVoyageAction = {
         player.doubloons += 5
         println(tag + ": +5 Doubloons")
-        return RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {

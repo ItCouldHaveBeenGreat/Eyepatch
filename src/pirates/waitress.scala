@@ -11,11 +11,13 @@ class Waitress(player: Player) extends Pirate(player) {
             if (!request.answered) {
                 return RetriableMethodResponse.PendingInput
             }
+            // TODO: fix
             if (InputManager.getBooleanResponseFromInput(request)) {
                 player.booty -= Booty.TreasureMap
                 player.doubloons += 3
                 println(tag + ": Sold Map for +3 Doubloons")
             }
+            InputManager.removeInputRequest(request.playerId)
         }
         return RetriableMethodResponse.Complete
     }

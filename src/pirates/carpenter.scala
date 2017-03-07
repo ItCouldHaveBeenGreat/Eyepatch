@@ -8,10 +8,9 @@ class Carpenter(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
 
-    override def endOfVoyageAction: RetriableMethodResponse.Value = {
+    override def endOfVoyageAction = {
         player.doubloons += 10
         println(tag + ": +10 Doubloons")
-        return RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {

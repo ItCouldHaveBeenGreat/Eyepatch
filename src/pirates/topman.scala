@@ -2,7 +2,7 @@ class Topman(player: Player) extends Pirate(player) {
     val rank = 16
     val name = "Topman"
 
-    override def endOfVoyageAction: RetriableMethodResponse.Value = {
+    override def endOfVoyageAction = {
         // If there are no dens which are explicitly smaller, award bonus
         // NOTE: Allows ties
         val smallerDenCounts = PlayerManager.players.map( p => p.pirates.size )
@@ -13,7 +13,6 @@ class Topman(player: Player) extends Pirate(player) {
         } else {
             println(tag + ": No bonus")
         }
-        return RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {

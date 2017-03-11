@@ -72,11 +72,12 @@ class Player() {
     
     private def sellBooty() = {
         // TODO: Is this ineffiecent? Yes.
+        println("Player " + playerId + " booty: " + booty)
         val gain = booty.count( b => b == Booty.Goods ) * 1 +
                    booty.count( b => b == Booty.Jewels ) * 3 +
                    booty.count( b => b == Booty.Chest ) * 5 +
                    booty.count( b => b == Booty.CursedMask ) * -3 +
-                   booty.count( b => b == Booty.TreasureMap ) % 3 * 12
+                   booty.count( b => b == Booty.TreasureMap ) / 3 * 12
         
         doubloons = Math.max(0, doubloons + gain)
         booty.clear

@@ -4,9 +4,6 @@ object Runner {
   def main(args: Array[String]) {
     val numPlayers = 3
 
-    Fann fann = new Fann( "/path/to/file" );
-
-
     val game = new Game(numPlayers)
 
     val players = List(new RandomBot, new RandomBot, new RandomBot)

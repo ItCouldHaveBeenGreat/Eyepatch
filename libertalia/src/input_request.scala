@@ -20,7 +20,6 @@ object InputRequestType extends Enumeration {
     val SelectBooty,
         PlayPirateFromHand,
         KillPirateInAdjacentDen,
-        ShouldKillPirateInAnyDen,
         KillPirateInAnyDen,
         RevivePirateFromDiscard,
         RecruitPirateFromDen,

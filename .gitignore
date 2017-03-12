@@ -26,6 +26,9 @@
 # Scala
 *.class
 
+# sqlite3 databases
+*.sqlite3
+
 # Executables
 *.exe
 *.out

@@ -17,6 +17,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from . import trainer
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^start_game_session/', trainer.start_game_session),
+    url(r'^make_decision/', trainer.make_decision),
+    url(r'^end_game_session/', trainer.end_session)
 ]

@@ -4,10 +4,9 @@ object Runner {
   def main(args: Array[String]) {
     val numPlayers = 3
 
+    val players = List(new RandomBot, new RandomBot, new QueryBot("https://[::1]:8080"))
     val game = new Game(numPlayers)
 
-    val players = List(new RandomBot, new RandomBot, new RandomBot)
-    
     var ticks = 0
     while (game.makeProgress() != RetriableMethodResponse.Complete) {
       for (i <- 0 to numPlayers - 1) {

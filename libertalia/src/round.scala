@@ -79,6 +79,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 val pirateRank = InputManager.getPirateIdFromInput(request)
                 val pirateToAdd = PlayerManager.players(request.playerId).getPirate(pirateRank)
                 addPirate(pirateToAdd)
+                computevisibility(PlayerManager.players(request.playerId))
                 println("Player " + request.playerId + " played " + pirateToAdd.name)
                 InputManager.removeInputRequest(request.playerId)
             }
@@ -91,8 +92,19 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
         pirates += pirate
         pirate.state = PirateState.Board
         pirates = pirates.sorted
+        dayIterator = pirates.toIterator.buffered
     }
-    
+
+    def computevisibility(player : Player) {
+        // if the player's hand has no unknowns, the graveyard returns to a fully known state
+        if (player.pirates.count( p => p.state == PirateState.Hand && p.known == true ) == 0) {
+            for (p <- player.pirates.filter ( p => p.state == PirateState.Discard )) {
+                p.known = false
+            }
+        }
+        
+    }
+
     def killPirate(pirate : Pirate) = {
         pirates -= pirate
         pirate.state = PirateState.Discard
@@ -109,7 +121,12 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
             if (response != RetriableMethodResponse.Complete) {
                 return response // We're pending something
             } else {
-                dayIterator.next // Advance to next pirate
+                if (dayIterator.hasNext) {
+                    dayIterator.next // Advance to next pirate
+                } else {
+                    // CASE: Brute can kill themselves, causing this edge case
+                    return RetriableMethodResponse.Complete
+                }
             }
         }
         return RetriableMethodResponse.Complete
@@ -166,7 +183,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     }
     
     def endRound() = {
-        
+
     }
 }
 

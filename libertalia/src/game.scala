@@ -16,6 +16,7 @@ class Game(numPlayers : Int) {
             voyagesTaken += 1
             if (voyagesTaken >= totalVoyages) {
                 println("Game complete")
+                endGame
                 return RetriableMethodResponse.Complete
             } else {
                 dealPirates(6)
@@ -37,6 +38,13 @@ class Game(numPlayers : Int) {
                p.dealPirate(pirateToDraw)
            }
            println("Game dealt pirate " + pirateToDraw)
+        }
+    }
+    
+    def endGame = {
+        println("Final Scores: ")
+        for (p <- PlayerManager.players) {
+            println("Player" + p.playerId + ": " + p.points + " points")
         }
     }
     

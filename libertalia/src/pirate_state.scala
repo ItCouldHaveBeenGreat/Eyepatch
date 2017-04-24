@@ -1,4 +1,9 @@
 object PirateState extends Enumeration {
     type PirateState = Value
-    val Deck, Hand, Den, Discard, Board, OutOfPlay = Value
+    val Board, Den, Deck, Discard, Hand, OutOfPlay = Value
+}
+
+object PublicPirateState extends Enumeration {
+    type PublicPirateState = Value
+    val Board, Den, Discard, Hand, OutOfPlay, Unknown = Value
 }

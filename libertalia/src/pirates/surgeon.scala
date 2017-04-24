@@ -3,6 +3,10 @@ class Surgeon(player: Player) extends Pirate(player) {
     val name = "Surgeon"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
+        if (InputManager.getPlayerDiscardFromPlayer(player).size == 0) {
+            return RetriableMethodResponse.Complete
+        }
+        
         val request = InputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.RevivePirateFromDiscard,
@@ -15,7 +19,23 @@ class Surgeon(player: Player) extends Pirate(player) {
         
         val pirateToRevive = PlayerManager.players(request.playerId).getPirate(pirateRank)
         pirateToRevive.state = PirateState.Hand
-        pirateToRevive.visible = false
+        
+        if (player.pirates.count( p => p.state == PirateState.Discard ) > 0) {
+            // if there is a pirate remaining in the graveyard,
+            // the entire graveyard and the revived pirate become unknown
+            pirateToRevive.known = false
+            for (p <- player.pirates) {
+                if (p.state == PirateState.Discard) {
+                    p.known = false
+                }
+            }
+        } else {
+            // if the graveyard is emptied, the player's hand returns to a fully known state
+            player.pirates.filter( p => p.state == PirateState.Hand ).map ( p =>
+                p.known = true
+            )
+        }
+        
 
         return RetriableMethodResponse.Complete
     }

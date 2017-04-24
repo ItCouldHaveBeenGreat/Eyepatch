@@ -3,7 +3,7 @@ import scala.math.Ordered.orderingToOrdered
 abstract class Pirate(val player: Player) extends Ordered[Pirate] {
     val rank : Int
     val name : String
-    var visible : Boolean = true
+    var known : Boolean = true
     val subRank: Int = getSubRank(player)
 
     var state : PirateState.Value = PirateState.Deck
@@ -48,6 +48,21 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
             round.booty -= b
             println("Player " + player.playerId + " claims " + b)
             return RetriableMethodResponse.Complete
+        }
+    }
+    
+    def publicState : PublicPirateState.Value = {
+        if (known == false) {
+            PublicPirateState.Unknown
+        } else {
+            state match {
+                case PirateState.Board => PublicPirateState.Board
+                case PirateState.Deck => PublicPirateState.OutOfPlay
+                case PirateState.Den => PublicPirateState.Den
+                case PirateState.Discard => PublicPirateState.Discard
+                case PirateState.Hand => PublicPirateState.Hand
+                case PirateState.OutOfPlay => PublicPirateState.OutOfPlay
+            }
         }
     }
     

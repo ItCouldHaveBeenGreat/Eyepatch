@@ -2,9 +2,9 @@ import scala.collection.mutable.HashMap
 
 object Runner {
   def main(args: Array[String]) {
-    val numPlayers = 3
+    val numPlayers = 6
 
-    val players = List(new RandomBot, new RandomBot, new QueryBot("https://[::1]:8080"))
+    val players = List(new RandomBot, new RandomBot, new RandomBot, new RandomBot, new RandomBot, new RandomBot)
     val game = new Game(numPlayers)
 
     var ticks = 0

@@ -3,14 +3,12 @@ import scala.collection.mutable.ArrayBuffer
 class Round(val booty : ArrayBuffer[Booty.Value]) {
     
     var state : RoundState.Value = RoundState.SolicitPirates
-    var pirates : ArrayBuffer[Pirate] = ArrayBuffer[Pirate]()
     
-    // TODO: Null is bad
-    private var dayIterator : BufferedIterator[Pirate] = null
-    private var duskIterator : BufferedIterator[Pirate] = null
-    private var nightIterators : List[BufferedIterator[Pirate]] = null
-   
-   println("Available booty: " + booty)
+    var dayStack = ArrayBuffer[Pirate]()
+    private var duskStack = ArrayBuffer[Pirate]()
+    private var survivorStack = ArrayBuffer[Pirate]()
+    private var nightSequences = List[ArrayBuffer[Pirate]]()
+    
     
     def makeProgress() : RetriableMethodResponse.Value = {
         state match {
@@ -18,7 +16,6 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 val response = solicitPirates()
                 if (response == RetriableMethodResponse.Complete) {
                     state = RoundState.DayActions;
-                    prepareForDayActions()
                     return RetriableMethodResponse.MadeProgress
                 } else {
                     return response
@@ -28,7 +25,6 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 val response = performDayActions()
                 if (response == RetriableMethodResponse.Complete) {
                     state = RoundState.DuskActions;
-                    prepareForDuskActions()
                     return RetriableMethodResponse.MadeProgress
                 } else {
                     return response
@@ -38,7 +34,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 val response = performDuskActions()
                 if (response == RetriableMethodResponse.Complete) {
                     state = RoundState.NightActions;
-                    prepareForNightActions()
+                    prepareForNightActions
                     return RetriableMethodResponse.MadeProgress
                 } else {
                     return response
@@ -70,7 +66,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 pendingInput = true
             }
         }
-        
+
         if (pendingInput) {
             println("Waiting for players to select pirates")
             return RetriableMethodResponse.PendingInput
@@ -89,10 +85,10 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     }
     
     def addPirate(pirate : Pirate) = {
-        pirates += pirate
+        // right now pirates can only be added during the day
         pirate.state = PirateState.Board
-        pirates = pirates.sorted
-        dayIterator = pirates.toIterator.buffered
+        dayStack += pirate
+        dayStack = dayStack.sorted
     }
 
     def computevisibility(player : Player) {
@@ -102,83 +98,70 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 p.known = false
             }
         }
-        
     }
 
     def killPirate(pirate : Pirate) = {
-        pirates -= pirate
         pirate.state = PirateState.Discard
-    }
-    
-    private def prepareForDayActions() = {
-        dayIterator = pirates.toIterator.buffered
+        dayStack -= pirate
+        duskStack -= pirate
     }
     
     private def performDayActions() : RetriableMethodResponse.Value = {
-        while (dayIterator.hasNext) {
-            println("Round running day action for " + dayIterator.head.tag)
-            val response = dayIterator.head.dayAction(this)
+        while (dayStack.size > 0) {
+            val activePirate = dayStack.head
+            println("Round running day action for " + activePirate.tag)
+            val response = activePirate.dayAction(this)
+
             if (response != RetriableMethodResponse.Complete) {
-                return response // We're pending something
-            } else {
-                if (dayIterator.hasNext) {
-                    dayIterator.next // Advance to next pirate
-                } else {
-                    // CASE: Brute can kill themselves, causing this edge case
-                    return RetriableMethodResponse.Complete
-                }
+                return response // We're pending something; return
+            } else if (activePirate.state == PirateState.Board) {
+                // If the active pirate is still alive, move them to the duskStack
+                duskStack += activePirate
+                dayStack -= activePirate
             }
         }
+        duskStack = duskStack.sorted(Ordering[Pirate].reverse)
         return RetriableMethodResponse.Complete
     }
     
-    private def prepareForDuskActions() = {
-        duskIterator = pirates.reverseIterator.buffered
-    }
-    
     private def performDuskActions() : RetriableMethodResponse.Value = {
-        // TODO: Got a lot of repeated code here
-        while (duskIterator.hasNext) {
-            println("Round running dusk action for " + duskIterator.head.tag)
-            val response = duskIterator.head.duskAction(this)
+         while (duskStack.size > 0) {
+            val activePirate = duskStack.head
+            println("Round running dusk action for " + activePirate.tag)
+            val response = activePirate.duskAction(this)
+
             if (response != RetriableMethodResponse.Complete) {
-                return response // We're pending something
-            } else {
-                duskIterator.next // Advance to next pirate
+                return response // We're pending something; return
+            } else if (activePirate.state == PirateState.Board) {
+                // If the active pirate is still alive, move them to the survivorStack
+                survivorStack += activePirate
+                duskStack -= activePirate
             }
         }
+        
+        println("Dusk over; all surviving pirates move to their dens")
+        survivorStack.foreach( p => p.state = PirateState.Den)
         return RetriableMethodResponse.Complete
     }
     
     private def prepareForNightActions() = {
-        pirates.foreach ( p => p.state = PirateState.Den)
-
-        // NOTE: Mutineer must resolve last due to its capacity to discard other pirates
-        val pirateSets = PlayerManager.players.map( player =>
-            player.pirates.filter( pirate =>
-                pirate.state == PirateState.Den && pirate.rank != 13
-            )
+        // pirates are resolved in descending order during night
+        nightSequences = PlayerManager.players.map( player => 
+            player.pirates.filter( p => p.state == PirateState.Den ).sorted(Ordering[Pirate].reverse).to[ArrayBuffer]
         )
-        nightIterators = pirateSets.map( set => set.iterator.buffered )
     }
     
     private def performNightActions() : RetriableMethodResponse.Value = {
-        nightIterators.foreach ( nightIterator =>
-            while (nightIterator.hasNext) {
-                val response = nightIterator.head.nightAction
+        nightSequences.foreach ( nightSequence =>
+            while (nightSequence.size > 0) {
+                val response = nightSequence.head.nightAction
                 if (response != RetriableMethodResponse.Complete) {
                     return response // We're pending something
                 } else {
-                    nightIterator.next // Advance to next pirate
+                    nightSequence -= nightSequence.head
                 }
             } 
         )
-        
-        // Actually resolve the mutineer now
-        val mutineers = PlayerManager.players.map( player => player.getPirate(13) )
-                                             .filter( pirate => pirate.state == PirateState.Den )
-        mutineers.foreach( mutineer => mutineer.nightAction )
-
         return RetriableMethodResponse.Complete
     }
     

@@ -3,7 +3,7 @@ class Brute(player: Player) extends Pirate(player) {
     val name = "Brute"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        val pirateToKill = round.pirates.last
+        val pirateToKill = round.dayStack.last
         round.killPirate(pirateToKill)
         println(tag + ": killed " + pirateToKill.tag)
         return RetriableMethodResponse.Complete

@@ -20,35 +20,57 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
     }
     def endOfVoyageAction = { }
     
+    var hasChosenSaber : Boolean = false
     def claimBooty(round : Round) : RetriableMethodResponse.Value = {
-        if (round.booty.size == 0) {
-            println("Player " + player.playerId + " had no booty to claim")
-            return RetriableMethodResponse.Complete
-        }
-        val validAnswers = round.booty.map(b => b.id.toString)
-        val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
-        if (!request.answered) {
-            return RetriableMethodResponse.PendingInput
-        } else {
-            val b = InputManager.getBootyFromInput(request)
-            InputManager.removeInputRequest(request.playerId)
-            
-            if (b == Booty.Saber) {
+        // TODO: There's a few of these multi-state, bifurcated functions running
+        // around that could be converted into something more like a workflow with
+        // a state machine. Main function would handle transitions, it'd be easy
+        if (!hasChosenSaber) {
+            if (round.booty.size == 0) {
+                println("Player " + player.playerId + " had no booty to claim")
+                return RetriableMethodResponse.Complete
+            }
+            val validAnswers = round.booty.map(b => b.id.toString)
+            val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
+            if (!request.answered) {
+                return RetriableMethodResponse.PendingInput
+            } else {
+                val b = InputManager.getBootyFromInput(request)
+                InputManager.removeInputRequest(request.playerId)
                 
+                if (b == Booty.Saber) {
+                    hasChosenSaber = true
+                }
+    
+                if (b == Booty.SpanishOfficer) {
+                    round.killPirate(this)
+                }
+                
+                player.booty += b
+                round.booty -= b
+                println("Player " + player.playerId + " claims " + b)
             }
-            // TODO: saber effect
-            // need to stack state within method
-            // 
-
-            if (b == Booty.SpanishOfficer) {
-                round.killPirate(this)
-            }
-            
-            player.booty += b
-            round.booty -= b
-            println("Player " + player.playerId + " claims " + b)
-            return RetriableMethodResponse.Complete
         }
+        
+        if (hasChosenSaber) {
+            if (InputManager.getAdjacentDenPirates(player).size > 0) {
+                val request = InputManager.postAndGetInputRequest(
+                    player.playerId,
+                    InputRequestType.KillPirateInAdjacentDen,
+                    InputManager.getAdjacentDenPirates(player))
+                if (!request.answered) {
+                    return RetriableMethodResponse.PendingInput
+                } else {
+                    val target = InputManager.getTargetPirateFromInput(request)
+                    target.state = PirateState.Discard
+                    println(tag + ": sabered " + target.tag)
+                    hasChosenSaber = false
+                    InputManager.removeInputRequest(request.playerId)
+                }
+            }
+        }
+
+        return RetriableMethodResponse.Complete
     }
     
     def publicState : PublicPirateState.Value = {

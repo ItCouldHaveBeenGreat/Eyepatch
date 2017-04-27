@@ -4,11 +4,6 @@ class Cook(player: Player) extends Pirate(player) {
 
     private var hasClaimedFirstBooty : Boolean = false
 
-    override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        // Reset the booty claimed counter in preparation for the dusk action
-        hasClaimedFirstBooty = false
-        return RetriableMethodResponse.Complete
-    }
     override def duskAction(round : Round): RetriableMethodResponse.Value = {
         // claim the first booty
         if (!hasClaimedFirstBooty) {
@@ -19,8 +14,15 @@ class Cook(player: Player) extends Pirate(player) {
                 return response
             }
         }
+
         // claim the second booty
-        return claimBooty(round)
+        val response = claimBooty(round)
+        if (response != RetriableMethodResponse.Complete) {
+            return response;
+        } else {
+            hasClaimedFirstBooty = false
+            return RetriableMethodResponse.Complete
+        }
     }
 
     def getSubRank(player : Player) : Int = {

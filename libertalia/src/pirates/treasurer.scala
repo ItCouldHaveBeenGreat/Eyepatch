@@ -11,6 +11,6 @@ class Treasurer(player: Player) extends Pirate(player) {
     }
     
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(3, 2, 5, 4, 6, 1)(player.playerId);
     }
 }

@@ -12,6 +12,6 @@ class FrenchOfficer(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(4, 3, 6, 5, 1, 2)(player.playerId);
     }
 }

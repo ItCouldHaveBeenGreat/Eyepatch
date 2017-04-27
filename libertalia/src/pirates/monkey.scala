@@ -19,6 +19,6 @@ class Monkey(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(3, 2, 5, 4, 2, 1)(player.playerId);
     }
 }

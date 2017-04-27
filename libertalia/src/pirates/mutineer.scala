@@ -17,6 +17,6 @@ class Mutineer(player: Player) extends Pirate(player) {
     }
     
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(6, 5, 2, 1, 3, 4)(player.playerId);
     }
 }

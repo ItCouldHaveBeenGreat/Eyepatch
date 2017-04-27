@@ -14,6 +14,6 @@ class Quartermaster(player: Player) extends Pirate(player) {
     }
     
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(5, 4, 1, 6, 2, 3)(player.playerId);
     }
 }

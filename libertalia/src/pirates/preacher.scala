@@ -26,6 +26,6 @@ class Preacher(player: Player) extends Pirate(player) {
     }
     
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(1, 6, 3, 2, 4, 5)(player.playerId);
     }
 }

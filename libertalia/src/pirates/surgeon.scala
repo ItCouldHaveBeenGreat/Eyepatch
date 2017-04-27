@@ -40,6 +40,6 @@ class Surgeon(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return 1; // TODO: Implement
+        return Array(2, 1, 4, 3, 5, 6)(player.playerId);
     }
 }

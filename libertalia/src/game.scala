@@ -44,7 +44,7 @@ class Game(numPlayers : Int) {
     def endGame = {
         println("Final Scores: ")
         for (p <- PlayerManager.players) {
-            println("Player" + p.playerId + ": " + p.points + " points")
+            println("Player " + p.playerId + ": " + p.points + " points")
         }
     }
     

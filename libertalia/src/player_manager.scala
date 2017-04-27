@@ -1,8 +1,12 @@
 object PlayerManager {
     // TODO: null is evil
+    val MAX_PLAYERS = 6
     var players : List[Player] = null
     
     def build(numPlayers: Int) = {
+        if (numPlayers > MAX_PLAYERS) {
+            throw new IllegalStateException("Maximum players is " + MAX_PLAYERS + ", received " + numPlayers)
+        }
         players = List.fill(numPlayers)(new Player())
     }
     

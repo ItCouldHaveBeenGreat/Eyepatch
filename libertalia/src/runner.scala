@@ -13,6 +13,7 @@ object Runner {
         val request = InputManager.getInputRequest(i)
         // TODO: nulls are evil
         if (request != null && !request.answered) {
+          println(game.getGameState)
           InputManager.answerInputRequest(i, players(i).makeDecision(request, game.getGameState))
         }
       }

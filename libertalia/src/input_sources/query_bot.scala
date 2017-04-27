@@ -5,7 +5,7 @@ class QueryBot(val url : String) extends InputSource {
     val START_GAME_SESSION = "start_game_session"
     
     
-    def makeDecision(request: InputRequest, state: GameState) : String = {
+    def makeDecision(request: InputRequest, state: Seq[Int]) : String = {
         val response = get(url + "/" + START_GAME_SESSION + "/")
         println("URL: " + url + "/" + START_GAME_SESSION)
         println("QueryBot: " + response)

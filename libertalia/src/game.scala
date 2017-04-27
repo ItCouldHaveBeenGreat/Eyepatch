@@ -1,4 +1,5 @@
 import scala.util.Random
+import scala.collection.mutable.ArrayBuffer
 
 class Game(numPlayers : Int) {
     PlayerManager.build(numPlayers)
@@ -48,49 +49,23 @@ class Game(numPlayers : Int) {
         }
     }
     
-    def getGameState : GameState = {
-        return new GameState()
+    def getGameState : Seq[Int] = {
+        val gameState = ArrayBuffer[Int]()
+        gameState += PlayerManager.players.size
+        gameState += voyagesTaken
+        gameState += currentVoyage.roundsTaken
+        gameState ++= currentVoyage.bootySets.map( bootySet => bootySet.map( b => b.id ).padTo(PlayerManager.MAX_PLAYERS, -1)).flatten
+        for (player <- PlayerManager.players) {
+            gameState += player.doubloons
+            gameState += player.points
+            gameState ++= player.pirates.map( p => p.publicState.id )
+            // The maximum number of items you can have is the total number of Cursed Masks (10) + Cook (2) + Recruiter (1) 
+            // + Cook (2) + Surgeon (1) + Cook (2) + 1, or 19
+            gameState ++= player.booty.map( b => b.id ).padTo(19, -1)
+        }
+        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS) {
+            gameState ++= ArrayBuffer.fill(51)(-1)
+        }
+        return gameState
     }
 }
-
-// what needs to access the game?
-
-// pirates need to access all players and pirates
-// the saber needs to access all players and pirates
-// pirates need to acess the round
-
-// game state is composed of:
-// the number of players
-// the current voyage
-//      the booty
-// the current round
-//      the booty
-//      currently played pirates
-// the players
-//      pirates
-//          den
-//          hand
-//          graveyard
-//      booty
-//      doubloons
-//      points
-
-// player: methods of access:
-// GAME
-//  -getState()
-//  -makeProgress()
-// INPUT MANAGER
-//  -getInputRequest(playerId)
-//  -answerInputRequest(inputRequestId, answer)
-
-
-// pirate: methods of access
-// ROUND
-//  -getCurrentRound()
-//      -getPirates
-
-// pirates modify the state of other pirates
-
-// PLAYERS
-//  -getPlayers()
-//  -getAdjacentPlayers()

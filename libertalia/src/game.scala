@@ -63,7 +63,7 @@ class Game(numPlayers : Int) {
             // + Cook (2) + Surgeon (1) + Cook (2) + 1, or 19
             gameState ++= player.booty.map( b => b.id ).padTo(19, -1)
         }
-        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS) {
+        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS - 1) {
             gameState ++= ArrayBuffer.fill(51)(-1)
         }
         return gameState

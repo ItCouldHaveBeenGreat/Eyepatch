@@ -2,8 +2,9 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 import org.apache.http.client.methods.HttpPost
-import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.entity.StringEntity
 
 class AnnotatingRandomBot() extends InputSource {
     val OPENSHIFT = "http://rutsubo-thewindwhispers.rhcloud.com"
@@ -23,7 +24,7 @@ class AnnotatingRandomBot() extends InputSource {
         trainingData.foreach ( td => td.setAnnotation(annotations) )
         
         val post = new HttpPost(OPENSHIFT + "/" + UPLOAD_TRAINING_DATA)
-        post.setHeader("Content-type", "application/json")
+        post.setHeader("Content-type", "application/x-www-form-urlencoded")
         post.setEntity(new StringEntity(buildJson))
         val response = (new DefaultHttpClient).execute(post)
         
@@ -31,6 +32,6 @@ class AnnotatingRandomBot() extends InputSource {
     }
     
     def buildJson : String = {
-        return "[" + trainingData.map( td => td.buildJson ).mkString(",") + "]"
+        return "data=[" + trainingData.map( td => td.buildJson ).mkString(",") + "]"
     }
 }

@@ -1,8 +1,6 @@
 import scala.collection.mutable.ArrayBuffer
 
-class Player() {
-    val playerId : Int = PlayerIdGenerator.getId()
-
+class Player(val playerId : Int) {
     var points : Int = 0;
     var doubloons : Int = 0;
     val booty : ArrayBuffer[Booty.Value] = ArrayBuffer()
@@ -83,13 +81,4 @@ class Player() {
         booty.clear
         println("Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
-}
-
-object PlayerIdGenerator {
-    // TODO: This is so bad
-    var lastId : Int = -1
-    def getId() : Int = {
-        lastId += 1
-        return lastId
-    } 
 }

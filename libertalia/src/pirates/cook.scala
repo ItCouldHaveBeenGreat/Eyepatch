@@ -8,6 +8,7 @@ class Cook(player: Player) extends Pirate(player) {
         // claim the first booty
         if (!hasClaimedFirstBooty) {
             val response = claimBooty(round)
+            println(tag + "(1): " + response)
             if (response == RetriableMethodResponse.Complete) {
                 hasClaimedFirstBooty = true
             } else {
@@ -17,6 +18,7 @@ class Cook(player: Player) extends Pirate(player) {
 
         // claim the second booty
         val response = claimBooty(round)
+        println(tag + "(2): " + response)
         if (response != RetriableMethodResponse.Complete) {
             return response;
         } else {

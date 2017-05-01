@@ -14,7 +14,7 @@ class GrannyWata(player: Player) extends Pirate(player) {
         return RetriableMethodResponse.Complete
     }
     
-    private def getAllGrannyWatasInDen() : List[Pirate] = {
+    private def getAllGrannyWatasInDen() : Seq[Pirate] = {
         return PlayerManager.players.map( p => p.getPirate(rank))
                                     .filter( p => p.state == PirateState.Den)
     }

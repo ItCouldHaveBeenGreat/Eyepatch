@@ -1,25 +1,30 @@
+import scala.collection.mutable.ArrayBuffer
+
 object PlayerManager {
     // TODO: null is evil
     val MAX_PLAYERS = 6
-    var players : List[Player] = null
+    var players = ArrayBuffer[Player]()
     
     def build(numPlayers: Int) = {
         if (numPlayers > MAX_PLAYERS) {
             throw new IllegalStateException("Maximum players is " + MAX_PLAYERS + ", received " + numPlayers)
         }
-        players = List.fill(numPlayers)(new Player())
+        players.clear()
+        for (i <- 0 until numPlayers) {
+            players += new Player(i)
+        }
     }
     
     def getPlayer(playerId: Int) : Player = {
-        return players(playerId)
+        players(playerId)
     }
     
     def getLeftPlayer(playerId : Int) : Player = {
-        return players((playerId + players.size - 1) % players.size)
+        players((playerId + players.size - 1) % players.size)
     }
     
     def getAdjacentPlayers(playerId : Int) : List[Player] = {
-        return List(players((playerId + 1) % players.size),
+        List(players((playerId + 1) % players.size),
                     players((playerId + players.size - 1) % players.size))
     }
 }

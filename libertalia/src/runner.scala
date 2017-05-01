@@ -21,7 +21,7 @@ object Runner {
   }
   
   def main(args: Array[String]) {
-    for (i <- 1 to 1) {
+    for (i <- 1 to 20000) {
       runGame
     }
   }

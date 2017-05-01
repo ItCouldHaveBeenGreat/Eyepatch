@@ -7,7 +7,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     var dayStack = ArrayBuffer[Pirate]()
     private var duskStack = ArrayBuffer[Pirate]()
     private var survivorStack = ArrayBuffer[Pirate]()
-    private var nightSequences = List[ArrayBuffer[Pirate]]()
+    private var nightSequences = Seq[ArrayBuffer[Pirate]]()
     
     
     def makeProgress() : RetriableMethodResponse.Value = {
@@ -73,7 +73,9 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
         } else {
             for (request <- requests) {
                 val pirateRank = InputManager.getPirateIdFromInput(request)
+                println("debug: " + request.playerId.toString + ", " + pirateRank.toString)
                 val pirateToAdd = PlayerManager.players(request.playerId).getPirate(pirateRank)
+
                 addPirate(pirateToAdd)
                 computevisibility(PlayerManager.players(request.playerId))
                 println("Player " + request.playerId + " played " + pirateToAdd.name)
@@ -103,7 +105,8 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     def killPirate(pirate : Pirate) = {
         pirate.state = PirateState.Discard
         dayStack -= pirate
-        duskStack -= pirate
+        // NOTE: Pirates cannot be killed /during/ the dusk phaase (cook + spanish spy interaction)
+        //duskStack -= pirate
     }
     
     private def performDayActions() : RetriableMethodResponse.Value = {

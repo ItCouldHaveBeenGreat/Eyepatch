@@ -4,7 +4,7 @@ class GovernorsDaughter(player: Player) extends Pirate(player) {
 
     override def endOfVoyageAction = {
         if (otherGovernorsDaughter) {
-            player.doubloons = Math.max(0, player.doubloons - 3)
+            player.doubloons -= 3
             println(tag + ": -3 Doubloons")
         } else {
             player.doubloons += 6

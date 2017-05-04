@@ -51,6 +51,7 @@ class Player(val playerId : Int) {
         doEndOfVoyageActions()
         cleanPirates()
         sellBooty()
+        doubloons = Math.max(0, doubloons)
         points += doubloons
         println("Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
     }
@@ -77,7 +78,7 @@ class Player(val playerId : Int) {
                    booty.count( b => b == Booty.CursedMask ) * -3 +
                    booty.count( b => b == Booty.TreasureMap ) / 3 * 12
         
-        doubloons = Math.max(0, doubloons + gain)
+        doubloons += gain
         booty.clear
         println("Player " + playerId + " sold their booty for " + gain + " doubloons")
     }

@@ -33,3 +33,10 @@
 *.exe
 *.out
 *.app
+
+# Junk
+.metadata/*
+.classpath
+.project
+.settings/
+.idea/

@@ -73,7 +73,6 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
         } else {
             for (request <- requests) {
                 val pirateRank = InputManager.getPirateIdFromInput(request)
-                println("debug: " + request.playerId.toString + ", " + pirateRank.toString)
                 val pirateToAdd = PlayerManager.players(request.playerId).getPirate(pirateRank)
 
                 addPirate(pirateToAdd)
@@ -132,12 +131,13 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
             val activePirate = duskStack.head
             println("Round running dusk action for " + activePirate.tag)
             val response = activePirate.duskAction(this)
-
             if (response != RetriableMethodResponse.Complete) {
                 return response // We're pending something; return
-            } else if (activePirate.state == PirateState.Board) {
-                // If the active pirate is still alive, move them to the survivorStack
-                survivorStack += activePirate
+            } else {
+                if (activePirate.state == PirateState.Board) {
+                    // If the active pirate is still alive, move them to the survivorStack
+                    survivorStack += activePirate
+                }
                 duskStack -= activePirate
             }
         }

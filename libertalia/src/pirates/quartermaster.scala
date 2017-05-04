@@ -9,7 +9,7 @@ class Quartermaster(player: Player) extends Pirate(player) {
     }
 
     override def endOfVoyageAction = {
-        player.doubloons = Math.max(0, player.doubloons - 8)
+        player.doubloons -= 8
         println(tag + ": -8 Doubloons")
     }
     

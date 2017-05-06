@@ -10,7 +10,7 @@ class Merchant(player: Player) extends Pirate(player) {
         if (bootyTypeToSell == None) {
             val sellableBooty = Booty.values.filter( bootyType => player.booty.count( playerBooty => playerBooty == bootyType ) >= 2 )
             if (sellableBooty.size == 0) {
-                println(tag + ": Has nothing to sell")
+                OutputManager.print(Channel.Pirate, tag + ": Has nothing to sell")
                 return RetriableMethodResponse.Complete
             }
             else if (sellableBooty.size == 1) {
@@ -40,11 +40,11 @@ class Merchant(player: Player) extends Pirate(player) {
                     if (InputManager.getBooleanResponseFromInput(request)) {
                         removeItems(bootyTypeToSell.get, 3)
                         player.doubloons += 5
-                        println(tag + ": Sold 3 " + bootyTypeToSell.get + " for 5 doubloons")
+                        OutputManager.print(Channel.Pirate, tag + ": Sold 3 " + bootyTypeToSell.get + " for 5 doubloons")
                     } else {
                         removeItems(bootyTypeToSell.get, 2)
                         player.doubloons += 3
-                        println(tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
+                        OutputManager.print(Channel.Pirate, tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
                     }
                     InputManager.removeInputRequest(request.playerId)
                 }
@@ -52,7 +52,7 @@ class Merchant(player: Player) extends Pirate(player) {
                 // sell two booty
                 removeItems(bootyTypeToSell.get, 2)
                 player.doubloons += 3
-                println(tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
+                OutputManager.print(Channel.Pirate, tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
             }
         }
         bootyTypeToSell = None

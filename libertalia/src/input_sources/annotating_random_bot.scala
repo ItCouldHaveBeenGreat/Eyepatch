@@ -28,23 +28,27 @@ class AnnotatingRandomBot() extends InputSource {
     }
 
     def uploadDecisions(annotations : Map[String, String]) = {
-        trainingData.foreach ( td => td.setAnnotation(annotations) )
-        
-        val create_network = new HttpPost(OPENSHIFT + "/" + CREATE_NETWORK)
-        create_network.setHeader("Content-type", "application/x-www-form-urlencoded")
-        create_network.setEntity(new StringEntity("network_id=" + network_id))
-        val create_network_response = (new DefaultHttpClient).execute(create_network)
-        println("AnnotatingRandomBot: " + create_network_response)
+        try {
+            trainingData.foreach(td => td.setAnnotation(annotations))
 
-        val train_network = new HttpPost(OPENSHIFT + "/" + UPLOAD_TRAINING_DATA)
-        train_network.setHeader("Content-type", "application/x-www-form-urlencoded")
-        val nameValuePairs = new util.ArrayList[NameValuePair](1)
-        nameValuePairs.add(new BasicNameValuePair("network_id", network_id));
-        nameValuePairs.add(new BasicNameValuePair("data", buildJson));
-        train_network.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        val train_network_response = (new DefaultHttpClient).execute(train_network)
+            val create_network = new HttpPost(OPENSHIFT + "/" + CREATE_NETWORK)
+            create_network.setHeader("Content-type", "application/x-www-form-urlencoded")
+            create_network.setEntity(new StringEntity("network_id=" + network_id))
+            val create_network_response = (new DefaultHttpClient).execute(create_network)
+            OutputManager.print(Channel.Debug, "AnnotatingRandomBot: " + create_network_response)
 
-        println("AnnotatingRandomBot: " + train_network_response)
+            val train_network = new HttpPost(OPENSHIFT + "/" + UPLOAD_TRAINING_DATA)
+            train_network.setHeader("Content-type", "application/x-www-form-urlencoded")
+            val nameValuePairs = new util.ArrayList[NameValuePair](1)
+            nameValuePairs.add(new BasicNameValuePair("network_id", network_id));
+            nameValuePairs.add(new BasicNameValuePair("data", buildJson));
+            train_network.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            val train_network_response = (new DefaultHttpClient).execute(train_network)
+
+            OutputManager.print(Channel.Debug, "AnnotatingRandomBot: " + train_network_response)
+        } catch {
+            case e: Exception => println(e)
+        }
     }
     
     def buildJson : String = {

@@ -53,11 +53,11 @@ class Player(val playerId : Int) {
         sellBooty()
         doubloons = Math.max(0, doubloons)
         points += doubloons
-        println("Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
+        OutputManager.print(Channel.Game, "Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
     }
     
     private def doEndOfVoyageActions() = {
-        println("Player " + playerId + " running end of voyage actions")
+        OutputManager.print(Channel.Debug, "Player " + playerId + " running end of voyage actions")
         pirates.filter( p => p.state == PirateState.Den).foreach( p =>
             p.endOfVoyageAction
         )
@@ -71,7 +71,7 @@ class Player(val playerId : Int) {
     
     private def sellBooty() = {
         // TODO: Is this ineffiecent? Yes.
-        println("Player " + playerId + " booty: " + booty)
+        OutputManager.print(Channel.Debug, "Player " + playerId + " booty: " + booty)
         val gain = booty.count( b => b == Booty.Goods ) * 1 +
                    booty.count( b => b == Booty.Jewels ) * 3 +
                    booty.count( b => b == Booty.Chest ) * 5 +
@@ -80,6 +80,6 @@ class Player(val playerId : Int) {
         
         doubloons += gain
         booty.clear
-        println("Player " + playerId + " sold their booty for " + gain + " doubloons")
+        OutputManager.print(Channel.Debug, "Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
 }

@@ -4,10 +4,10 @@ class FrenchOfficer(player: Player) extends Pirate(player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (player.doubloons <= 9) {
-            println(tag + ": +5 Doubloons")
+            OutputManager.print(Channel.Pirate, tag + ": +5 Doubloons")
             player.doubloons += 5
         } else {
-            println(tag + ": did nothing")
+            OutputManager.print(Channel.Pirate, tag + ": did nothing")
         }
         return RetriableMethodResponse.Complete
     }

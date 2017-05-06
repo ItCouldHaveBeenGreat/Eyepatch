@@ -25,7 +25,7 @@ object InputManager {
         if (request.validAnswers.contains(inputResponse)) {
             request.answer = inputResponse
             request.answered = true
-            println("Player " + playerId + " answered " + request.answer + " out of set " + request.validAnswers)
+            OutputManager.print(Channel.Debug, "Player " + playerId + " answered " + request.answer + " out of set " + request.validAnswers)
         } else {
             throw new Exception("Invalid answer for request " + playerId)
         }
@@ -38,7 +38,7 @@ object InputManager {
             throw new Exception("No valid answers supplied")
         }
         if (!inputRequests.contains(playerId)) {
-            println("Created request for player " + playerId + " for " + requestType)
+            OutputManager.print(Channel.Debug, "Created request for player " + playerId + " for " + requestType)
             inputRequests += ((playerId, new InputRequest(playerId, requestType, validAnswers)))
         }
         return inputRequests(playerId)

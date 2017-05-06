@@ -13,10 +13,10 @@ class Game(numPlayers : Int) {
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentVoyage.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
-            println("Voyage " + voyagesTaken + " complete")
+            OutputManager.print(Channel.Game, "Voyage " + voyagesTaken + " complete")
             voyagesTaken += 1
             if (voyagesTaken >= totalVoyages) {
-                println("Game complete")
+                OutputManager.print(Channel.Game, "Game complete")
                 endGame
                 return RetriableMethodResponse.Complete
             } else {
@@ -38,14 +38,14 @@ class Game(numPlayers : Int) {
                // NOTE: Rank is 1 indexed
                p.dealPirate(pirateToDraw)
            }
-           println("Game dealt pirate " + pirateToDraw)
+            OutputManager.print(Channel.Game, "Game dealt pirate " + pirateToDraw)
         }
     }
     
     def endGame = {
-        println("Final Scores: ")
+        OutputManager.print(Channel.Game, "Final Scores: ")
         for (p <- PlayerManager.players) {
-            println("Player " + p.playerId + ": " + p.points + " points")
+            OutputManager.print(Channel.Game, "Player " + p.playerId + ": " + p.points + " points")
         }
     }
     

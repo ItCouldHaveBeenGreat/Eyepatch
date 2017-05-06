@@ -8,7 +8,7 @@ class SpanishGovernor(player: Player) extends Pirate(player) {
                 p.state = PirateState.Discard
             }
         }
-        println(tag + ": Discarded all characters in den")
+        OutputManager.print(Channel.Pirate, tag + ": Discarded all characters in den")
         return RetriableMethodResponse.Complete
     }
     

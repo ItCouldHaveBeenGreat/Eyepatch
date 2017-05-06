@@ -4,7 +4,7 @@ class Surgeon(player: Player) extends Pirate(player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (InputManager.getPlayerDiscardFromPlayer(player).size == 0) {
-            println(tag + ": No one to revive")
+            OutputManager.print(Channel.Pirate, tag + ": No one to revive")
             return RetriableMethodResponse.Complete
         }
         

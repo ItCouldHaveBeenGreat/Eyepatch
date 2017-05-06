@@ -5,7 +5,7 @@ class Armorer(player: Player) extends Pirate(player) {
     override def nightAction: RetriableMethodResponse.Value = {
         val numSabers = player.booty.count(b => b == Booty.Saber)
         player.doubloons += numSabers
-        println(tag + ": +" + numSabers + " Doubloons")
+        OutputManager.print(Channel.Pirate, tag + ": +" + numSabers + " Doubloons")
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {

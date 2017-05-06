@@ -11,9 +11,9 @@ class Monkey(player: Player) extends Pirate(player) {
                 // TODO: There must be a better way to batch remove
                 player.booty -= Booty.CursedMask
             }
-            println(tag + ": transferred all Cursed Masks to player " + leftPlayer.playerId)
+            OutputManager.print(Channel.Pirate, tag + ": transferred all Cursed Masks to player " + leftPlayer.playerId)
         } else {
-            println(tag + ": No Cursed Masks to transfer")
+            OutputManager.print(Channel.Pirate, tag + ": No Cursed Masks to transfer")
         }
         
         return RetriableMethodResponse.Complete

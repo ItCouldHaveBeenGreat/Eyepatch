@@ -1,5 +1,3 @@
-import scala.collection.mutable.HashMap
-
 object Runner {
   
   def runGame = {
@@ -21,8 +19,15 @@ object Runner {
   }
   
   def main(args: Array[String]) {
-    for (i <- 1 to 20000) {
+    OutputManager.enableChannel(Channel.Bot)
+    //OutputManager.enableChannel(Channel.Debug)
+    //OutputManager.enableChannel(Channel.Game)
+    //OutputManager.enableChannel(Channel.Pirate)
+    OutputManager.enableChannel(Channel.Runner)
+
+    for (i <- 1 to 50000) {
       runGame
+      OutputManager.print(Channel.Runner, i.toString)
     }
   }
 }

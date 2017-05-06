@@ -9,9 +9,9 @@ class Topman(player: Player) extends Pirate(player) {
                                             .filter( count => count < player.pirates.size)
         if (smallerDenCounts.size == 0) {
             player.doubloons += 5
-            println(tag + ": +5 Doubloons")
+            OutputManager.print(Channel.Pirate, tag + ": +5 Doubloons")
         } else {
-            println(tag + ": No bonus")
+            OutputManager.print(Channel.Pirate, tag + ": No bonus")
         }
     }
     

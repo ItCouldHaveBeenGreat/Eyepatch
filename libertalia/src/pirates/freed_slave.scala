@@ -5,7 +5,7 @@ class FreedSlave(player: Player) extends Pirate(player) {
     override def nightAction: RetriableMethodResponse.Value = {
         val numHighRank = player.pirates.count( p => p.state == PirateState.Den && p.rank > rank)
         player.doubloons += numHighRank
-        println(tag + ": +" + numHighRank + " Doubloons")
+        OutputManager.print(Channel.Pirate, tag + ": +" + numHighRank + " Doubloons")
         return RetriableMethodResponse.Complete
     }
     

@@ -14,7 +14,7 @@ class Preacher(player: Player) extends Pirate(player) {
                 val b = InputManager.getBootyFromInput(request)
                 InputManager.removeInputRequest(request.playerId)
                 player.booty -= b
-                println("Player " + player.playerId + " discarded " + b)
+                OutputManager.print(Channel.Pirate, "Player " + player.playerId + " discarded " + b)
             }
         }
         return RetriableMethodResponse.Complete
@@ -22,7 +22,7 @@ class Preacher(player: Player) extends Pirate(player) {
 
     override def endOfVoyageAction = {
         player.doubloons += 5
-        println(tag + ": +5 Doubloons")
+        OutputManager.print(Channel.Pirate, tag + ": +5 Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

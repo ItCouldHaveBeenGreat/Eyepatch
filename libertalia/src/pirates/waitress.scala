@@ -15,7 +15,7 @@ class Waitress(player: Player) extends Pirate(player) {
             if (InputManager.getBooleanResponseFromInput(request)) {
                 player.booty -= Booty.TreasureMap
                 player.doubloons += 3
-                println(tag + ": Sold Map for +3 Doubloons")
+                OutputManager.print(Channel.Pirate, tag + ": Sold Map for +3 Doubloons")
             }
             InputManager.removeInputRequest(request.playerId)
         }

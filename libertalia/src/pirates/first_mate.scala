@@ -5,7 +5,7 @@ class FirstMate(player: Player) extends Pirate(player) {
     override def endOfVoyageAction = {
         val numDen = player.pirates.count( p => p.state == PirateState.Den)
         player.doubloons += numDen
-        println(tag + ": +" + numDen + " Doubloons")
+        OutputManager.print(Channel.Pirate, tag + ": +" + numDen + " Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

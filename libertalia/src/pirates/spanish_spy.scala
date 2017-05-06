@@ -8,7 +8,7 @@ class SpanishSpy(player: Player) extends Pirate(player) {
             player.booty -= Booty.SpanishOfficer
             val bootyDrawn = BootyBag.draw
             player.booty += bootyDrawn
-            println(tag + ": Drew a " + bootyDrawn)
+            OutputManager.print(Channel.Pirate, tag + ": Drew a " + bootyDrawn)
         }
         
         return RetriableMethodResponse.Complete

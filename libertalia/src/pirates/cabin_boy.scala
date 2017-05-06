@@ -3,7 +3,7 @@ class CabinBoy(player: Player) extends Pirate(player) {
     val name = "Cabin Boy"
 
     override def duskAction(round : Round): RetriableMethodResponse.Value = {
-        println(tag + ": Doesn't claim booty")
+        OutputManager.print(Channel.Pirate, tag + ": Doesn't claim booty")
         return RetriableMethodResponse.Complete
     }
 

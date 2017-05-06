@@ -68,7 +68,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
         }
 
         if (pendingInput) {
-            println("Waiting for players to select pirates")
+            OutputManager.print(Channel.Debug, "Waiting for players to select pirates")
             return RetriableMethodResponse.PendingInput
         } else {
             for (request <- requests) {
@@ -77,7 +77,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
 
                 addPirate(pirateToAdd)
                 computevisibility(PlayerManager.players(request.playerId))
-                println("Player " + request.playerId + " played " + pirateToAdd.name)
+                OutputManager.print(Channel.Game, "Player " + request.playerId + " played " + pirateToAdd.name)
                 InputManager.removeInputRequest(request.playerId)
             }
         }
@@ -111,7 +111,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     private def performDayActions() : RetriableMethodResponse.Value = {
         while (dayStack.size > 0) {
             val activePirate = dayStack.head
-            println("Round running day action for " + activePirate.tag)
+            OutputManager.print(Channel.Pirate, "Round running day action for " + activePirate.tag)
             val response = activePirate.dayAction(this)
 
             if (response != RetriableMethodResponse.Complete) {
@@ -129,7 +129,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     private def performDuskActions() : RetriableMethodResponse.Value = {
          while (duskStack.size > 0) {
             val activePirate = duskStack.head
-            println("Round running dusk action for " + activePirate.tag)
+             OutputManager.print(Channel.Pirate, "Round running dusk action for " + activePirate.tag)
             val response = activePirate.duskAction(this)
             if (response != RetriableMethodResponse.Complete) {
                 return response // We're pending something; return
@@ -141,8 +141,8 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
                 duskStack -= activePirate
             }
         }
-        
-        println("Dusk over; all surviving pirates move to their dens")
+
+        OutputManager.print(Channel.Debug, "Dusk over; all surviving pirates move to their dens")
         survivorStack.foreach( p => p.state = PirateState.Den)
         return RetriableMethodResponse.Complete
     }

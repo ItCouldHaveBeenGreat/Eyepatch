@@ -13,7 +13,7 @@ class Voyage(val numPlayers : Int) {
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentRound.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
-            println("Round " + roundsTaken + " complete")
+            OutputManager.print(Channel.Game, "Round " + roundsTaken + " complete")
             roundsTaken += 1
             if (roundsTaken >= totalRounds) {
                 endVoyage()

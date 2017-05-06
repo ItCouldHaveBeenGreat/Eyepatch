@@ -7,7 +7,7 @@ class Treasurer(player: Player) extends Pirate(player) {
                                                      b == Booty.Jewels ||
                                                      b == Booty.Chest)
         player.doubloons += numCommodities
-        println(tag + ": +" + numCommodities + " Doubloons")
+        OutputManager.print(Channel.Pirate, tag + ": +" + numCommodities + " Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

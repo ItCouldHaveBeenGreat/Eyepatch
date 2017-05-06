@@ -5,10 +5,10 @@ class GovernorsDaughter(player: Player) extends Pirate(player) {
     override def endOfVoyageAction = {
         if (otherGovernorsDaughter) {
             player.doubloons -= 3
-            println(tag + ": -3 Doubloons")
+            OutputManager.print(Channel.Pirate, tag + ": -3 Doubloons")
         } else {
             player.doubloons += 6
-            println(tag + ": +6 Doubloons")
+            OutputManager.print(Channel.Pirate, tag + ": +6 Doubloons")
         }
     }
     

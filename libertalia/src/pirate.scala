@@ -27,7 +27,7 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
         // a state machine. Main function would handle transitions, it'd be easy
         if (!hasChosenSaber) {
             if (round.booty.size == 0) {
-                println("Player " + player.playerId + " had no booty to claim")
+                OutputManager.print(Channel.Pirate, "Player " + player.playerId + " had no booty to claim")
                 return RetriableMethodResponse.Complete
             }
             val validAnswers = round.booty.map(b => b.id.toString)
@@ -48,7 +48,7 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
                 
                 player.booty += b
                 round.booty -= b
-                println("Player " + player.playerId + " claims " + b)
+                OutputManager.print(Channel.Game, "Player " + player.playerId + " claims " + b)
             }
         }
         
@@ -63,7 +63,7 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
                 } else {
                     val target = InputManager.getTargetPirateFromInput(request)
                     target.state = PirateState.Discard
-                    println(tag + ": sabered " + target.tag)
+                    OutputManager.print(Channel.Game, tag + ": sabered " + target.tag)
                     hasChosenSaber = false
                     InputManager.removeInputRequest(request.playerId)
                 }

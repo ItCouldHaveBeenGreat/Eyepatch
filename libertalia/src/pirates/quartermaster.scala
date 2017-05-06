@@ -1,3 +1,5 @@
+package libertalia
+
 class Quartermaster(player: Player) extends Pirate(player) {
     val rank = 26
     val name = "Quartermaster"

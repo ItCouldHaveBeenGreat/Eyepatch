@@ -1,3 +1,5 @@
+package libertalia
+
 class CabinBoy(player: Player) extends Pirate(player) {
     val rank = 5
     val name = "Cabin Boy"

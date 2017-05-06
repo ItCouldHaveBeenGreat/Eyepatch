@@ -1,3 +1,5 @@
+package libertalia
+
 class InputRequest(val playerId : Int,
                    val inputType : InputRequestType.Value,
                    val validAnswers : Seq[String]) {

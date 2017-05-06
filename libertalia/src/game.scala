@@ -1,3 +1,5 @@
+package libertalia
+
 import scala.util.Random
 import scala.collection.mutable.ArrayBuffer
 

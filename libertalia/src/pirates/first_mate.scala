@@ -1,3 +1,5 @@
+package libertalia
+
 class FirstMate(player: Player) extends Pirate(player) {
     val rank = 28
     val name = "First Mate"

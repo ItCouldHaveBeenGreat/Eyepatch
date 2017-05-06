@@ -1,8 +1,11 @@
+import input_sources.{AnnotatingRandomBot, FirstBot}
+import libertalia._
+
 object Runner {
   
   def runGame = {
     val numPlayers = 6
-    val players = List(new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot)
+    val players = List(new AnnotatingRandomBot, new FirstBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot)
     val game = new Game(numPlayers)
 
     while (game.makeProgress() != RetriableMethodResponse.Complete) {
@@ -13,9 +16,8 @@ object Runner {
         }
       }
     }
-    
-    val winner = PlayerManager.players.maxBy( p => p.points )
-    players(winner.playerId).uploadDecisions(Map[String, String]())
+
+    PlayerManager.players.foreach(p => players(p.playerId).endGame(p, PlayerManager.players))
   }
   
   def main(args: Array[String]) {
@@ -25,7 +27,7 @@ object Runner {
     //OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
-    for (i <- 1 to 50000) {
+    for (i <- 1 to 1) {
       runGame
       OutputManager.print(Channel.Runner, i.toString)
     }

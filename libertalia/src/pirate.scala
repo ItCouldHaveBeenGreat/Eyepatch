@@ -1,3 +1,5 @@
+package libertalia
+
 import scala.math.Ordered.orderingToOrdered
 
 abstract class Pirate(val player: Player) extends Ordered[Pirate] {

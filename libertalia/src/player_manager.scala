@@ -1,3 +1,5 @@
+package libertalia
+
 import scala.collection.mutable.ArrayBuffer
 
 object PlayerManager {

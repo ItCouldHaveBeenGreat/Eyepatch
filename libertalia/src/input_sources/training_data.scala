@@ -1,3 +1,5 @@
+package input_sources
+
 class TrainingData(val playerId : Int, val decisionType : Int, val gameState : Seq[Int], val decision : Int, val agent : String) {
     var annotation = Map[String, String]()
     

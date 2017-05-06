@@ -1,3 +1,5 @@
+package libertalia
+
 class GovernorsDaughter(player: Player) extends Pirate(player) {
     val rank = 25
     val name = "Governor's Daughter"

@@ -1,3 +1,5 @@
+package libertalia
+
 class Cook(player: Player) extends Pirate(player) {
     val rank = 18
     val name = "Cook"

@@ -1,3 +1,5 @@
+package libertalia
+
 class VoodooWitch(player: Player) extends Pirate(player) {
     val rank = 11
     val name = "Voodoo Witch"

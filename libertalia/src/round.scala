@@ -1,3 +1,5 @@
+package libertalia
+
 import scala.collection.mutable.ArrayBuffer
 
 class Round(val booty : ArrayBuffer[Booty.Value]) {

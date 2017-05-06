@@ -1,3 +1,5 @@
+package libertalia
+
 class SpanishGovernor(player: Player) extends Pirate(player) {
     val rank = 30
     val name = "Spanish Governor"

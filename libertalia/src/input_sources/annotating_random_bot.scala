@@ -4,8 +4,7 @@ import libertalia._
 
 import scala.util.Random
 
-class AnnotatingRandomBot() extends InputSource with Annotating with Networked {
-    val OPENSHIFT = "http://rutsubo-thewindwhispers.rhcloud.com"
+class AnnotatingRandomBot() extends InputSource with Annotating with Networked with Statistics {
     val TRAIN_NETWORK = "train_network"
     val CREATE_NETWORK = "create_network"
     val network_id = "first"
@@ -29,13 +28,15 @@ class AnnotatingRandomBot() extends InputSource with Annotating with Networked {
 
     override def endGame(player: Player, players: Seq[Player]) = {
         // only upload data if we won
-        if (player == PlayerManager.players.maxBy( p => p.points )) {
+        if (player.points == players.maxBy( p => p.points ).points) {
             uploadDecisions(Map[String, String]())
+            addCounter("wins", 1)
         }
+        addCounter("games", 1)
         clearData
     }
 
     override def endSession() = {
-        // do nothing
+        printCounters()
     }
 }

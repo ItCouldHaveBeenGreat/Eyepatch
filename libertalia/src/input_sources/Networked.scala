@@ -1,18 +1,14 @@
 package input_sources
 
-import java.io.InputStreamReader
 import java.util
-import java.util.Scanner
 
-import com.google.common.io.CharStreams
 import libertalia.{Channel, OutputManager}
-import org.apache.http.{Header, NameValuePair}
+import org.apache.http.{NameValuePair}
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.{HttpGet, HttpPost}
 import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.message.{BasicHeader, BasicNameValuePair}
+import org.apache.http.message.{ BasicNameValuePair}
 
-import scala.collection.mutable.ArrayBuffer
 
 trait Networked {
     val HOST = "http://rutsubo-thewindwhispers.rhcloud.com"
@@ -32,16 +28,16 @@ trait Networked {
     }
 
     def get(operation : String, parameters : Map[String, String]) : String = {
-      val get = new HttpGet(HOST + "/" + operation)
-      var nameValuePairs = ArrayBuffer[Header]()
-      parameters.foreach { case (key, value) =>
-        nameValuePairs += new BasicHeader(key, value)
-      }
-      nameValuePairs += new BasicHeader("Content-type", "application/x-www-form-urlencoded")
-      get.setHeaders(nameValuePairs.toArray)
-
-      val get_response = (new DefaultHttpClient).execute(get)
+      val query_string = "?" + parameters.map{ case (key, value) => key + "=" + value}.mkString("&")
+      val get_request = new HttpGet(HOST + "/" + operation + query_string)
+      get_request.addHeader("Content-type", "application/x-www-form-urlencoded")
+      val get_response = (new DefaultHttpClient).execute(get_request)
       OutputManager.print(Channel.Debug, "Networked Bot: " + get_response)
-      return CharStreams.toString(new InputStreamReader(get_response.getEntity.getContent, get_response.getEntity.getContentEncoding.getName))
+
+      val inputStream = get_response.getEntity.getContent
+      val content = io.Source.fromInputStream(inputStream).getLines.mkString
+      inputStream.close
+
+      return content
     }
 }

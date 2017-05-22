@@ -40,6 +40,16 @@
       <artifactId>guava</artifactId>
       <version>19.0</version>
     </dependency>
+    <dependency>
+    	<groupId>org.tensorflow</groupId>
+    	<artifactId>libtensorflow</artifactId>
+    	<version>1.1.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.tensorflow</groupId>
+    	<artifactId>libtensorflow_jni</artifactId>
+    	<version>1.1.0</version>
+    </dependency>
   </dependencies>
 
 

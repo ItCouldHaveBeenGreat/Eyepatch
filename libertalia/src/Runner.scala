@@ -14,7 +14,7 @@ object Runner {
       for (i <- 0 to numPlayers - 1) {
         val request = InputManager.getInputRequest(i)
         if (request != null && !request.answered) {
-          InputManager.answerInputRequest(i, players(i).makeDecision(request, game.getGameState))
+          InputManager.answerInputRequest(i, players(i).makeDecision(request, game.getNormalizedGameState(i)))
         }
       }
     }
@@ -31,11 +31,11 @@ object Runner {
 
     var players = List(new AnnotatingRandomBot, new FirstBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot)
     
-    for (i <- 1 to 10) {
+    for (i <- 1 to 1) {
       runGame(Random.shuffle(players))
       OutputManager.print(Channel.Runner, i.toString)
     }
-    
+
     for (player <- players) {
       player.endSession()
     }

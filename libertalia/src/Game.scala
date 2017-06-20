@@ -53,21 +53,52 @@ class Game(numPlayers : Int) {
     
     def getGameState : Seq[Int] = {
         val gameState = ArrayBuffer[Int]()
+        appendCommonState(gameState)
+        for (player <- PlayerManager.players) {
+            appendPlayerState(gameState, player)
+        }
+        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS - 1) {
+            appendEmptyPlayer(gameState)
+        }
+        return gameState
+    }
+
+    // Returns game state as if the player is always player 1, but preserves order
+    def getNormalizedGameState(playerId : Int) : Seq[Int] = {
+        val gameState = ArrayBuffer[Int]()
+        appendCommonState(gameState)
+        for (i <- playerId to PlayerManager.players.size - 1) {
+            val player = PlayerManager.getPlayer(i)
+            appendPlayerState(gameState, player)
+        }
+        for (i <- 0 to playerId - 1) {
+            val player = PlayerManager.getPlayer(i)
+            appendPlayerState(gameState, player)
+        }
+        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS - 1) {
+            appendEmptyPlayer(gameState)
+        }
+        return gameState
+    }
+
+    def appendCommonState(gameState : ArrayBuffer[Int]) = {
         gameState += PlayerManager.players.size
         gameState += voyagesTaken
         gameState += currentVoyage.roundsTaken
         gameState ++= currentVoyage.bootySets.map( bootySet => bootySet.map( b => b.id ).padTo(PlayerManager.MAX_PLAYERS, -1)).flatten
-        for (player <- PlayerManager.players) {
-            gameState += player.doubloons
-            gameState += player.points
-            gameState ++= player.pirates.map( p => p.publicState.id )
-            // The maximum number of items you can have is the total number of Cursed Masks (10) + Cook (2) + Recruiter (1) 
-            // + Cook (2) + Surgeon (1) + Cook (2) + 1, or 19
-            gameState ++= player.booty.map( b => b.id ).padTo(19, -1)
-        }
-        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS - 1) {
-            gameState ++= ArrayBuffer.fill(51)(-1)
-        }
-        return gameState
     }
+
+    def appendPlayerState(gameState : ArrayBuffer[Int], player : Player) = {
+        gameState += player.doubloons
+        gameState += player.points
+        gameState ++= player.pirates.map( p => p.publicState.id )
+        // The maximum number of items you can have is the total number of Cursed Masks (10) + Cook (2) + Recruiter (1)
+        // + Cook (2) + Surgeon (1) + Cook (2) + 1, or 19
+        gameState ++= player.booty.map( b => b.id ).padTo(19, -1)
+    }
+
+    def appendEmptyPlayer(gameState : ArrayBuffer[Int]): Unit = {
+        gameState ++= ArrayBuffer.fill(51)(-1)
+    }
+
 }

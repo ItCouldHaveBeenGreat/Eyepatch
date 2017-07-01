@@ -3,6 +3,24 @@
   <groupId>Eyepatch</groupId>
   <artifactId>Eyepatch</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+  <properties>
+    <scala.version>2.11.5</scala.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.3</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <sourceDirectory>libertalia/src</sourceDirectory>
     <resources>

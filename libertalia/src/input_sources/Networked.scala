@@ -11,7 +11,7 @@ import org.apache.http.message.{ BasicNameValuePair}
 
 
 trait Networked {
-    val HOST = "http://rutsubo-thewindwhispers.rhcloud.com"
+    val HOST = "localhost:5000"
 
     def post(operation : String, parameters : Map[String, String]) : String = {
       val post = new HttpPost(HOST + "/" + operation)

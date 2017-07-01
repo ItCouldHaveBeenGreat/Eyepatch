@@ -29,7 +29,13 @@ object Runner {
     //OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
-    var players = List(new AnnotatingRandomBot, new FirstBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot, new AnnotatingRandomBot)
+    val players = List(
+      new FirstBot,
+      new AnnotatingRandomBot,
+      new AnnotatingRandomBot,
+      new AnnotatingRandomBot,
+      new AnnotatingRandomBot,
+      new AnnotatingRandomBot)
     
     for (i <- 1 to 1) {
       runGame(Random.shuffle(players))

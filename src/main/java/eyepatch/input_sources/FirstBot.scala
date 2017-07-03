@@ -6,8 +6,12 @@ import scala.util.Random
 
 class FirstBot() extends InputSource with Annotating with Statistics with Networked {
     private val MAKE_DECISION = "make_decision"
+    private val CREATE_OR_LOAD_NETWORK = "create_network"
     private val NETWORK_ID = "first"
     private val AGENT = "first"
+
+    // ensure network is created
+    post(CREATE_OR_LOAD_NETWORK, Map("network_id" -> NETWORK_ID))
 
     override def makeDecision(request: InputRequest, state: Seq[Int]): String = {
         val input = "[" + request.playerId + "," + request.inputType.id + "," + state.mkString(",") + "]"

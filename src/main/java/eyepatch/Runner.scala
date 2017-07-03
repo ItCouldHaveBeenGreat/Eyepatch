@@ -30,6 +30,8 @@ object Runner {
     //OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
+    val rounds = args(0).toInt
+
     val players = List(
       new FirstBot,
       new AnnotatingRandomBot,
@@ -38,7 +40,7 @@ object Runner {
       new AnnotatingRandomBot,
       new AnnotatingRandomBot)
 
-    for (i <- 1 to 1) {
+    for (i <- 1 to rounds) {
       runGame(Random.shuffle(players))
       OutputManager.print(Channel.Runner, i.toString)
     }

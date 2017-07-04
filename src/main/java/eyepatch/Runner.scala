@@ -41,8 +41,9 @@ object Runner {
       new AnnotatingRandomBot)
 
     for (i <- 1 to rounds) {
+      OutputManager.print(Channel.Runner, "Round " + i.toString() + " start: " + System.currentTimeMillis().toString)
       runGame(Random.shuffle(players))
-      OutputManager.print(Channel.Runner, i.toString)
+      OutputManager.print(Channel.Runner, "Round " + i.toString() + " end: " + System.currentTimeMillis().toString)
     }
 
     for (player <- players) {

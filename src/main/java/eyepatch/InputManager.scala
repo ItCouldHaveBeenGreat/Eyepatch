@@ -106,7 +106,10 @@ object InputManager {
     def getAdjacentDenPirates(player : Player) : Seq[String] = {
         // Returns a list of conjoined playerId + pirateId
         // TODO: This is terrible, find a better way to address multiple players
-        return PlayerManager.getAdjacentPlayers(player.playerId).map( p => p.pirates.filter( pirate => pirate.state == PirateState.Den).map( pirate => p.playerId.toString + "%02d".format(pirate.rank)).flatten
+        return PlayerManager.getAdjacentPlayers(player.playerId)
+          .flatMap(p => p.pirates
+            .filter(pirate => pirate.state == PirateState.Den)
+            .map(pirate => p.playerId.toString + "%02d".format(pirate.rank)))
     }
 
     def getAllDenPirates() : Seq[String] = {

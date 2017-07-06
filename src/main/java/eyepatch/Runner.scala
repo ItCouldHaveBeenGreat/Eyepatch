@@ -43,7 +43,7 @@ object Runner {
     for (i <- 1 to rounds) {
       val startTime = System.currentTimeMillis()
       runGame(Random.shuffle(players))
-      OutputManager.print(Channel.Runner, "Game " + i.toString() + " time: " + System.currentTimeMillis() - startTime)
+      OutputManager.print(Channel.Runner, "Game " + i.toString() + " time: " + (System.currentTimeMillis() - startTime))
     }
 
     for (player <- players) {

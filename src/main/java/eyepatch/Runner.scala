@@ -1,6 +1,6 @@
 package main.java.eyepatch
 
-import input_sources.{AnnotatingRandomBot, FirstBot, InputSource}
+import input_sources.{AnnotatingRandomBot, RemoteNeuralNetworkBot, InputSource}
 
 import scala.util.Random
 
@@ -33,8 +33,8 @@ object Runner {
     val rounds = args(0).toInt
 
     val players = List(
-      new FirstBot,
-      new AnnotatingRandomBot,
+      new RemoteNeuralNetworkBot("celadon"),
+      new RemoteNeuralNetworkBot("pewter"),
       new AnnotatingRandomBot,
       new AnnotatingRandomBot,
       new AnnotatingRandomBot,

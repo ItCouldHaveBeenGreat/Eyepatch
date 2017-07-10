@@ -4,21 +4,19 @@ import main.java.eyepatch.{InputRequest, Player}
 
 import scala.util.Random
 
-class FirstBot() extends InputSource with Annotating with Statistics with Networked {
+class RemoteNeuralNetworkBot(val modelKey : String = "first") extends InputSource with Annotating with Statistics with Networked {
     private val MAKE_DECISION = "make_decision"
     private val CREATE_OR_LOAD_NETWORK = "create_network"
-    private val NETWORK_ID = "first"
-    private val AGENT = "first"
 
     // ensure network is created
-    post(CREATE_OR_LOAD_NETWORK, Map("network_id" -> NETWORK_ID))
+    post(CREATE_OR_LOAD_NETWORK, Map("network_id" -> modelKey))
 
     override def makeDecision(request: InputRequest, state: Seq[Int]): String = {
         val input = "[" + request.playerId + "," + request.inputType.id + "," + state.mkString(",") + "]"
         val choices = "[" + request.validAnswers.mkString(",") + "]"
-        val get_response = get(MAKE_DECISION, Map("network_id" -> NETWORK_ID, "input" -> input, "choices" -> choices))
+        val get_response = get(MAKE_DECISION, Map("network_id" -> modelKey, "input" -> input, "choices" -> choices))
         val choice = get_response.substring(1, get_response.size - 1)
-        record(request.playerId, AGENT, request.inputType, 1, state)
+        record(request.playerId, modelKey, request.inputType, 1, state)
 
         if(request.validAnswers.contains(choice)) {
             addCounter("legal moves", 1)

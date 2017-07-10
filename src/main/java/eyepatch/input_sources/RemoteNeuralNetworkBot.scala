@@ -24,7 +24,7 @@ class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Ann
             return choice
         }
         addCounter("moves", 1)
-        OutputManager.print(Channel.Game, "Illegal move for " + modelKey + ": " + choice + " for request[ "
+        OutputManager.print(Channel.Bot, "Illegal move for " + modelKey + ": " + choice + " for request[ "
                             + request.playerId + ", " + request.inputType + ", " + request.validAnswers + "]")
 
 

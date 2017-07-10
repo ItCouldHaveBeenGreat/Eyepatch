@@ -1,10 +1,10 @@
 package main.java.eyepatch.input_sources
 
-import main.java.eyepatch.{InputRequest, Player}
+import main.java.eyepatch.{Channel, InputRequest, OutputManager, Player}
 
 import scala.util.Random
 
-class RemoteNeuralNetworkBot(val modelKey : String = "first") extends InputSource with Annotating with Statistics with Networked {
+class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Annotating with Statistics with Networked {
     private val MAKE_DECISION = "make_decision"
     private val CREATE_OR_LOAD_NETWORK = "create_network"
 
@@ -24,6 +24,9 @@ class RemoteNeuralNetworkBot(val modelKey : String = "first") extends InputSourc
             return choice
         }
         addCounter("moves", 1)
+        OutputManager.print(Channel.Game, "Illegal move for " + modelKey + ": " + choice + " for request[ "
+                            + request.playerId + ", " + request.inputType + ", " + request.validAnswers + "]")
+
 
         return request.validAnswers(Random.nextInt(request.validAnswers.size)).toString
     }

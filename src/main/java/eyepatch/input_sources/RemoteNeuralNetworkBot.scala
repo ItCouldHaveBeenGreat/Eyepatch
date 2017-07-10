@@ -20,6 +20,7 @@ class RemoteNeuralNetworkBot(val modelKey : String = "first") extends InputSourc
 
         if(request.validAnswers.contains(choice)) {
             addCounter("legal moves", 1)
+            addCounter("moves", 1)
             return choice
         }
         addCounter("moves", 1)

@@ -34,7 +34,7 @@ object Runner {
 
     val players = List(
       new RemoteNeuralNetworkBot("celadon"),
-      new RemoteNeuralNetworkBot("pewter"),
+      new AnnotatingRandomBot,
       new AnnotatingRandomBot,
       new AnnotatingRandomBot,
       new AnnotatingRandomBot,

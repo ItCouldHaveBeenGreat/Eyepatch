@@ -7,7 +7,8 @@ import scala.util.Random
 class AnnotatingRandomBot() extends InputSource with Annotating with Networked with Statistics {
     val TRAIN_NETWORK = "train_network"
     val CREATE_NETWORK = "create_network"
-    val network_id = "first"
+    // TODO: This is super bad to be hard coded
+    val network_id = "celadon"
     val agent = "randombot"
     
     override def makeDecision(request: InputRequest, state: Seq[Int]) : String = {

@@ -25,9 +25,9 @@ object Runner {
 
   def main(args: Array[String]) {
     OutputManager.enableChannel(Channel.Bot)
-    OutputManager.enableChannel(Channel.Debug)
-    OutputManager.enableChannel(Channel.Game)
-    OutputManager.enableChannel(Channel.Pirate)
+    //OutputManager.enableChannel(Channel.Debug)
+    //OutputManager.enableChannel(Channel.Game)
+    //OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
     val rounds = if (args.length > 0) args(0).toInt else 1;

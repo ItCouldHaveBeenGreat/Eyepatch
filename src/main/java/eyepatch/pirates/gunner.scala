@@ -14,11 +14,11 @@ class Gunner(player: Player) extends Pirate(player) {
         player.doubloons -= doubloonsToCharge
         OutputManager.print(Channel.Pirate, tag + ": -" + doubloonsToCharge + " doubloons")
 
-        if (InputManager.getAllDenPirates.size > 0) {
+        if (InputManager.getAllDenPirates(player).size > 0) {
             val request = InputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.KillPirateInAnyDen,
-                InputManager.getAllDenPirates)
+                InputManager.getAllDenPirates(player))
             if (!request.answered) {
                 return RetriableMethodResponse.PendingInput
             } else {

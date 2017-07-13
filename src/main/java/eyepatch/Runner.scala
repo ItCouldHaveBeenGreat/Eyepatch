@@ -25,15 +25,16 @@ object Runner {
 
   def main(args: Array[String]) {
     OutputManager.enableChannel(Channel.Bot)
-    //OutputManager.enableChannel(Channel.Debug)
-    //OutputManager.enableChannel(Channel.Game)
-    //OutputManager.enableChannel(Channel.Pirate)
+    OutputManager.enableChannel(Channel.Debug)
+    OutputManager.enableChannel(Channel.Game)
+    OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
-    val rounds = args(0).toInt
+    val rounds = if (args.length > 0) args(0).toInt else 1;
 
     val players = List(
-      new RemoteNeuralNetworkBot("celadon"),
+      //new RemoteNeuralNetworkBot("celadon"),
+      new AnnotatingRandomBot,
       new AnnotatingRandomBot,
       new AnnotatingRandomBot,
       new AnnotatingRandomBot,

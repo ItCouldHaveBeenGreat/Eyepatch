@@ -2,9 +2,6 @@ package main.java.eyepatch
 
 import scala.collection.mutable.{HashMap, Map}
 
-/**
-  * Created by Boreal on 7/1/17.
-  */
 // TODO: Define class as the intersection of a player facing trait and a game facing trait
 object InputManager {
 
@@ -42,7 +39,8 @@ object InputManager {
             throw new Exception("No valid answers supplied")
         }
         if (!inputRequests.contains(playerId)) {
-            OutputManager.print(Channel.Debug, "Created request for player " + playerId + " for " + requestType)
+            OutputManager.print(Channel.Debug, "Created request for player " + playerId + " for " + requestType
+                + "with answers " + validAnswers)
             inputRequests += ((playerId, new InputRequest(playerId, requestType, validAnswers)))
         }
         return inputRequests(playerId)
@@ -70,8 +68,7 @@ object InputManager {
 
     def getTargetPirateFromInput(input : InputRequest) : Pirate = {
         if (input.inputType == InputRequestType.KillPirateInAnyDen || input.inputType == InputRequestType.KillPirateInAdjacentDen) {
-             val player = PlayerManager.players(input.answer.substring(0, 1).toInt)
-             return player.getPirate(input.answer.substring(1).toInt)
+             return getPirateFromLocalizedPirateId(PlayerManager.getPlayer(input.playerId), input.answer)
         } else {
             throw new IllegalStateException("Can't extract player from input " + input)
         }
@@ -106,14 +103,39 @@ object InputManager {
     def getAdjacentDenPirates(player : Player) : Seq[String] = {
         // Returns a list of conjoined playerId + pirateId
         // TODO: This is terrible, find a better way to address multiple players
-        return PlayerManager.getAdjacentPlayers(player.playerId)
-          .flatMap(p => p.pirates
-            .filter(pirate => pirate.state == PirateState.Den)
-            .map(pirate => p.playerId.toString + "%02d".format(pirate.rank)))
+        return PlayerManager.getAdjacentPlayers(player)
+            .flatMap(p => p.pirates.filter(pirate => pirate.state == PirateState.Den)
+            .map(pirate => getLocalizedPirateId(player, pirate)))
     }
 
-    def getAllDenPirates() : Seq[String] = {
-        // Returns a list of conjoined playerId + pirateId
-        return PlayerManager.players.map( player => player.pirates.filter( pirate => pirate.state == PirateState.Den).map( pirate => player.playerId.toString + pirate.rank.toString)).flatten
+
+    def getAllDenPirates(localPlayer : Player) : Seq[String] = {
+        // Returns a list of conjoined playerId + pirateId. localPlayer has no playerid
+        return PlayerManager.players
+            .flatMap(player => player.pirates.filter(pirate => pirate.state == PirateState.Den)
+            .map(pirate => getLocalizedPirateId(localPlayer, pirate)))
+    }
+
+    /**
+      * Gets the pirate's global identifier of playerId + pirateId from the perspective of localPlayer
+      * @param localPlayer
+      * @param pirate
+      * @return
+      */
+    private def getLocalizedPirateId(localPlayer : Player, pirate : Pirate) : String = {
+        if (pirate.player == localPlayer) {
+            pirate.rank.toString
+        } else {
+            PlayerManager.getLocalPlayerId(localPlayer, pirate.player).toString + "%02d".format(pirate.rank)
+        }
+    }
+
+    private def getPirateFromLocalizedPirateId(localPlayer : Player, localizedPirateId : String) : Pirate = {
+        if (localizedPirateId.length == 3) {
+          val player = PlayerManager.getPlayerFromLocalPlayerId(localPlayer, localizedPirateId.substring(0, 1).toInt)
+          return player.getPirate(localizedPirateId.substring(1).toInt)
+        } else {
+          return localPlayer.getPirate(localizedPirateId.toInt)
+        }
     }
 }

@@ -7,14 +7,29 @@ import scala.util.Random
 class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Annotating with Statistics with Networked {
     private val MAKE_DECISION = "make_decision"
     private val CREATE_OR_LOAD_NETWORK = "create_network"
+    private val NETWORK_LAYER_SIZES = "[694, 694]"
+    private val NETWORK_CLASSES = {
+      "[" + (List.range(0, 31)
+        ++ List.range(101, 131)
+        ++ List.range(201, 231)
+        ++ List.range(301, 331)
+        ++ List.range(401, 431)
+        ++ List.range(501, 531)
+      ).mkString(",") + "]"
 
+
+    }
     // ensure network is created
-    post(CREATE_OR_LOAD_NETWORK, Map("network_id" -> modelKey))
+    post(CREATE_OR_LOAD_NETWORK, Map("network_id" -> modelKey,
+                                     "layer_sizes" -> NETWORK_LAYER_SIZES,
+                                     "output_classes" -> NETWORK_CLASSES))
 
     override def makeDecision(request: InputRequest, state: Seq[Int]): String = {
         val input = "[" + request.playerId + "," + request.inputType.id + "," + state.mkString(",") + "]"
         val choices = "[" + request.validAnswers.mkString(",") + "]"
-        val get_response = get(MAKE_DECISION, Map("network_id" -> modelKey, "input" -> input, "choices" -> choices))
+        val get_response = get(MAKE_DECISION, Map("network_id" -> modelKey,
+                                                  "input" -> input,
+                                                  "choices" -> choices))
         val choice = get_response.substring(1, get_response.size - 1)
         record(request.playerId, modelKey, request.inputType, 1, state)
 

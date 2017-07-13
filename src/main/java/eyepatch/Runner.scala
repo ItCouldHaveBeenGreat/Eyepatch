@@ -33,13 +33,12 @@ object Runner {
     val rounds = if (args.length > 0) args(0).toInt else 1;
 
     val players = List(
-      //new RemoteNeuralNetworkBot("celadon"),
-      new AnnotatingRandomBot,
-      new AnnotatingRandomBot,
-      new AnnotatingRandomBot,
-      new AnnotatingRandomBot,
-      new AnnotatingRandomBot,
-      new AnnotatingRandomBot)
+      new RemoteNeuralNetworkBot("celadon"),
+      new AnnotatingRandomBot("celadon"),
+      new AnnotatingRandomBot("celadon"),
+      new AnnotatingRandomBot("celadon"),
+      new AnnotatingRandomBot("celadon"),
+      new AnnotatingRandomBot("celadon"))
 
     for (i <- 1 to rounds) {
       val startTime = System.currentTimeMillis()

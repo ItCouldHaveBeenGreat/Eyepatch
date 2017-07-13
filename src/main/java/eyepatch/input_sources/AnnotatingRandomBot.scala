@@ -4,11 +4,9 @@ import main.java.eyepatch.{InputRequest, Player}
 
 import scala.util.Random
 
-class AnnotatingRandomBot() extends InputSource with Annotating with Networked with Statistics {
+class AnnotatingRandomBot(val network_to_train : String) extends InputSource with Annotating with Networked with Statistics {
     val TRAIN_NETWORK = "train_network"
     val CREATE_NETWORK = "create_network"
-    // TODO: This is super bad to be hard coded
-    val network_id = "celadon"
     val agent = "randombot"
     
     override def makeDecision(request: InputRequest, state: Seq[Int]) : String = {
@@ -20,8 +18,8 @@ class AnnotatingRandomBot() extends InputSource with Annotating with Networked w
     def uploadDecisions(annotations : Map[String, String]) = {
         try {
             annotate(annotations)
-            post(CREATE_NETWORK, Map("network_id" -> network_id))
-            post(TRAIN_NETWORK, Map("network_id" -> network_id, "data" -> getAnnotatedData))
+            post(CREATE_NETWORK, Map("network_id" -> network_to_train))
+            post(TRAIN_NETWORK, Map("network_id" -> network_to_train, "data" -> getAnnotatedData))
         } catch {
             case e: Exception => println(e)
         }

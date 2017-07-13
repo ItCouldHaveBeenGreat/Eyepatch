@@ -8,6 +8,8 @@ class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Ann
     private val MAKE_DECISION = "make_decision"
     private val CREATE_OR_LOAD_NETWORK = "create_network"
     private val NETWORK_LAYER_SIZES = "[694, 694]"
+    private val NETWORK_INPUT_SIZE = 347;
+    private val NETWORK_OUTPUT_SIZE = 1;
     private val NETWORK_CLASSES = {
       "[" + (List.range(0, 31)
         ++ List.range(101, 131)
@@ -22,7 +24,9 @@ class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Ann
     // ensure network is created
     post(CREATE_OR_LOAD_NETWORK, Map("network_id" -> modelKey,
                                      "layer_sizes" -> NETWORK_LAYER_SIZES,
-                                     "output_classes" -> NETWORK_CLASSES))
+                                     "output_classes" -> NETWORK_CLASSES,
+                                     "input_size" -> NETWORK_INPUT_SIZE.toString,
+                                     "output_size" -> NETWORK_OUTPUT_SIZE.toString))
 
     override def makeDecision(request: InputRequest, state: Seq[Int]): String = {
         val input = "[" + request.playerId + "," + request.inputType.id + "," + state.mkString(",") + "]"

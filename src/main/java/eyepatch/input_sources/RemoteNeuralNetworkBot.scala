@@ -4,7 +4,7 @@ import main.java.eyepatch.{Channel, InputRequest, OutputManager, Player}
 
 import scala.util.Random
 
-class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Annotating with Statistics with Networked {
+class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Statistics with Networked {
     private val MAKE_DECISION = "make_decision"
     private val CREATE_OR_LOAD_NETWORK = "create_network"
     private val NETWORK_LAYER_SIZES = "[694, 694]"
@@ -35,7 +35,6 @@ class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Ann
                                                   "input" -> input,
                                                   "choices" -> choices))
         val choice = get_response.substring(1, get_response.size - 1)
-        record(request.playerId, modelKey, request.inputType, 1, state)
 
         if(request.validAnswers.contains(choice)) {
             addCounter("legal moves", 1)
@@ -55,7 +54,6 @@ class RemoteNeuralNetworkBot(val modelKey : String) extends InputSource with Ann
             addCounter("wins", 1)
         }
         addCounter("games", 1)
-        clearData
     }
 
     override def endSession() = {

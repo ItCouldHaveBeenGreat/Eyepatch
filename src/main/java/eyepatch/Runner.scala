@@ -1,10 +1,12 @@
 package main.java.eyepatch
 
-import input_sources.{AnnotatingRandomBot, RemoteNeuralNetworkBot, InputSource}
+import input_sources.{AnnotatingMutatingBot, AnnotatingRandomBot, InputSource, RemoteNeuralNetworkBot}
 
 import scala.util.Random
 
 object Runner {
+
+
 
   def runGame(players : List[InputSource]) = {
     val numPlayers = players.size
@@ -30,16 +32,33 @@ object Runner {
     //OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
-    val rounds = if (args.length > 0) args(0).toInt else 1;
+    if (args.length != 3) {
 
-    val players = List(
-      new RemoteNeuralNetworkBot("celadon"),
-      new AnnotatingRandomBot("celadon"),
-      new AnnotatingRandomBot("celadon"),
-      new AnnotatingRandomBot("celadon"),
-      new AnnotatingRandomBot("celadon"),
-      new AnnotatingRandomBot("celadon"))
+    }
 
+
+    val rounds = args(0).toInt
+    val configuration = PlayerConfiguration.withName(args(1))
+    val network_id = args(2)
+
+    val players = configuration match {
+      case PlayerConfiguration.RandomTest => List(
+        new RemoteNeuralNetworkBot(network_id),
+        new AnnotatingRandomBot(network_id),
+        new AnnotatingRandomBot(network_id),
+        new AnnotatingRandomBot(network_id),
+        new AnnotatingRandomBot(network_id),
+        new AnnotatingRandomBot(network_id))
+      case PlayerConfiguration.MutationTraining => List(
+        new AnnotatingMutatingBot(network_id, 0.01),
+        new AnnotatingMutatingBot(network_id, 0.05),
+        new AnnotatingMutatingBot(network_id, 0.10),
+        new AnnotatingRandomBot(network_id),
+        new AnnotatingRandomBot(network_id),
+        new AnnotatingRandomBot(network_id)
+      )
+
+    }
     for (i <- 1 to rounds) {
       val startTime = System.currentTimeMillis()
       runGame(Random.shuffle(players))
@@ -50,4 +69,9 @@ object Runner {
       player.endSession()
     }
   }
+}
+
+object PlayerConfiguration extends Enumeration {
+  type PlayerConfiguration = Value
+  val RandomTest, MutationTraining = Value
 }

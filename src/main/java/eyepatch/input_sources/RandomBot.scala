@@ -9,7 +9,7 @@ class RandomBot extends InputSource {
         return request.validAnswers(Random.nextInt(request.validAnswers.size))
     }
 
-    override def endGame(player: Player, players: Seq[Player]): Unit = ???
+    override def endGame(player: Player, players: Seq[Player]): Unit = { }
 
-    override def endSession(): Unit = ???
+    override def endSession(): Unit = { }
 }

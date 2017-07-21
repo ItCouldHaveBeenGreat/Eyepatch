@@ -1,6 +1,6 @@
 package main.java.eyepatch
 
-import input_sources.{AnnotatingMutatingBot, AnnotatingRandomBot, InputSource, RemoteNeuralNetworkBot}
+import input_sources._
 
 import scala.util.Random
 
@@ -42,7 +42,7 @@ object Runner {
     val network_id = args(2)
 
     val players = configuration match {
-      case PlayerConfiguration.RandomTest => List(
+      case PlayerConfiguration.RandomTraining => List(
         new RemoteNeuralNetworkBot(network_id),
         new AnnotatingRandomBot(network_id),
         new AnnotatingRandomBot(network_id),
@@ -55,9 +55,14 @@ object Runner {
         new AnnotatingMutatingBot(network_id, 0.10),
         new AnnotatingRandomBot(network_id),
         new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id)
-      )
-
+        new AnnotatingRandomBot(network_id))
+      case PlayerConfiguration.RandomTest => List(
+        new RemoteNeuralNetworkBot(network_id),
+        new RandomBot(),
+        new RandomBot(),
+        new RandomBot(),
+        new RandomBot(),
+        new RandomBot())
     }
     for (i <- 1 to rounds) {
       val startTime = System.currentTimeMillis()
@@ -73,5 +78,5 @@ object Runner {
 
 object PlayerConfiguration extends Enumeration {
   type PlayerConfiguration = Value
-  val RandomTest, MutationTraining = Value
+  val RandomTraining, MutationTraining, RandomTest = Value
 }

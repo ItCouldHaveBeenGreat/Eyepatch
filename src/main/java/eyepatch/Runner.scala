@@ -50,12 +50,12 @@ object Runner {
         new AnnotatingRandomBot(network_id),
         new AnnotatingRandomBot(network_id))
       case PlayerConfiguration.MutationTraining => List(
+        new RemoteNeuralNetworkBot(network_id),
+        new RemoteNeuralNetworkBot(network_id),
         new AnnotatingMutatingBot(network_id, 0.01),
         new AnnotatingMutatingBot(network_id, 0.05),
-        new AnnotatingMutatingBot(network_id, 0.10),
-        new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id))
+        new RandomBot(),
+        new RandomBot())
       case PlayerConfiguration.RandomTest => List(
         new RemoteNeuralNetworkBot(network_id),
         new RandomBot(),

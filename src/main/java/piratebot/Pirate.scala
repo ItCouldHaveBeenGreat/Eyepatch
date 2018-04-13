@@ -46,7 +46,7 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
                     round.killPirate(this)
                 }
                 
-                player.booty += b
+                player.booty(b) = player.booty(b) - 1
                 round.booty -= b
                 OutputManager.print(Channel.Game, "Player " + player.playerId + " claims " + b)
             }

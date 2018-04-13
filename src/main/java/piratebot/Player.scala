@@ -2,12 +2,19 @@ package main.java.piratebot
 
 import libertalia._
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
 
 class Player(val playerId : Int) {
     var points : Int = 0;
     var doubloons : Int = 0;
-    val booty : ArrayBuffer[Booty.Value] = ArrayBuffer()
+    val booty = mutable.HashMap(
+        Booty.Chest -> 0,
+        Booty.CursedMask -> 0,
+        Booty.Goods -> 0,
+        Booty.Jewels -> 0,
+        Booty.Saber -> 0,
+        Booty.SpanishOfficer -> 0,
+        Booty.TreasureMap -> 0)
     val pirates : Seq[Pirate] = List( // NOTE: Order matters
         new Parrot(this),
         new Monkey(this),
@@ -39,17 +46,17 @@ class Player(val playerId : Int) {
         new FirstMate(this),
         new Captain(this),
         new SpanishGovernor(this))
-    
+
     def getPirate(rank : Int) : Pirate = {
         // Rank is 1 indexed
         return pirates(rank - 1)
     }
-    
-    def dealPirate(rank : Int) = {
+
+    def dealPirate(rank : Int): Unit = {
         getPirate(rank).state = PirateState.Hand
     }
-    
-    def endVoyage() = {
+
+    def endVoyage(): Unit = {
         // enact all den pirate's end of voyage actions
         // clean the hand, den, and graveyard
         doEndOfVoyageActions()
@@ -59,31 +66,30 @@ class Player(val playerId : Int) {
         points += doubloons
         OutputManager.print(Channel.Game, "Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
     }
-    
-    private def doEndOfVoyageActions() = {
+
+    private def doEndOfVoyageActions(): Unit = {
         OutputManager.print(Channel.Debug, "Player " + playerId + " running end of voyage actions")
         pirates.filter( p => p.state == PirateState.Den).foreach( p =>
             p.endOfVoyageAction
         )
     }
-    
-    private def cleanPirates() = {
+
+    private def cleanPirates(): Unit = {
         pirates.filter( p => p.state == PirateState.Den || p.state == PirateState.Discard).foreach(
             p => p.state = PirateState.OutOfPlay
         )
     }
-    
-    private def sellBooty() = {
-        // TODO: Is this ineffiecent? Yes.
+
+    private def sellBooty(): Unit = {
         OutputManager.print(Channel.Debug, "Player " + playerId + " booty: " + booty)
-        val gain = booty.count( b => b == Booty.Goods ) * 1 +
-                   booty.count( b => b == Booty.Jewels ) * 3 +
-                   booty.count( b => b == Booty.Chest ) * 5 +
-                   booty.count( b => b == Booty.CursedMask ) * -3 +
-                   booty.count( b => b == Booty.TreasureMap ) / 3 * 12
-        
+        val gain = booty(Booty.Goods) * 1 +
+                   booty(Booty.Jewels) * 3 +
+                   booty(Booty.Chest) * 5 +
+                   booty(Booty.CursedMask) * -3 +
+                   booty(Booty.TreasureMap) / 3 * 12
+
         doubloons += gain
-        booty.clear
+        booty.keys.foreach(bootyType => booty(bootyType) = 0)
         OutputManager.print(Channel.Debug, "Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
 }

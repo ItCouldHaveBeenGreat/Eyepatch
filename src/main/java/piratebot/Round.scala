@@ -129,9 +129,9 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
     }
     
     private def performDuskActions() : RetriableMethodResponse.Value = {
-         while (duskStack.size > 0) {
+         while (duskStack.nonEmpty) {
             val activePirate = duskStack.head
-             OutputManager.print(Channel.Pirate, "Round running dusk action for " + activePirate.tag)
+            OutputManager.print(Channel.Pirate, "Round running dusk action for " + activePirate.tag)
             val response = activePirate.duskAction(this)
             if (response != RetriableMethodResponse.Complete) {
                 return response // We're pending something; return

@@ -14,7 +14,7 @@ class Captain(player: Player) extends Pirate(player) {
     }
 
     override def endOfVoyageAction = {
-        val numCursedRelics = player.booty.count(b => b == Booty.CursedMask)
+        val numCursedRelics = player.booty(Booty.CursedMask)
         player.doubloons -= numCursedRelics * 3
         OutputManager.print(Channel.Pirate, tag + ": -" + numCursedRelics * 3 + " Doubloons")
     }

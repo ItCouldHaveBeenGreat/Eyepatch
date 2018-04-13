@@ -8,13 +8,12 @@ class SpanishSpy(player: Player) extends Pirate(player) {
     val name = "SpanishSpy"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        val numSpanishOfficers = player.booty.count( b => b == Booty.SpanishOfficer )
-        for (i <- 1 to numSpanishOfficers) {
-            player.booty -= Booty.SpanishOfficer
+        for (_ <- 1 to player.booty(Booty.SpanishOfficer)) {
             val bootyDrawn = BootyBag.draw
-            player.booty += bootyDrawn
+            player.booty(bootyDrawn) += 1
             OutputManager.print(Channel.Pirate, tag + ": Drew a " + bootyDrawn)
         }
+        player.booty(Booty.SpanishOfficer) = 0
         
         return RetriableMethodResponse.Complete
     }

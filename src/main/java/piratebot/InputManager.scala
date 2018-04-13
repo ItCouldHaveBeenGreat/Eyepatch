@@ -90,14 +90,19 @@ object InputManager {
         return player.pirates.filter( p => p.state == state ).map( p => p.rank.toString )
     }
 
-    def getBootyFromPlayer(player: Player) : Seq[String] = {
-        return player.booty.map(b => b.id.toString).distinct
+    def getBootyTypesOwnedByPlayer(player: Player) : Seq[Booty.Value] = {
+        // Returns all of the types of booty the player currently possesses
+        player.booty.keySet
+            .filter(bootyType => player.booty(bootyType) > 0)
+            .toSeq
     }
 
-    def getSellableBootyFromPlayer(player : Player) : Seq[String] = {
+    def getSellableBootyTypesFromPlayer(player : Player) : Seq[Booty.Value] = {
         // 'Sellable' is defined as having 2 or more of the same type of booty
-        // This is exclusively used by the Merchant
-        return Booty.values.filter( bootyType => player.booty.count( playerBooty => playerBooty == bootyType ) >= 2 ).toList.map( b => b.id.toString )
+        player.booty
+            .filter(entry => entry._2 >= 2)
+            .keys
+            .toSeq
     }
 
     def getAdjacentDenPirates(player : Player) : Seq[String] = {

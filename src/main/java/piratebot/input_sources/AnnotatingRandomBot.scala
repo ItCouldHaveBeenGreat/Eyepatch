@@ -4,7 +4,7 @@ import main.java.piratebot.{InputRequest, Player}
 
 import scala.util.Random
 
-class AnnotatingRandomBot(val network_to_train : String) extends InputSource with Annotating with Networked with Statistics {
+class AnnotatingRandomBot(val network_to_train : String) extends InputSource with Annotating with Statistics {
     val TRAIN_NETWORK = "train_network"
     val CREATE_NETWORK = "create_network"
     val agent = "randombot"
@@ -15,7 +15,7 @@ class AnnotatingRandomBot(val network_to_train : String) extends InputSource wit
         return decision
     }
 
-    def uploadDecisions(annotations : Map[String, String]) = {
+    def getWinningTrainingData(annotations : Map[String, String]) = {
         try {
             annotate(annotations)
             post(CREATE_NETWORK, Map("network_id" -> network_to_train))

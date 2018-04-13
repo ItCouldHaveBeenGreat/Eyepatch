@@ -8,9 +8,9 @@ class Gambler(player: Player) extends Pirate(player) {
     val name = "Gambler"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        player.doubloons -= player.booty.size
-        OutputManager.print(Channel.Pirate, tag + ": -" + player.booty.size + " Doubloons")
-        return RetriableMethodResponse.Complete
+        player.doubloons -= player.booty.values.sum
+        OutputManager.print(Channel.Pirate, tag + ": -" + player.booty.values.sum + " Doubloons")
+        RetriableMethodResponse.Complete
     }
 
     override def endOfVoyageAction = {
@@ -19,6 +19,6 @@ class Gambler(player: Player) extends Pirate(player) {
     }
     
     def getSubRank(player : Player) : Int = {
-        return Array(4, 3, 6, 5, 1, 2)(player.playerId);
+        Array(4, 3, 6, 5, 1, 2)(player.playerId);
     }
 }

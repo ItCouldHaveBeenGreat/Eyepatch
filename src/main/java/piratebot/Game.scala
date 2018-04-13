@@ -11,7 +11,9 @@ class Game(numPlayers : Int) {
     val totalVoyages : Int = 3
 
     dealPirates(9)
-    
+
+    // this whole retriable thing is actually really, really overbuilt
+    // like, if you don't believe me, just look at the cook. i don't know how this would ever need to exist
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentVoyage.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
@@ -92,9 +94,8 @@ class Game(numPlayers : Int) {
         gameState += player.doubloons
         gameState += player.points
         gameState ++= player.pirates.map( p => p.publicState.id )
-        // The maximum number of items you can have is the total number of Cursed Masks (10) + Cook (2) + Recruiter (1)
-        // + Cook (2) + Surgeon (1) + Cook (2) + 1, or 19
-        gameState ++= player.booty.map( b => b.id ).padTo(19, -1)
+        // Return the quantity of each bootyType in sorted order (not clear what that is?!)
+        gameState ++= player.booty.toSeq.sorted.map(entry => entry._2)
     }
 
     def appendEmptyPlayer(gameState : ArrayBuffer[Int]): Unit = {

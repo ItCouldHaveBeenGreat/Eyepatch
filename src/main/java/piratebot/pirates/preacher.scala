@@ -8,21 +8,25 @@ class Preacher(player: Player) extends Pirate(player) {
     val name = "Preacher"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        while (player.booty.size > 1) {
+        if (player.booty.values.sum <= 1) {
+            return RetriableMethodResponse.Complete
+        } else {
             val request = InputManager.postAndGetInputRequest(
                 player.playerId,
-                InputRequestType.DiscardBooty,
-                InputManager.getBootyFromPlayer(player))
+                InputRequestType.DiscardAllButOneBooty,
+                InputManager.getBootyTypesOwnedByPlayer(player)
+                    .map(bootyType => bootyType.id.toString))
             if (!request.answered) {
                 return RetriableMethodResponse.PendingInput
             } else {
-                val b = InputManager.getBootyFromInput(request)
+                val bootyTypeToKeep = InputManager.getBootyFromInput(request)
+                player.booty.keys.foreach(bootyType => player.booty(bootyType) = 0)
+                player.booty(bootyTypeToKeep) = 1
+                OutputManager.print(Channel.Pirate, "Player " + player.playerId + " kept one " + bootyTypeToKeep)
                 InputManager.removeInputRequest(request.playerId)
-                player.booty -= b
-                OutputManager.print(Channel.Pirate, "Player " + player.playerId + " discarded " + b)
+                return RetriableMethodResponse.Complete
             }
         }
-        return RetriableMethodResponse.Complete
     }
 
     override def endOfVoyageAction = {

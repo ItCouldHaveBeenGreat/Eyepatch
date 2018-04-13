@@ -7,10 +7,10 @@ class Treasurer(player: Player) extends Pirate(player) {
     val rank = 23
     val name = "Treasurer"
 
-    override def endOfVoyageAction = {
-        val numCommodities = player.booty.count(b => b == Booty.Goods ||
-                                                     b == Booty.Jewels ||
-                                                     b == Booty.Chest)
+    override def endOfVoyageAction: Unit = {
+        val numCommodities = player.booty(Booty.Goods)
+            + player.booty(Booty.Jewels)
+            + player.booty(Booty.Chest)
         player.doubloons += numCommodities
         OutputManager.print(Channel.Pirate, tag + ": +" + numCommodities + " Doubloons")
     }

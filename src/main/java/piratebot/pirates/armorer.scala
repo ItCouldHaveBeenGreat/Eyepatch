@@ -8,7 +8,7 @@ class Armorer(player: Player) extends Pirate(player) {
     val name = "Armorer"
 
     override def nightAction: RetriableMethodResponse.Value = {
-        val numSabers = player.booty.count(b => b == Booty.Saber)
+        val numSabers = player.booty(Booty.Saber)
         player.doubloons += numSabers
         OutputManager.print(Channel.Pirate, tag + ": +" + numSabers + " Doubloons")
         return RetriableMethodResponse.Complete

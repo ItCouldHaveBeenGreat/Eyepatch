@@ -25,7 +25,7 @@ object InputRequestType extends Enumeration {
         KillPirateInAnyDen,
         RevivePirateFromDiscard,
         RecruitPirateFromDen,
-        DiscardBooty,
+        DiscardAllButOneBooty,
         SellBooty,
         SellThreeBooty,
         SellMap = Value

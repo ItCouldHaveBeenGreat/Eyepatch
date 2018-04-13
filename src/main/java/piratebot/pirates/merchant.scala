@@ -13,8 +13,9 @@ class Merchant(player: Player) extends Pirate(player) {
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         // determine which type of booty to sell, then determine how many
         if (bootyTypeToSell == None) {
-            val sellableBooty = Booty.values.filter( bootyType => player.booty.count( playerBooty => playerBooty == bootyType ) >= 2 )
-            if (sellableBooty.size == 0) {
+            // I kind of hate how this is using the input manager logic... should break out into booty util
+            val sellableBooty = InputManager.getSellableBootyTypesFromPlayer(player)
+            if (sellableBooty.isEmpty) {
                 OutputManager.print(Channel.Pirate, tag + ": Has nothing to sell")
                 return RetriableMethodResponse.Complete
             }
@@ -24,7 +25,8 @@ class Merchant(player: Player) extends Pirate(player) {
                 val request = InputManager.postAndGetInputRequest(
                     player.playerId,
                     InputRequestType.SellBooty,
-                    InputManager.getSellableBootyFromPlayer(player))
+                    InputManager.getSellableBootyTypesFromPlayer(player)
+                        .map(bootyType => bootyType.toString))
                 if (!request.answered) {
                     return RetriableMethodResponse.PendingInput
                 } else {
@@ -33,8 +35,8 @@ class Merchant(player: Player) extends Pirate(player) {
                 }
             }
         }
-        if (bootyTypeToSell != None) {
-            if (player.booty.count ( b => b == bootyTypeToSell.get ) >= 3) {
+        if (bootyTypeToSell.isDefined) {
+            if (player.booty(bootyTypeToSell.get) >= 3) {
                 val request = InputManager.postAndGetInputRequest(
                     player.playerId,
                     InputRequestType.SellThreeBooty,
@@ -43,11 +45,11 @@ class Merchant(player: Player) extends Pirate(player) {
                     return RetriableMethodResponse.PendingInput
                 } else {
                     if (InputManager.getBooleanResponseFromInput(request)) {
-                        removeItems(bootyTypeToSell.get, 3)
+                        player.booty(bootyTypeToSell.get) -= 3
                         player.doubloons += 5
                         OutputManager.print(Channel.Pirate, tag + ": Sold 3 " + bootyTypeToSell.get + " for 5 doubloons")
                     } else {
-                        removeItems(bootyTypeToSell.get, 2)
+                        player.booty(bootyTypeToSell.get) -= 2
                         player.doubloons += 3
                         OutputManager.print(Channel.Pirate, tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
                     }
@@ -55,7 +57,8 @@ class Merchant(player: Player) extends Pirate(player) {
                 }
             } else {
                 // sell two booty
-                removeItems(bootyTypeToSell.get, 2)
+                // stupid repeated code stupid stupid
+                player.booty(bootyTypeToSell.get) -= 2
                 player.doubloons += 3
                 OutputManager.print(Channel.Pirate, tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
             }
@@ -66,7 +69,7 @@ class Merchant(player: Player) extends Pirate(player) {
 
     def removeItems(bootyType : Booty.Value, howMany : Int) = {
         for (i <- 1 to howMany) {
-            player.booty -= bootyType
+
         }
     }
 

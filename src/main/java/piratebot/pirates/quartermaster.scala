@@ -8,8 +8,8 @@ class Quartermaster(player: Player) extends Pirate(player) {
     val name = "Quartermaster"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        player.doubloons += player.booty.size
-        OutputManager.print(Channel.Pirate, tag + ": +" + player.booty.size + " Doubloons")
+        player.doubloons += player.booty.values.sum
+        OutputManager.print(Channel.Pirate, tag + ": +" + player.booty.values.sum + " Doubloons")
         return RetriableMethodResponse.Complete
     }
 

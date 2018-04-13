@@ -28,8 +28,8 @@ object Runner {
   def main(args: Array[String]) {
     OutputManager.enableChannel(Channel.Bot)
     //OutputManager.enableChannel(Channel.Debug)
-    //OutputManager.enableChannel(Channel.Game)
-    //OutputManager.enableChannel(Channel.Pirate)
+    OutputManager.enableChannel(Channel.Game)
+    OutputManager.enableChannel(Channel.Pirate)
     OutputManager.enableChannel(Channel.Runner)
 
     if (args.length != 3) {
@@ -37,27 +37,13 @@ object Runner {
     }
 
 
-    val rounds = args(0).toInt
-    val configuration = PlayerConfiguration.withName(args(1))
-    val network_id = args(2)
+    val rounds = 1//args(0).toInt
+    val configuration = PlayerConfiguration.RandomTest//PlayerConfiguration.withName(args(1))
+    val network_id = "blah"//args(2)
 
     val players = configuration match {
-      case PlayerConfiguration.RandomTraining => List(
-        new RemoteNeuralNetworkBot(network_id),
-        new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id),
-        new AnnotatingRandomBot(network_id))
-      case PlayerConfiguration.MutationTraining => List(
-        new RemoteNeuralNetworkBot(network_id),
-        new RemoteNeuralNetworkBot(network_id),
-        new AnnotatingMutatingBot(network_id, 0.01),
-        new AnnotatingMutatingBot(network_id, 0.05),
-        new RandomBot(),
-        new RandomBot())
       case PlayerConfiguration.RandomTest => List(
-        new RemoteNeuralNetworkBot(network_id),
+        new RandomBot(),
         new RandomBot(),
         new RandomBot(),
         new RandomBot(),

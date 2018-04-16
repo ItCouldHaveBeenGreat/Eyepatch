@@ -13,7 +13,7 @@ class Waitress(player: Player) extends Pirate(player) {
                 player.playerId,
                 InputRequestType.SellMap,
                 InputManager.getBooleanAnswers)
-            if (!request.answered) {
+            if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             }
 

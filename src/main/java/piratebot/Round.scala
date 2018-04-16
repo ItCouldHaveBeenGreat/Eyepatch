@@ -64,7 +64,7 @@ class Round(val booty : ArrayBuffer[Booty.Value]) {
 
         var pendingInput : Boolean = false
         for (request <- requests) {
-            if (!request.answered) {
+            if (request.answer.isEmpty) {
                 pendingInput = true
             }
         }

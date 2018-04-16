@@ -2,9 +2,8 @@ package main.java.piratebot
 
 class InputRequest(val playerId : Int,
                    val inputType : InputRequestType.Value,
-                   val validAnswers : Seq[String]) {
-    var answer : String = ""
-    var answered : Boolean = false
+                   val choices : Map[String, Int]) {
+    var answer : Option[Int] = Option.empty
     
     override def equals(o: Any) = o match {
         case that: InputRequest => that.hashCode.equals(this.hashCode)
@@ -13,6 +12,7 @@ class InputRequest(val playerId : Int,
       
     override def hashCode : Int = {
         // Deduplicate on inputType and playerId
+        // this is nuts
         return playerId * 61 + inputType.id
     }
 }

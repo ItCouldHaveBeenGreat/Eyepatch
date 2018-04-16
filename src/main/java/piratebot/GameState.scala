@@ -1,5 +1,9 @@
 package main.java.piratebot
 
+object GameState {
+    val GAME_STATE_SIZE = 273
+}
+
 class GameState {
     // array of player state
     // current voyage #

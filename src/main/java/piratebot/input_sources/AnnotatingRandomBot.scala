@@ -3,7 +3,7 @@ package main.java.piratebot.input_sources
 import main.java.piratebot.{InputRequest, Player}
 
 import scala.util.Random
-
+/*
 class AnnotatingRandomBot(val network_to_train : String) extends InputSource with Annotating with Statistics {
     val TRAIN_NETWORK = "train_network"
     val CREATE_NETWORK = "create_network"
@@ -39,3 +39,4 @@ class AnnotatingRandomBot(val network_to_train : String) extends InputSource wit
         printCounters()
     }
 }
+*/

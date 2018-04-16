@@ -12,7 +12,7 @@ class Parrot(player: Player) extends Pirate(player) {
                 player.playerId,
                 InputRequestType.PlayPirateFromHand,
                 InputManager.getPlayerHandFromPlayer(player))
-        if (!request.answered) {
+        if (request.answer.isEmpty) {
             return RetriableMethodResponse.PendingInput
         }
         val pirateRank = InputManager.getPirateIdFromInput(request)

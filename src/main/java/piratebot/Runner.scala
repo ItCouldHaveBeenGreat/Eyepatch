@@ -6,17 +6,15 @@ import scala.util.Random
 
 object Runner {
 
-
-
   def runGame(players : List[InputSource]) = {
     val numPlayers = players.size
 
     val game = new Game(numPlayers)
 
     while (game.makeProgress() != RetriableMethodResponse.Complete) {
-      for (i <- 0 to numPlayers - 1) {
+      for (i <- 0 until numPlayers) {
         val request = InputManager.getInputRequest(i)
-        if (request != null && !request.answered) {
+        if (request != null && request.answer.isEmpty) {
           InputManager.answerInputRequest(i, players(i).makeDecision(request, game.getNormalizedGameState(i)))
         }
       }
@@ -43,7 +41,7 @@ object Runner {
 
     val players = configuration match {
       case PlayerConfiguration.RandomTest => List(
-        new RandomBot(),
+        new BranchingNeuralNetworkBot("JoyOfWind"),
         new RandomBot(),
         new RandomBot(),
         new RandomBot(),

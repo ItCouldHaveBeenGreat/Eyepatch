@@ -15,8 +15,9 @@ class Preacher(player: Player) extends Pirate(player) {
                 player.playerId,
                 InputRequestType.DiscardAllButOneBooty,
                 InputManager.getBootyTypesOwnedByPlayer(player)
-                    .map(bootyType => bootyType.id.toString))
-            if (!request.answered) {
+                    .map(bootyType => bootyType.toString -> bootyType.id)
+                    .toMap)
+            if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             } else {
                 val bootyTypeToKeep = InputManager.getBootyFromInput(request)

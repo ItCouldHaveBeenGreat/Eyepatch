@@ -16,7 +16,7 @@ class Recruiter(player: Player) extends Pirate(player) {
                 player.playerId,
                 InputRequestType.RecruitPirateFromDen,
                 InputManager.getPlayerDenFromPlayer(player))
-        if (!request.answered) {
+        if (request.answer.isEmpty) {
             return RetriableMethodResponse.PendingInput
         }
         val pirateId = InputManager.getPirateIdFromInput(request)

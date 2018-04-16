@@ -19,7 +19,7 @@ class Gunner(player: Player) extends Pirate(player) {
                 player.playerId,
                 InputRequestType.KillPirateInAnyDen,
                 InputManager.getAllDenPirates(player))
-            if (!request.answered) {
+            if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             } else {
                 val target = InputManager.getTargetPirateFromInput(request)

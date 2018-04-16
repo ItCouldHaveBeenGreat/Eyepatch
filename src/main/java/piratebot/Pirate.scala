@@ -25,14 +25,15 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
         // TODO: There's a few of these multi-state, bifurcated functions running
         // around that could be converted into something more like a workflow with
         // a state machine. Main function would handle transitions, it'd be easy
+        // NOTE: This is insanely overbuilt. What was I thinking?! This doesn't need to dump to a DB!
         if (!hasChosenSaber) {
-            if (round.booty.size == 0) {
+            if (round.booty.isEmpty) {
                 OutputManager.print(Channel.Pirate, "Player " + player.playerId + " had no booty to claim")
                 return RetriableMethodResponse.Complete
             }
-            val validAnswers = round.booty.map(b => b.id.toString)
+            val validAnswers = round.booty.map(b => b.toString -> b.id).toMap
             val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
-            if (!request.answered) {
+            if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             } else {
                 val b = InputManager.getBootyFromInput(request)
@@ -46,19 +47,19 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
                     round.killPirate(this)
                 }
                 
-                player.booty(b) = player.booty(b) - 1
+                player.booty(b) = player.booty(b) + 1
                 round.booty -= b
                 OutputManager.print(Channel.Game, "Player " + player.playerId + " claims " + b)
             }
         }
         
         if (hasChosenSaber) {
-            if (InputManager.getAdjacentDenPirates(player).size > 0) {
+            if (InputManager.getAdjacentDenPirates(player).nonEmpty) {
                 val request = InputManager.postAndGetInputRequest(
                     player.playerId,
                     InputRequestType.KillPirateInAdjacentDen,
                     InputManager.getAdjacentDenPirates(player))
-                if (!request.answered) {
+                if (request.answer.isEmpty) {
                     return RetriableMethodResponse.PendingInput
                 } else {
                     val target = InputManager.getTargetPirateFromInput(request)
@@ -70,11 +71,11 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
             }
         }
 
-        return RetriableMethodResponse.Complete
+        RetriableMethodResponse.Complete
     }
     
     def publicState : PublicPirateState.Value = {
-        if (known == false) {
+        if (!known) {
             PublicPirateState.Unknown
         } else {
             state match {
@@ -92,10 +93,10 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
         if (rank == that.rank) {
             return subRank - this.subRank
         }
-        return rank - that.rank
+        rank - that.rank
     }
-    
-    def tag : String = { return name + "(" + player.playerId + ")" }
+
+    def tag : String = { name + "(" + player.playerId + ")" }
     
     protected def getSubRank(player : Player) : Int
 }

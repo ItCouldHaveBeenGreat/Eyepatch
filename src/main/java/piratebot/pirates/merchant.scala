@@ -12,7 +12,7 @@ class Merchant(player: Player) extends Pirate(player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         // determine which type of booty to sell, then determine how many
-        if (bootyTypeToSell == None) {
+        if (bootyTypeToSell.isEmpty) {
             // I kind of hate how this is using the input manager logic... should break out into booty util
             val sellableBooty = InputManager.getSellableBootyTypesFromPlayer(player)
             if (sellableBooty.isEmpty) {
@@ -26,8 +26,9 @@ class Merchant(player: Player) extends Pirate(player) {
                     player.playerId,
                     InputRequestType.SellBooty,
                     InputManager.getSellableBootyTypesFromPlayer(player)
-                        .map(bootyType => bootyType.toString))
-                if (!request.answered) {
+                        .map(bootyType => bootyType.toString -> bootyType.id)
+                        .toMap)
+                if (request.answer.isEmpty) {
                     return RetriableMethodResponse.PendingInput
                 } else {
                     bootyTypeToSell = Some(InputManager.getBootyFromInput(request))
@@ -41,7 +42,7 @@ class Merchant(player: Player) extends Pirate(player) {
                     player.playerId,
                     InputRequestType.SellThreeBooty,
                     InputManager.getBooleanAnswers)
-                if (!request.answered) {
+                if (request.answer.isEmpty) {
                     return RetriableMethodResponse.PendingInput
                 } else {
                     if (InputManager.getBooleanResponseFromInput(request)) {
@@ -64,16 +65,10 @@ class Merchant(player: Player) extends Pirate(player) {
             }
         }
         bootyTypeToSell = None
-        return RetriableMethodResponse.Complete
-    }
-
-    def removeItems(bootyType : Booty.Value, howMany : Int) = {
-        for (i <- 1 to howMany) {
-
-        }
+        RetriableMethodResponse.Complete
     }
 
     def getSubRank(player : Player) : Int = {
-        return Array(1, 6, 3, 2, 4, 5)(player.playerId);
+        Array(1, 6, 3, 2, 4, 5)(player.playerId)
     }
 }

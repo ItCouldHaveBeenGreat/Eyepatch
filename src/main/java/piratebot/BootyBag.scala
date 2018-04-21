@@ -23,7 +23,7 @@ object BootyBag {
         for (i <- 1 to 10) { bootyBag += Booty.Goods }
         for (i <- 1 to 6) { bootyBag += Booty.SpanishOfficer }
         for (i <- 1 to 6) { bootyBag += Booty.Saber }
-        for (i <- 1 to 8) { bootyBag += Booty.TreasureMap }
+        for (i <- 1 to 16) { bootyBag += Booty.TreasureMap }
         for (i <- 1 to 10) { bootyBag += Booty.CursedMask }
     }
 }

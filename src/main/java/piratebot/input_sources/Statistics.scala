@@ -12,7 +12,7 @@ trait Statistics {
       counters.put(counterName, value)
     }
   }
-  def printCounters() = {
+  def printCounters = {
     println(counters)
   }
 }

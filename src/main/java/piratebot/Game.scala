@@ -8,7 +8,7 @@ class Game(numPlayers : Int) {
     
     var currentVoyage: Voyage = new Voyage(numPlayers)
     var voyagesTaken : Int = 0
-    val totalVoyages : Int = 3
+    val totalVoyages : Int = 1
 
     dealPirates(9)
 

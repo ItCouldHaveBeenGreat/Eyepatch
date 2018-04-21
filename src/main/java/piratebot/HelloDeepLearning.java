@@ -7,7 +7,6 @@ import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.conf.layers.RBM;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -46,13 +45,13 @@ public class HelloDeepLearning {
         int iterations = 1;
 
         //Initialize the user interface backend
-        UIServer uiServer = UIServer.getInstance();
+        //UIServer uiServer = UIServer.getInstance();
 
         //Configure where the network information (gradients, score vs. time etc) is to be stored. Here: store in memory.
         StatsStorage statsStorage = new InMemoryStatsStorage();         //Alternative: new FileStatsStorage(File), for saving and loading later
 
         //Attach the StatsStorage instance to the UI: this allows the contents of the StatsStorage to be visualized
-        uiServer.attach(statsStorage);
+        //uiServer.attach(statsStorage);
 
 
 
@@ -72,7 +71,7 @@ public class HelloDeepLearning {
                         .activation(Activation.TANH)
                         .build())
                 .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.MSE)
-                        .activation(Activation.IDENTITY)
+                        .activation(Activation.SOFTMAX)
                         .nIn(10).nOut(1).build())
                 .pretrain(false)
                 .backprop(true)
@@ -95,7 +94,9 @@ public class HelloDeepLearning {
 
         // evaluation while training (the score should go down)
         for (int i = 0; i < nEpochs; i++) {
+            System.out.println(trainingSet.next().toString());
             net.fit(trainingSet);
+
             log.info("Completed epoch {}", i);
             trainingSet.reset();
             //Evaluation eval = net.evaluate(trainingSet);
@@ -117,6 +118,6 @@ public class HelloDeepLearning {
         System.out.println(net.output(new NDArray(new float[]{3.0f})));
         System.out.println(net.output(new NDArray(new float[]{2.0f})));
         System.out.println(net.predict(new NDArray(new float[]{10.0f}))[0]);
-        uiServer.stop();
+        //uiServer.stop();
     }
 }

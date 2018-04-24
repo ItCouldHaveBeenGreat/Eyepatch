@@ -1,19 +1,27 @@
 package main.java.piratebot
 
+import com.google.gson.Gson
+
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 class Game(numPlayers : Int) {
     PlayerManager.build(numPlayers)
-    
+
+    @transient
     var currentVoyage: Voyage = new Voyage(numPlayers)
     var voyagesTaken : Int = 0
     val totalVoyages : Int = 1
 
     dealPirates(9)
 
+    @transient
+    val gson = new Gson
+
     // this whole retriable thing is actually really, really overbuilt
     // like, if you don't believe me, just look at the cook. i don't know how this would ever need to exist
+    // if the game needed to be stored into a database. that's it
+
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentVoyage.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
@@ -34,7 +42,7 @@ class Game(numPlayers : Int) {
         }
     }
     
-    def dealPirates(numPirates : Int) = {
+    def dealPirates(numPirates : Int): Unit = {
         for (i <- 1 to numPirates) {
            val deck = PlayerManager.players.head.pirates.filter( p => p.state == PirateState.Deck)
            val pirateToDraw = deck(Random.nextInt(deck.size)).rank
@@ -46,7 +54,7 @@ class Game(numPlayers : Int) {
         }
     }
     
-    def endGame = {
+    def endGame(): Unit = {
         OutputManager.print(Channel.Game, "Final Scores: ")
         for (p <- PlayerManager.players) {
             OutputManager.print(Channel.Game, "Player " + p.playerId + ": " + p.points + " points")
@@ -59,7 +67,7 @@ class Game(numPlayers : Int) {
         for (player <- PlayerManager.players) {
             appendPlayerState(gameState, player)
         }
-        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS - 1) {
+        for (i <- PlayerManager.players.size until PlayerManager.MAX_PLAYERS) {
             appendEmptyPlayer(gameState)
         }
         return gameState
@@ -67,30 +75,40 @@ class Game(numPlayers : Int) {
 
     // Returns game state as if the player is always player 1, but preserves order
     def getNormalizedGameState(playerId : Int) : Seq[Int] = {
+        println("Zerone!")
+        var readableGameState = gson.toJson(this)
+        println("One!")
+        readableGameState += gson.toJson(currentVoyage)
+        println("Two!")
+
         val gameState = ArrayBuffer[Int]()
         appendCommonState(gameState)
-        for (i <- playerId to PlayerManager.players.size - 1) {
+        for (i <- playerId until PlayerManager.players.size) {
             val player = PlayerManager.getPlayer(i)
             appendPlayerState(gameState, player)
+            readableGameState += gson.toJson(player)
         }
-        for (i <- 0 to playerId - 1) {
+        println("Five!")
+        for (i <- 0 until playerId) {
             val player = PlayerManager.getPlayer(i)
             appendPlayerState(gameState, player)
+            readableGameState += gson.toJson(player)
         }
-        for (i <- PlayerManager.players.size to PlayerManager.MAX_PLAYERS - 1) {
+        for (i <- PlayerManager.players.size until PlayerManager.MAX_PLAYERS) {
             appendEmptyPlayer(gameState)
         }
+        println(readableGameState)
         return gameState
     }
 
-    def appendCommonState(gameState : ArrayBuffer[Int]) = {
+    def appendCommonState(gameState : ArrayBuffer[Int]): Unit = {
         gameState += PlayerManager.players.size
         gameState += voyagesTaken
         gameState += currentVoyage.roundsTaken
-        gameState ++= currentVoyage.bootySets.map( bootySet => bootySet.map( b => b.id ).padTo(PlayerManager.MAX_PLAYERS, -1)).flatten
+        gameState ++= currentVoyage.bootySets.flatMap(bootySet => bootySet.map(b => b.id).padTo(PlayerManager.MAX_PLAYERS, -1))
     }
 
-    def appendPlayerState(gameState : ArrayBuffer[Int], player : Player) = {
+    def appendPlayerState(gameState : ArrayBuffer[Int], player : Player) : Unit = {
         gameState += player.doubloons
         gameState += player.points
         gameState ++= player.pirates.map( p => p.publicState.id )

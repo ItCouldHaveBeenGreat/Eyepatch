@@ -3,12 +3,17 @@ package main.java.piratebot
 import scala.collection.mutable.ArrayBuffer
 
 class Round(val booty : ArrayBuffer[Booty.Value]) {
-    
+
+    @transient
     var state : RoundState.Value = RoundState.SolicitPirates
-    
+
+    @transient
     var dayStack = ArrayBuffer[Pirate]()
+    @transient
     private var duskStack = ArrayBuffer[Pirate]()
+    @transient
     private var survivorStack = ArrayBuffer[Pirate]()
+    @transient
     private var nightSequences = Seq[ArrayBuffer[Pirate]]()
     
     

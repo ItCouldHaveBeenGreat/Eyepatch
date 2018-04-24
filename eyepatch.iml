@@ -207,6 +207,7 @@
     <orderEntry type="library" name="Maven: org.deeplearning4j:deeplearning4j-ui-resources:0.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.datavec:datavec-data-codec:0.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.jcodec:jcodec:0.1.5" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.7" level="project" />
   </component>
 </module>

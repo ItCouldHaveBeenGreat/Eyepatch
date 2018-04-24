@@ -3,12 +3,13 @@ package main.java.piratebot
 import scala.collection.mutable.ArrayBuffer
 
 class Voyage(val numPlayers : Int) {
-    val totalRounds: Int = 6;
+    val totalRounds: Int = 6
     
     BootyBag.build
+    @transient
     val bootySets = ArrayBuffer.fill(totalRounds)( ArrayBuffer.fill(numPlayers)( BootyBag.draw ) )
     var currentRound = new Round(bootySets(0))
-    var roundsTaken : Int = 0;
+    var roundsTaken : Int = 0
 
     PlayerManager.players.foreach( p => p.doubloons = 10)
     

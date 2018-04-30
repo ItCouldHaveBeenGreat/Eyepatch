@@ -1,10 +1,12 @@
 package main.java.piratebot
 
 import input_sources._
+import org.slf4j.LoggerFactory
 
 import scala.util.Random
 
 object Runner {
+    private val logger = LoggerFactory.getLogger(getClass())
 
     def runGame(players : List[InputSource]): Unit = {
         val numPlayers = players.size
@@ -12,28 +14,22 @@ object Runner {
 
         while (game.makeProgress() != RetriableMethodResponse.Complete) {
             for (i <- 0 until numPlayers) {
-                val request = InputManager.getInputRequest(i)
+                val request = game.inputManager.getInputRequest(i)
                 if (request != null && request.answer.isEmpty) {
-                    InputManager.answerInputRequest(i, players(i).makeDecision(request, game.getNormalizedGameState(i)))
+                    game.inputManager.answerInputRequest(i, players(i).makeDecision(request, game.getNormalizedGameState(i)))
                 }
             }
         }
 
-        PlayerManager.players.foreach(p => players(p.playerId).endGame(p, PlayerManager.players))
+        game.playerManager.players.foreach(p => players(p.playerId).endGame(p, game.playerManager.players))
     }
 
     def main(args: Array[String]) {
-        OutputManager.enableChannel(Channel.Bot)
-        //OutputManager.enableChannel(Channel.Debug)
-        OutputManager.enableChannel(Channel.Game)
-        OutputManager.enableChannel(Channel.Pirate)
-        OutputManager.enableChannel(Channel.Runner)
-
         if (args.length != 3) {
 
         }
 
-        val rounds = 1000//args(0).toInt
+        val rounds = 100//args(0).toInt
         val configuration = PlayerConfiguration.RandomTest//PlayerConfiguration.withName(args(1))
         val network_id = "blah"//args(2)
 
@@ -51,7 +47,7 @@ object Runner {
         for (i <- 1 to rounds) {
             val startTime = System.currentTimeMillis()
             runGame(Random.shuffle(players))
-            OutputManager.print(Channel.Runner, "Game " + i.toString + " time: " + (System.currentTimeMillis() - startTime))
+            logger.info("Game " + i.toString + " time: " + (System.currentTimeMillis() - startTime))
         }
 
         for (player <- players) {

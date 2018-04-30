@@ -1,28 +1,30 @@
 package main.java.piratebot
 
+import org.slf4j.LoggerFactory
+
 import scala.collection.mutable.ArrayBuffer
 
-class Voyage(val numPlayers : Int) {
+class Voyage(val game: Game, val numPlayers : Int) {
+    private val logger = LoggerFactory.getLogger(classOf[Voyage])
     val totalRounds: Int = 6
     
-    BootyBag.build
-    @transient
-    val bootySets = ArrayBuffer.fill(totalRounds)( ArrayBuffer.fill(numPlayers)( BootyBag.draw ) )
-    var currentRound = new Round(bootySets(0))
+    game.bootyBag.build
+    val bootySets: ArrayBuffer[ArrayBuffer[Booty.Value]] = ArrayBuffer.fill(totalRounds)( ArrayBuffer.fill(numPlayers)( game.bootyBag.draw ) )
+    var currentRound = new Round(game, bootySets(0))
     var roundsTaken : Int = 0
 
-    PlayerManager.players.foreach( p => p.doubloons = 10)
+    game.playerManager.players.foreach( p => p.doubloons = 10)
     
     def makeProgress() : RetriableMethodResponse.Value = {
         var response = currentRound.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
-            OutputManager.print(Channel.Game, "Round " + roundsTaken + " complete")
+            logger.info("Round " + roundsTaken + " complete")
             roundsTaken += 1
             if (roundsTaken >= totalRounds) {
                 endVoyage()
                 return RetriableMethodResponse.Complete
             } else {
-                currentRound = new Round(bootySets(roundsTaken))
+                currentRound = new Round(game, bootySets(roundsTaken))
                 return RetriableMethodResponse.MadeProgress
             }
         } else {
@@ -31,7 +33,7 @@ class Voyage(val numPlayers : Int) {
         }
     }
     
-    def endVoyage() = {
-        PlayerManager.players.foreach ( p => p.endVoyage )
+    def endVoyage(): Unit = {
+        game.playerManager.players.foreach ( p => p.endVoyage() )
     }
 }

@@ -1,43 +1,44 @@
 package main.java.piratebot
 
-abstract class Pirate(val player: Player) extends Ordered[Pirate] {
+import org.slf4j.LoggerFactory
+
+abstract class Pirate(val game: Game, val player: Player) extends Ordered[Pirate] {
+    protected val logger = LoggerFactory.getLogger(classOf[Pirate])
+
     val rank : Int
     val name : String
     var known : Boolean = true
     val subRank: Int = getSubRank(player)
 
     var state : PirateState.Value = PirateState.Deck
+    var hasChosenSaber : Boolean = false
     
     // By default, a pirate only claims booty
-    def dayAction(round : Round): RetriableMethodResponse.Value = {
-        return RetriableMethodResponse.Complete
+    def dayAction(round : Round) : RetriableMethodResponse.Value = {
+        RetriableMethodResponse.Complete
     }
-    def duskAction(round : Round): RetriableMethodResponse.Value = {
-        return claimBooty(round)
+    def duskAction(round : Round) : RetriableMethodResponse.Value = {
+        claimBooty(round)
     }
-    def nightAction: RetriableMethodResponse.Value = {
-        return RetriableMethodResponse.Complete
+    def nightAction : RetriableMethodResponse.Value = {
+        RetriableMethodResponse.Complete
     }
-    def endOfVoyageAction = { }
+    def endOfVoyageAction() : Unit = { }
     
-    var hasChosenSaber : Boolean = false
+
     def claimBooty(round : Round) : RetriableMethodResponse.Value = {
-        // TODO: There's a few of these multi-state, bifurcated functions running
-        // around that could be converted into something more like a workflow with
-        // a state machine. Main function would handle transitions, it'd be easy
-        // NOTE: This is insanely overbuilt. What was I thinking?! This doesn't need to dump to a DB!
         if (!hasChosenSaber) {
             if (round.booty.isEmpty) {
-                OutputManager.print(Channel.Pirate, "Player " + player.playerId + " had no booty to claim")
+                logger.debug("Player " + player.playerId + " had no booty to claim")
                 return RetriableMethodResponse.Complete
             }
             val validAnswers = round.booty.map(b => b.toString -> b.id).toMap
-            val request = InputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
+            val request = game.inputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
             if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             } else {
-                val b = InputManager.getBootyFromInput(request)
-                InputManager.removeInputRequest(request.playerId)
+                val b = game.inputManager.getBootyFromInput(request)
+                game.inputManager.removeInputRequest(request.playerId)
                 
                 if (b == Booty.Saber) {
                     hasChosenSaber = true
@@ -49,24 +50,24 @@ abstract class Pirate(val player: Player) extends Ordered[Pirate] {
                 
                 player.booty(b) = player.booty(b) + 1
                 round.booty -= b
-                OutputManager.print(Channel.Game, "Player " + player.playerId + " claims " + b)
+                logger.info("Player " + player.playerId + " claims " + b)
             }
         }
         
         if (hasChosenSaber) {
-            if (InputManager.getAdjacentDenPirates(player).nonEmpty) {
-                val request = InputManager.postAndGetInputRequest(
+            if (game.inputManager.getAdjacentDenPirates(player).nonEmpty) {
+                val request = game.inputManager.postAndGetInputRequest(
                     player.playerId,
                     InputRequestType.KillPirateInAdjacentDen,
-                    InputManager.getAdjacentDenPirates(player))
+                    game.inputManager.getAdjacentDenPirates(player))
                 if (request.answer.isEmpty) {
                     return RetriableMethodResponse.PendingInput
                 } else {
-                    val target = InputManager.getTargetPirateFromInput(request)
+                    val target = game.inputManager.getTargetPirateFromInput(request)
                     target.state = PirateState.Discard
-                    OutputManager.print(Channel.Game, tag + ": sabered " + target.tag)
+                    logger.info(tag + ": sabered " + target.tag)
                     hasChosenSaber = false
-                    InputManager.removeInputRequest(request.playerId)
+                    game.inputManager.removeInputRequest(request.playerId)
                 }
             }
         }

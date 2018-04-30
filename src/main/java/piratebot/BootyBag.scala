@@ -3,12 +3,8 @@ package main.java.piratebot
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-/**
-  * Created by Boreal on 7/1/17.
-  */
-object BootyBag {
+class BootyBag {
     private val bootyBag = ArrayBuffer[Booty.Value]()
-    build
 
     def draw : Booty.Value = {
         val drawn = bootyBag(Random.nextInt(bootyBag.size))

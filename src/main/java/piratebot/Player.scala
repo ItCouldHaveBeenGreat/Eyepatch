@@ -1,12 +1,16 @@
 package main.java.piratebot
 
 import libertalia._
+import main.java.piratebot.pirates._
+import org.slf4j.LoggerFactory
 
 import scala.collection.mutable
 
-class Player(val playerId : Int) {
-    var points : Int = 0;
-    var doubloons : Int = 0;
+class Player(val game: Game, val playerId : Int) {
+    private val logger = LoggerFactory.getLogger(classOf[InputManager])
+
+    var points : Int = 0
+    var doubloons : Int = 0
     val booty = mutable.HashMap(
         Booty.Chest -> 0,
         Booty.CursedMask -> 0,
@@ -16,40 +20,40 @@ class Player(val playerId : Int) {
         Booty.SpanishOfficer -> 0,
         Booty.TreasureMap -> 0)
     val pirates : Seq[Pirate] = List( // NOTE: Order matters
-        new Parrot(this),
-        new Monkey(this),
-        new Beggar(this),
-        new Recruiter(this),
-        new CabinBoy(this),
-        new Preacher(this),
-        new Barkeep(this),
-        new Waitress(this),
-        new Carpenter(this),
-        new FrenchOfficer(this),
-        new VoodooWitch(this),
-        new FreedSlave(this),
-        new Mutineer(this),
-        new Brute(this),
-        new Gunner(this),
-        new Topman(this),
-        new SpanishSpy(this),
-        new Cook(this),
-        new Bosun(this),
-        new Armorer(this),
-        new Merchant(this),
-        new Surgeon(this),
-        new Treasurer(this),
-        new Gambler(this),
-        new GovernorsDaughter(this),
-        new Quartermaster(this),
-        new GrannyWata(this),
-        new FirstMate(this),
-        new Captain(this),
-        new SpanishGovernor(this))
+        new Parrot(game, this),
+        new Monkey(game, this),
+        new Beggar(game, this),
+        new Recruiter(game, this),
+        new CabinBoy(game, this),
+        new Preacher(game, this),
+        new Barkeep(game, this),
+        new Waitress(game, this),
+        new Carpenter(game, this),
+        new FrenchOfficer(game, this),
+        new VoodooWitch(game, this),
+        new FreedSlave(game, this),
+        new Mutineer(game, this),
+        new Brute(game, this),
+        new Gunner(game, this),
+        new Topman(game, this),
+        new SpanishSpy(game, this),
+        new Cook(game, this),
+        new Bosun(game, this),
+        new Armorer(game, this),
+        new Merchant(game, this),
+        new Surgeon(game, this),
+        new Treasurer(game, this),
+        new Gambler(game, this),
+        new GovernorsDaughter(game, this),
+        new Quartermaster(game, this),
+        new GrannyWata(game, this),
+        new FirstMate(game, this),
+        new Captain(game, this),
+        new SpanishGovernor(game, this))
 
     def getPirate(rank : Int) : Pirate = {
         // Rank is 1 indexed
-        return pirates(rank - 1)
+        pirates(rank - 1)
     }
 
     def dealPirate(rank : Int): Unit = {
@@ -64,13 +68,13 @@ class Player(val playerId : Int) {
         sellBooty()
         doubloons = Math.max(0, doubloons)
         points += doubloons
-        OutputManager.print(Channel.Game, "Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
+        logger.info("Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
     }
 
     private def doEndOfVoyageActions(): Unit = {
-        OutputManager.print(Channel.Debug, "Player " + playerId + " running end of voyage actions")
+        logger.debug("Player " + playerId + " running end of voyage actions")
         pirates.filter( p => p.state == PirateState.Den).foreach( p =>
-            p.endOfVoyageAction
+            p.endOfVoyageAction()
         )
     }
 
@@ -81,7 +85,7 @@ class Player(val playerId : Int) {
     }
 
     private def sellBooty(): Unit = {
-        OutputManager.print(Channel.Debug, "Player " + playerId + " booty: " + booty)
+        logger.debug("Player " + playerId + " booty: " + booty)
         val gain = booty(Booty.Goods) * 1 +
                    booty(Booty.Jewels) * 3 +
                    booty(Booty.Chest) * 5 +
@@ -90,6 +94,6 @@ class Player(val playerId : Int) {
 
         doubloons += gain
         booty.keys.foreach(bootyType => booty(bootyType) = 0)
-        OutputManager.print(Channel.Debug, "Player " + playerId + " sold their booty for " + gain + " doubloons")
+        logger.debug("Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
 }

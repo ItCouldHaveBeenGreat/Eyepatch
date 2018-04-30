@@ -1,20 +1,19 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class VoodooWitch(player: Player) extends Pirate(player) {
+class VoodooWitch(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 11
     val name = "Voodoo Witch"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         val numDiscard = player.pirates.count( p => p.state == PirateState.Discard )
         player.doubloons += 2 * numDiscard
-        OutputManager.print(Channel.Pirate, tag + ": +" + numDiscard * 2 + " Doubloons")
-        return RetriableMethodResponse.Complete
+        logger.debug(tag + ": +" + numDiscard * 2 + " Doubloons")
+        RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {
-        return Array(5, 4, 1, 6, 2, 3)(player.playerId);
+        Array(5, 4, 1, 6, 2, 3)(player.playerId)
     }
 }

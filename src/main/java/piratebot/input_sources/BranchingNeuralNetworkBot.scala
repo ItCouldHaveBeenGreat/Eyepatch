@@ -95,7 +95,7 @@ class BranchingNeuralNetworkBot(val network_id : String) extends InputSource wit
         val bestValidChoice = choiceWeights.indices.filter(index => choices.contains(index)).maxBy(choiceWeights)
         println("choices: " + choices)
         println("best: " + bestValidChoice)
-
+f
         bestValidChoice
     }
 

@@ -1,10 +1,11 @@
 package main.java.piratebot
 
+import org.slf4j.LoggerFactory
+
 import scala.collection.mutable
 
-// TODO: Define class as the intersection of a player facing trait and a game facing trait
-object InputManager {
-
+class InputManager(game: Game) {
+    private val logger = LoggerFactory.getLogger(classOf[InputManager])
     // TODO: Restructure this to be a set
     private val inputRequests : mutable.HashMap[Int, InputRequest] = mutable.HashMap[Int, InputRequest]()
 
@@ -16,14 +17,14 @@ object InputManager {
         }
     }
 
-    def answerInputRequest(playerId: Int, inputResponse : Int) = {
+    def answerInputRequest(playerId: Int, inputResponse : Int): Unit = {
         val request : InputRequest = inputRequests(playerId)
         if (request.answer.isDefined) {
             throw new Exception("Already answered request " + playerId)
         }
         if (request.choices.values.toList.contains(inputResponse)) {
             request.answer = Option(inputResponse)
-            OutputManager.print(Channel.Debug, "Player " + playerId + " answered " + request.answer + " out of set " + request.choices)
+            logger.debug("Player " + playerId + " answered " + request.answer + " out of set " + request.choices)
         } else {
             throw new Exception("Invalid answer for request " + playerId)
         }
@@ -36,14 +37,14 @@ object InputManager {
             throw new Exception("No valid answers supplied")
         }
         if (!inputRequests.contains(playerId)) {
-            OutputManager.print(Channel.Debug, "Created request for player " + playerId + " for " + requestType
+            logger.debug("Created request for player " + playerId + " for " + requestType
                 + "with answers " + choices)
             inputRequests += ((playerId, new InputRequest(playerId, requestType, choices)))
         }
         inputRequests(playerId)
    }
 
-    def removeInputRequest(playerId : Int) = {
+    def removeInputRequest(playerId : Int) : Unit = {
         inputRequests -= playerId
     }
 
@@ -65,7 +66,7 @@ object InputManager {
 
     def getTargetPirateFromInput(input : InputRequest) : Pirate = {
         if (input.inputType == InputRequestType.KillPirateInAnyDen || input.inputType == InputRequestType.KillPirateInAdjacentDen) {
-            getPirateFromLocalizedPirateId(PlayerManager.getPlayer(
+            getPirateFromLocalizedPirateId(game.playerManager.getPlayer(
                  input.playerId),
                  input.answer.getOrElse(throw new RuntimeException("Input Request was not answered!")))
         } else {
@@ -109,7 +110,7 @@ object InputManager {
 
     def getAdjacentDenPirates(localPlayer : Player) : Map[String, Int] = {
         // Returns a list of playerId * 30 + pirateId
-        PlayerManager.getAdjacentPlayers(localPlayer)
+        game.playerManager.getAdjacentPlayers(localPlayer)
             .flatMap(p => p.pirates.filter(pirate => pirate.state == PirateState.Den))
             .map(pirate => pirate.tag -> getLocalizedPirateId(localPlayer, pirate))
             .toMap
@@ -118,7 +119,7 @@ object InputManager {
 
     def getAllDenPirates(localPlayer : Player) : Map[String, Int] = {
         // Returns a list of conjoined playerId + pirateId. localPlayer has no playerid
-        PlayerManager.players
+        game.playerManager.players
             .flatMap(player => player.pirates.filter(pirate => pirate.state == PirateState.Den))
             .map(pirate => pirate.tag -> getLocalizedPirateId(localPlayer, pirate))
             .toMap
@@ -131,12 +132,12 @@ object InputManager {
       * @return
       */
     private def getLocalizedPirateId(localPlayer : Player, pirate : Pirate) : Int = {
-        PlayerManager.getLocalPlayerId(localPlayer, pirate.player) * 30 + pirate.rank - 1
+        game.playerManager.getLocalPlayerId(localPlayer, pirate.player) * 30 + pirate.rank - 1
     }
 
     private def getPirateFromLocalizedPirateId(localPlayer : Player, localizedPirateId : Int) : Pirate = {
         val localizedPlayerId = localizedPirateId / 30
-        val player = PlayerManager.getPlayerFromLocalPlayerId(localPlayer, localizedPlayerId)
+        val player = game.playerManager.getPlayerFromLocalPlayerId(localPlayer, localizedPlayerId)
         val pirateRank = localizedPirateId % 30 + 1
 
         player.getPirate(pirateRank)

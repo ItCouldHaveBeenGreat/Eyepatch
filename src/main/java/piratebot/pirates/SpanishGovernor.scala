@@ -1,9 +1,8 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class SpanishGovernor(player: Player) extends Pirate(player) {
+class SpanishGovernor(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 30
     val name = "Spanish Governor"
 
@@ -13,11 +12,11 @@ class SpanishGovernor(player: Player) extends Pirate(player) {
                 p.state = PirateState.Discard
             }
         }
-        OutputManager.print(Channel.Pirate, tag + ": Discarded all characters in den")
-        return RetriableMethodResponse.Complete
+        logger.debug(tag + ": Discarded all characters in den")
+        RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {
-        return Array(3, 2, 5, 4, 6, 1)(player.playerId);
+         Array(3, 2, 5, 4, 6, 1)(player.playerId)
     }
 }

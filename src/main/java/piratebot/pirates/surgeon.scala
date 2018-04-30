@@ -1,29 +1,28 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Surgeon(player: Player) extends Pirate(player) {
+class Surgeon(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 22
     val name = "Surgeon"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        if (InputManager.getPlayerDiscardFromPlayer(player).size == 0) {
-            OutputManager.print(Channel.Pirate, tag + ": No one to revive")
+        if (game.inputManager.getPlayerDiscardFromPlayer(player).isEmpty) {
+            logger.debug(tag + ": No one to revive")
             return RetriableMethodResponse.Complete
         }
         
-        val request = InputManager.postAndGetInputRequest(
+        val request = game.inputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.RevivePirateFromDiscard,
-                InputManager.getPlayerDiscardFromPlayer(player))
+                game.inputManager.getPlayerDiscardFromPlayer(player))
         if (request.answer.isEmpty) {
             return RetriableMethodResponse.PendingInput
         }
-        val pirateRank = InputManager.getPirateIdFromInput(request)
-        InputManager.removeInputRequest(request.playerId)
+        val pirateRank = game.inputManager.getPirateIdFromInput(request)
+        game.inputManager.removeInputRequest(request.playerId)
         
-        val pirateToRevive = PlayerManager.players(request.playerId).getPirate(pirateRank)
+        val pirateToRevive = game.playerManager.players(request.playerId).getPirate(pirateRank)
         pirateToRevive.state = PirateState.Hand
         
         if (player.pirates.count( p => p.state == PirateState.Discard ) > 0) {
@@ -42,9 +41,9 @@ class Surgeon(player: Player) extends Pirate(player) {
             )
         }
 
-        return RetriableMethodResponse.Complete
+        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return Array(2, 1, 4, 3, 5, 6)(player.playerId);
+        Array(2, 1, 4, 3, 5, 6)(player.playerId)
     }
 }

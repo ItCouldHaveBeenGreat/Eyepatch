@@ -1,21 +1,20 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Gambler(player: Player) extends Pirate(player) {
+class Gambler(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 24
     val name = "Gambler"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         player.doubloons -= player.booty.values.sum
-        OutputManager.print(Channel.Pirate, tag + ": -" + player.booty.values.sum + " Doubloons")
+        logger.debug(tag + ": -" + player.booty.values.sum + " Doubloons")
         RetriableMethodResponse.Complete
     }
 
     override def endOfVoyageAction = {
         player.doubloons += 8
-        OutputManager.print(Channel.Pirate, tag + ": +8 Doubloons")
+        logger.debug(tag + ": +8 Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

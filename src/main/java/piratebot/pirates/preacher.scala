@@ -1,9 +1,8 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Preacher(player: Player) extends Pirate(player) {
+class Preacher(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 6
     val name = "Preacher"
 
@@ -11,31 +10,31 @@ class Preacher(player: Player) extends Pirate(player) {
         if (player.booty.values.sum <= 1) {
             return RetriableMethodResponse.Complete
         } else {
-            val request = InputManager.postAndGetInputRequest(
+            val request = game.inputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.DiscardAllButOneBooty,
-                InputManager.getBootyTypesOwnedByPlayer(player)
+                game.inputManager.getBootyTypesOwnedByPlayer(player)
                     .map(bootyType => bootyType.toString -> bootyType.id)
                     .toMap)
             if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             } else {
-                val bootyTypeToKeep = InputManager.getBootyFromInput(request)
+                val bootyTypeToKeep = game.inputManager.getBootyFromInput(request)
                 player.booty.keys.foreach(bootyType => player.booty(bootyType) = 0)
                 player.booty(bootyTypeToKeep) = 1
-                OutputManager.print(Channel.Pirate, "Player " + player.playerId + " kept one " + bootyTypeToKeep)
-                InputManager.removeInputRequest(request.playerId)
+                logger.debug("Player " + player.playerId + " kept one " + bootyTypeToKeep)
+                game.inputManager.removeInputRequest(request.playerId)
                 return RetriableMethodResponse.Complete
             }
         }
     }
 
-    override def endOfVoyageAction = {
+    override def endOfVoyageAction(): Unit = {
         player.doubloons += 5
-        OutputManager.print(Channel.Pirate, tag + ": +5 Doubloons")
+        logger.debug(tag + ": +5 Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {
-        return Array(1, 6, 3, 2, 4, 5)(player.playerId);
+        Array(1, 6, 3, 2, 4, 5)(player.playerId)
     }
 }

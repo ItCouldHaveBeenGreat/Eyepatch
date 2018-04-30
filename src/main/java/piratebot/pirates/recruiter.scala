@@ -1,31 +1,30 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Recruiter(player: Player) extends Pirate(player) {
+class Recruiter(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 4
     val name = "Recruiter"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (player.pirates.count ( p => p.state == PirateState.Den) == 0) {
-            OutputManager.print(Channel.Pirate, tag + ": Nobody to recruit")
+            logger.debug(tag + ": Nobody to recruit")
             return RetriableMethodResponse.Complete
         }
-        val request = InputManager.postAndGetInputRequest(
+        val request = game.inputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.RecruitPirateFromDen,
-                InputManager.getPlayerDenFromPlayer(player))
+            game.inputManager.getPlayerDenFromPlayer(player))
         if (request.answer.isEmpty) {
             return RetriableMethodResponse.PendingInput
         }
-        val pirateId = InputManager.getPirateIdFromInput(request)
-        InputManager.removeInputRequest(request.playerId)
+        val pirateId = game.inputManager.getPirateIdFromInput(request)
+        game.inputManager.removeInputRequest(request.playerId)
         player.getPirate(pirateId).state = PirateState.Hand
-        OutputManager.print(Channel.Pirate, tag + ": Recruits " + player.getPirate(pirateId).name)
-        return RetriableMethodResponse.Complete
+        logger.debug(tag + ": Recruits " + player.getPirate(pirateId).name)
+        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return Array(5, 4, 1, 6, 2, 3)(player.playerId);
+        Array(5, 4, 1, 6, 2, 3)(player.playerId)
     }
 }

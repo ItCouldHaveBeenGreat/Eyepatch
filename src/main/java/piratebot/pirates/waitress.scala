@@ -1,32 +1,31 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Waitress(player: Player) extends Pirate(player) {
+class Waitress(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 8
     val name = "Waitress"
 
     override def nightAction: RetriableMethodResponse.Value = {
         if (player.booty(Booty.TreasureMap) > 0) {
-            val request = InputManager.postAndGetInputRequest(
+            val request = game.inputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.SellMap,
-                InputManager.getBooleanAnswers)
+                game.inputManager.getBooleanAnswers)
             if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             }
 
-            if (InputManager.getBooleanResponseFromInput(request)) {
+            if (game.inputManager.getBooleanResponseFromInput(request)) {
                 player.booty(Booty.TreasureMap) -= 1
                 player.doubloons += 3
-                OutputManager.print(Channel.Pirate, tag + ": Sold Map for +3 Doubloons")
+                logger.debug(tag + ": Sold Map for +3 Doubloons")
             }
-            InputManager.removeInputRequest(request.playerId)
+            game.inputManager.removeInputRequest(request.playerId)
         }
-        return RetriableMethodResponse.Complete
+        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return Array(2, 1, 4, 3, 5, 6)(player.playerId);
+        Array(2, 1, 4, 3, 5, 6)(player.playerId)
     }
 }

@@ -1,19 +1,18 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Brute(player: Player) extends Pirate(player) {
+class Brute(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 14
     val name = "Brute"
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         val pirateToKill = round.dayStack.last
         round.killPirate(pirateToKill)
-        OutputManager.print(Channel.Pirate, tag + ": killed " + pirateToKill.tag)
-        return RetriableMethodResponse.Complete
+        logger.debug(tag + ": killed " + pirateToKill.tag)
+        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return Array(1, 6, 3, 2, 4, 5)(player.playerId);
+        Array(1, 6, 3, 2, 4, 5)(player.playerId)
     }
 }

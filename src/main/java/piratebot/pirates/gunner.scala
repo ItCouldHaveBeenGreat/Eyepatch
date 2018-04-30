@@ -1,9 +1,8 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Gunner(player: Player) extends Pirate(player) {
+class Gunner(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 15
     val name = "Gunner"
 
@@ -12,26 +11,26 @@ class Gunner(player: Player) extends Pirate(player) {
         // NOTE: Yeah, it's kind of silly
         val doubloonsToCharge = Math.min(3, player.doubloons)
         player.doubloons -= doubloonsToCharge
-        OutputManager.print(Channel.Pirate, tag + ": -" + doubloonsToCharge + " doubloons")
+        logger.debug(tag + ": -" + doubloonsToCharge + " doubloons")
 
-        if (InputManager.getAllDenPirates(player).size > 0) {
-            val request = InputManager.postAndGetInputRequest(
+        if (game.inputManager.getAllDenPirates(player).nonEmpty) {
+            val request = game.inputManager.postAndGetInputRequest(
                 player.playerId,
                 InputRequestType.KillPirateInAnyDen,
-                InputManager.getAllDenPirates(player))
+                game.inputManager.getAllDenPirates(player))
             if (request.answer.isEmpty) {
                 return RetriableMethodResponse.PendingInput
             } else {
-                val target = InputManager.getTargetPirateFromInput(request)
+                val target = game.inputManager.getTargetPirateFromInput(request)
                 target.state = PirateState.Discard
-                OutputManager.print(Channel.Pirate, tag + ": killed " + target.tag)
-                InputManager.removeInputRequest(request.playerId)
+                logger.debug(tag + ": killed " + target.tag)
+                game.inputManager.removeInputRequest(request.playerId)
             }
         }
 
-        return RetriableMethodResponse.Complete
+        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return Array(2, 1, 4, 3, 5, 6)(player.playerId);
+        Array(2, 1, 4, 3, 5, 6)(player.playerId)
     }
 }

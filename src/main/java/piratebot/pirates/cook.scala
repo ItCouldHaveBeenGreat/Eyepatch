@@ -1,9 +1,8 @@
 package libertalia
 
-import main._
 import main.java.piratebot._
 
-class Cook(player: Player) extends Pirate(player) {
+class Cook(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 18
     val name = "Cook"
 
@@ -13,7 +12,7 @@ class Cook(player: Player) extends Pirate(player) {
         // claim the first booty
         if (!hasClaimedFirstBooty) {
             val response = claimBooty(round)
-            OutputManager.print(Channel.Pirate, tag + "(1): " + response)
+            logger.debug(tag + "(1): " + response)
             if (response == RetriableMethodResponse.Complete) {
                 hasClaimedFirstBooty = true
             } else {
@@ -23,9 +22,9 @@ class Cook(player: Player) extends Pirate(player) {
 
         // claim the second booty
         val response = claimBooty(round)
-        OutputManager.print(Channel.Pirate, tag + "(2): " + response)
+        logger.debug(tag + "(2): " + response)
         if (response != RetriableMethodResponse.Complete) {
-            return response;
+            return response
         } else {
             hasClaimedFirstBooty = false
             return RetriableMethodResponse.Complete
@@ -33,6 +32,6 @@ class Cook(player: Player) extends Pirate(player) {
     }
 
     def getSubRank(player : Player) : Int = {
-        return Array(5, 4, 1, 6, 2, 3)(player.playerId);
+        Array(5, 4, 1, 6, 2, 3)(player.playerId)
     }
 }

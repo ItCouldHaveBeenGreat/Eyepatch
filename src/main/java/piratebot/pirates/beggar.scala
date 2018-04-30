@@ -1,9 +1,8 @@
-package libertalia
+package main.java.piratebot.pirates
 
-import main._
 import main.java.piratebot._
 
-class Beggar(player: Player) extends Pirate(player) {
+class Beggar(game: Game, player: Player) extends Pirate(game, player) {
     val rank = 3
     val name = "Beggar"
 
@@ -12,10 +11,10 @@ class Beggar(player: Player) extends Pirate(player) {
         val doubloonsToTake = Math.min(3, firstPlayer.doubloons)
         player.doubloons += doubloonsToTake
         firstPlayer.doubloons -= doubloonsToTake
-        OutputManager.print(Channel.Pirate, tag + ": stole " + doubloonsToTake + " from player " + firstPlayer.playerId)
+        logger.debug(tag + ": stole " + doubloonsToTake + " from player " + firstPlayer.playerId)
         return RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        return Array(4, 3, 6, 5, 1, 2)(player.playerId);
+        Array(4, 3, 6, 5, 1, 2)(player.playerId)
     }
 }

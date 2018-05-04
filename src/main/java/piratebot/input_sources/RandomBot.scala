@@ -1,15 +1,22 @@
 package main.java.piratebot.input_sources
 
-import main.java.piratebot.{InputRequest, Player}
+import main.java.piratebot.{Game, InputRequest, Player}
 
 import scala.util.Random
 
-class RandomBot extends InputSource {
-    override def makeDecision(request: InputRequest, state: Seq[Int]) : Int = {
-        return request.choices.values.toList(Random.nextInt(request.choices.values.size))
+class RandomBot extends InputSource with Statistics {
+    override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
+        request.choices.values.toList(Random.nextInt(request.choices.values.size))
     }
 
-    override def endGame(player: Player, players: Seq[Player]): Unit = { }
+    override def endGame(player: Player, players: Seq[Player]): Unit = {
+        if (player.points == players.maxBy( p => p.points ).points) {
+            addCounter("wins", 1)
+        }
+        addCounter("games", 1)
+    }
 
-    override def endSession(): Unit = { }
+    override def endSession(): Unit = {
+        printCounters
+    }
 }

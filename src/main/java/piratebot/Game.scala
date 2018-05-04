@@ -1,12 +1,11 @@
 package main.java.piratebot
 
-import com.google.gson.Gson
 import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class Game(numPlayers : Int, totalVoyages: Int = 3) {
+class Game(numPlayers : Int, totalVoyages: Int = 1) {
     private val logger = LoggerFactory.getLogger(classOf[Game])
 
     val bootyBag = new BootyBag()

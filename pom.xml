@@ -118,6 +118,13 @@
             <version>2.8.2</version>
         </dependency>
 
+        <!-- cloner -->
+        <dependency>
+            <groupId>uk.com.robust-it</groupId>
+            <artifactId>cloning</artifactId>
+            <version>1.9.10</version>
+        </dependency>
+
         <!-- sl4j -->
         <dependency>
             <groupId>org.slf4j</groupId>

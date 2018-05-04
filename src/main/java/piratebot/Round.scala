@@ -1,8 +1,11 @@
 package main.java.piratebot
 
+import com.rits.cloning.Immutable
+
 import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
+
 
 class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
     private val logger = LoggerFactory.getLogger(classOf[Round])
@@ -13,8 +16,8 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
     private var duskStack = ArrayBuffer[Pirate]()
     private var survivorStack = ArrayBuffer[Pirate]()
     private var nightSequences = Seq[ArrayBuffer[Pirate]]()
-    
-    
+
+
     def makeProgress() : RetriableMethodResponse.Value = {
         state match {
             case RoundState.SolicitPirates => {
@@ -174,6 +177,7 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
     }
 }
 
+@Immutable
 object RoundState extends Enumeration {
     type RoundState = Value
     val SolicitPirates, DayActions, DuskActions, NightActions = Value

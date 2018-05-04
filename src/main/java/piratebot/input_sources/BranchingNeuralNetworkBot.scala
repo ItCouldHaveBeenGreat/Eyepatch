@@ -36,7 +36,7 @@ class BranchingNeuralNetworkBot(val network_id : String) extends InputSource wit
         .map(subType => subType -> new ArrayBuffer[TrainingData])
         .toMap
 
-    override def makeDecision(request: InputRequest, state: Seq[Int]) : Int = {
+    override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
         return getBestValidChoice(state, request.inputType, request.choices.values.toList)
         //return request.choices.values.toList(Random.nextInt(request.choices.values.size))
     }
@@ -95,7 +95,7 @@ class BranchingNeuralNetworkBot(val network_id : String) extends InputSource wit
         val bestValidChoice = choiceWeights.indices.filter(index => choices.contains(index)).maxBy(choiceWeights)
         println("choices: " + choices)
         println("best: " + bestValidChoice)
-f
+
         bestValidChoice
     }
 

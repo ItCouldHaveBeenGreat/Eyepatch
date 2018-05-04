@@ -1,12 +1,12 @@
 package main.java.piratebot.input_sources
 
-import main.java.piratebot.{InputRequest, Player}
+import main.java.piratebot.{Game, InputRequest, Player}
 
 import scala.util.Random
 
 class WinTrainingRandomBot(consumer: TrainingDataConsumer) extends InputSource with Annotating with Statistics {
 
-    override def makeDecision(request: InputRequest, state: Seq[Int]) : Int = {
+    override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
         val decision = request.choices.values.toList(Random.nextInt(request.choices.values.size))
         record(request.playerId, "random", request.inputType, decision.toInt, state)
         decision

@@ -34,6 +34,7 @@ class InputManager(game: Game) {
                                requestType: InputRequestType.Value,
                                choices : Map[String, Int]) : InputRequest = {
         if (choices.isEmpty) {
+            logger.error(inputRequests.toString())
             throw new Exception("No valid answers supplied")
         }
         if (!inputRequests.contains(playerId)) {

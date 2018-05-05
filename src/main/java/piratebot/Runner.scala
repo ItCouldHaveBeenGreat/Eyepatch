@@ -8,7 +8,6 @@ import scala.util.Random
 object Runner {
     private val logger = LoggerFactory.getLogger(getClass)
 
-
     def runGame(players : List[InputSource]): Unit = {
         val numPlayers = players.size
         val game = new Game(numPlayers)
@@ -30,7 +29,7 @@ object Runner {
 
         }
 
-        val rounds = 10//args(0).toInt
+        val rounds = 500//args(0).toInt
         val configuration = PlayerConfiguration.RandomTest//PlayerConfiguration.withName(args(1))
         val network_id = "blah"//args(2)
 

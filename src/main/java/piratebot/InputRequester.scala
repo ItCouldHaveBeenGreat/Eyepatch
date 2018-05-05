@@ -1,5 +1,7 @@
 package main.java.piratebot
 
+import com.rits.cloning.Immutable
+
 class InputRequest(val playerId : Int,
                    val inputType : InputRequestType.Value,
                    val choices : Map[String, Int]) {
@@ -17,6 +19,7 @@ class InputRequest(val playerId : Int,
     }
 }
 
+@Immutable
 object InputRequestType extends Enumeration {
     type InputRequestType = Value
     val SelectBooty,

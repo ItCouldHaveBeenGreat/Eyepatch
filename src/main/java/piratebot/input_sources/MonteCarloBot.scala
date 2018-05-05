@@ -12,8 +12,12 @@ class MonteCarloBot() extends InputSource with Statistics {
 
     override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
         logger.info("Beginning rollout for " + request.inputType.toString + ", " + request.playerId)
-        val searchTree = new MonteCarloSearchTree(game, request.playerId, request.choices.values.toList)
-        searchTree.playOut(request.playerId, 500)
+        val searchTree = new MonteCarloSearchTree(game, request.playerId, request.choices.values.toList, request.inputType)
+        searchTree.playOut(request.playerId, 30000)
+        println(searchTree.rootNode.plays)
+        println(searchTree.rootNode.childStates.values.map(node => node.wins))
+        println(searchTree.rootNode.childStates.values.map(node => node.plays))
+        assert(false)
         searchTree.getBestChoice
     }
 
@@ -32,7 +36,8 @@ class MonteCarloBot() extends InputSource with Statistics {
 class MonteCarloNode() {
     var wins = 0
     var plays = 0
-    var playerMakingChoice = 0
+    var playerMakingChoice: Int = _
+    var choiceType: InputRequestType.Value = _
     var childStates: Map[Int, MonteCarloNode] = Map()
 
     def initializeChildren(choices: Iterable[Int]): Unit = {
@@ -47,20 +52,25 @@ class MonteCarloNode() {
 
 // does this reeeallly need to take a player as input? Arguably we can just calculate this by looking at the input request needing an answer
 // then again, we always want to do this because we're building this tree to inform a specific input request (with a specific player)
-class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: List[Int]) {
+class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: List[Int], choiceType: InputRequestType.Value) {
     protected val logger = LoggerFactory.getLogger(classOf[MonteCarloBot])
 
     private val cloner = new Cloner
 
-    private val rootNode = new MonteCarloNode()
+    val rootNode = new MonteCarloNode()
     rootNode.playerMakingChoice = playerMakingChoice
+    rootNode.choiceType = choiceType
     rootNode.initializeChildren(choices)
 
     def playOut(playerId: Int, timeoutInMillis: Int) : Unit = {
         val timer = timeoutInMillis.milliseconds.fromNow
         while (timer.hasTimeLeft()) {
-            val clonedGame = cloner.deepClone(rootGame)
-            playOut(rootNode, clonedGame, playerId)
+            try {
+                val clonedGame = cloner.deepClone(rootGame)
+                playOut(rootNode, clonedGame, playerId)
+            } catch {
+                case e: Exception => logger.error(e.getMessage)
+            }
         }
     }
 
@@ -94,12 +104,13 @@ class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: Lis
             // we've reached the end of the tree, so begin a rollout
             val playerMakingChoice = 0.to(game.playerManager.numPlayers)
                 .filter(playerNum => game.inputManager.getInputRequest(playerNum) != null && game.inputManager.getInputRequest(playerNum).answer.isEmpty) // null sucks
-                .head
+                .min
 
             val request = game.inputManager.getInputRequest(playerMakingChoice)
-            logger.debug("choices" + request.choices)
+            logger.debug("request_type: " + request.inputType + ", players" + request.playerId + ", choices" + request.choices)
             currentNode.initializeChildren(request.choices.values)
             currentNode.playerMakingChoice = request.playerId
+            currentNode.choiceType = request.inputType
 
             rollout(request.choices.values.toList)
 
@@ -110,7 +121,9 @@ class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: Lis
         }
 
         // answer the input request and continue traversal
-        logger.debug("Current node player " + currentNode.playerMakingChoice + ", " + choiceToMake + ", " + currentNode.childStates)
+        logger.warn("Current node player " + currentNode.playerMakingChoice + ", " + currentNode.choiceType.toString + ", " + choiceToMake + ", " + currentNode.childStates)
+        logger.warn("Current input request " + game.inputManager.getInputRequest(currentNode.playerMakingChoice))
+        logger.warn("Current input request " + game.inputManager.getInputRequest(currentNode.playerMakingChoice).inputType.toString + ", " + game.inputManager.getInputRequest(currentNode.playerMakingChoice).choices)
         game.inputManager.answerInputRequest(currentNode.playerMakingChoice, choiceToMake)
         val isWin = playOut(currentNode.childStates(choiceToMake), game, botPlayer)
         if (isWin) {

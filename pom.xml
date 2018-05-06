@@ -135,7 +135,7 @@
         <!-- sl4j binding for <artifactId>slf4j-simple</artifactId> / <artifactId>slf4j-nop</artifactId> -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
+            <artifactId>slf4j-simple</artifactId>
             <version>${slf4jVersion}</version>
         </dependency>
 

@@ -13,11 +13,7 @@ class MonteCarloBot() extends InputSource with Statistics {
     override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
         logger.info("Beginning rollout for " + request.inputType.toString + ", " + request.playerId)
         val searchTree = new MonteCarloSearchTree(game, request.playerId, request.choices.values.toList, request.inputType)
-        searchTree.playOut(request.playerId, 30000)
-        println(searchTree.rootNode.plays)
-        println(searchTree.rootNode.childStates.values.map(node => node.wins))
-        println(searchTree.rootNode.childStates.values.map(node => node.plays))
-        assert(false)
+        searchTree.playOut(request.playerId, 1000)
         searchTree.getBestChoice
     }
 
@@ -45,7 +41,11 @@ class MonteCarloNode() {
     }
 
     def getConfidenceUpperBound(totalPlays: Int): Double = {
-        wins.toFloat/plays + Math.sqrt(2.0 * Math.log(totalPlays) / plays)
+        if (plays == 0) {
+            Int.MaxValue
+        } else {
+            wins.toFloat / plays + Math.sqrt(2.0) * Math.sqrt(Math.log(totalPlays) / plays)
+        }
     }
 }
 
@@ -90,12 +90,6 @@ class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: Lis
             currentNode.wins += 1
             return botPlayer == game.playerManager.players.maxBy(p => p.doubloons).playerId
         }
-
-        // restructure to...
-        // get to a pending input state
-        // if the current node has no children, initialize the node by selecting a player and setting up the choices, then pick randomly (define this separately as a rollout method!!!)
-        // if the current node has children, traverse using MTCS algorithm
-
 
         // traversal phase
         // oh god this code

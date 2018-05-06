@@ -29,7 +29,7 @@ object Runner {
 
         }
 
-        val rounds = 500//args(0).toInt
+        val rounds = 100//args(0).toInt
         val configuration = PlayerConfiguration.RandomTest//PlayerConfiguration.withName(args(1))
         val network_id = "blah"//args(2)
 

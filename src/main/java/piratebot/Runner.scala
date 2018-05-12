@@ -39,6 +39,7 @@ object Runner {
         val players = configuration match {
             case PlayerConfiguration.RandomTest => List(
                 crusadeOfDawn,
+                //new StandardInputBot("Thomas"),
                 new RandomBot(),
                 new RandomBot(),
                 new RandomBot(),

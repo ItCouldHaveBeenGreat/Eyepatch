@@ -67,6 +67,7 @@ class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: Lis
         while (timer.hasTimeLeft()) {
             try {
                 val clonedGame = cloner.deepClone(rootGame)
+                clonedGame.totalVoyages = 0 // terminates game after one voyage
                 playOut(rootNode, clonedGame, playerId)
             } catch {
                 case e: Exception => logger.error(e.getMessage)

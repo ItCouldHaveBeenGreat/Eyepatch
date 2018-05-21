@@ -9,7 +9,7 @@ class VoodooWitch(game: Game, player: Player) extends Pirate(game, player) {
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         val numDiscard = player.pirates.count( p => p.state == PirateState.Discard )
         player.doubloons += 2 * numDiscard
-        logger.debug(tag + ": +" + numDiscard * 2 + " Doubloons")
+        game.printer.print(Channel.Debug, tag + ": +" + numDiscard * 2 + " Doubloons")
         RetriableMethodResponse.Complete
     }
     

@@ -54,7 +54,7 @@ class BranchingNeuralNetworkBot(val network_id : String) extends InputSource wit
     }
 
     override def endSession(): Unit = {
-        printCounters
+        printCounters(network_id)
     }
 
     override def consume(trainingData: Seq[TrainingData]): Unit = {

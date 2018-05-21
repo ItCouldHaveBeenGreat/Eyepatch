@@ -8,7 +8,7 @@ class Recruiter(game: Game, player: Player) extends Pirate(game, player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (player.pirates.count ( p => p.state == PirateState.Den) == 0) {
-            logger.debug(tag + ": Nobody to recruit")
+            game.printer.print(Channel.Debug, tag + ": Nobody to recruit")
             return RetriableMethodResponse.Complete
         }
         val request = game.inputManager.postAndGetInputRequest(
@@ -21,7 +21,7 @@ class Recruiter(game: Game, player: Player) extends Pirate(game, player) {
         val pirateId = game.inputManager.getPirateIdFromInput(request)
         game.inputManager.removeInputRequest(request.playerId)
         player.getPirate(pirateId).state = PirateState.Hand
-        logger.debug(tag + ": Recruits " + player.getPirate(pirateId).name)
+        game.printer.print(Channel.Debug, tag + ": Recruits " + player.getPirate(pirateId).name)
         RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {

@@ -12,7 +12,7 @@ class Cook(game: Game, player: Player) extends Pirate(game, player) {
         // claim the first booty
         if (!hasClaimedFirstBooty) {
             val response = claimBooty(round)
-            logger.debug(tag + "(1): " + response)
+            game.printer.print(Channel.Debug, tag + "(1): " + response)
             if (response == RetriableMethodResponse.Complete) {
                 hasClaimedFirstBooty = true
             } else {
@@ -22,12 +22,12 @@ class Cook(game: Game, player: Player) extends Pirate(game, player) {
 
         // claim the second booty
         val response = claimBooty(round)
-        logger.debug(tag + "(2): " + response)
+        game.printer.print(Channel.Debug, tag + "(2): " + response)
         if (response != RetriableMethodResponse.Complete) {
-            return response
+            response
         } else {
             hasClaimedFirstBooty = false
-            return RetriableMethodResponse.Complete
+            RetriableMethodResponse.Complete
         }
     }
 

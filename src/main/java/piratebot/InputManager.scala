@@ -1,19 +1,15 @@
 package main.java.piratebot
 
-import org.slf4j.LoggerFactory
-
 import scala.collection.mutable
 
 class InputManager(game: Game) {
-    private val logger = LoggerFactory.getLogger(classOf[InputManager])
-    // TODO: Restructure this to be a set
     private val inputRequests : mutable.HashMap[Int, InputRequest] = mutable.HashMap[Int, InputRequest]()
 
-    def getInputRequest(playerId : Int) : InputRequest = {
+    def getInputRequest(playerId : Int): InputRequest = {
         if (inputRequests.contains(playerId)) {
-            return inputRequests(playerId)
+            inputRequests(playerId)
         } else {
-            return null
+            null
         }
     }
 
@@ -24,29 +20,33 @@ class InputManager(game: Game) {
         }
         if (request.choices.values.toList.contains(inputResponse)) {
             request.answer = Option(inputResponse)
-            logger.debug("Player " + playerId + " answered " + request.answer + " out of set " + request.choices)
+            game.printer.print(Channel.Input, "Player " + playerId + " answered " + request.answer + " out of set " + request.choices)
         } else {
-            throw new Exception("Invalid answer for request " + playerId)
+            request.answer = Option.empty
         }
     }
 
     def postAndGetInputRequest(playerId: Int,
                                requestType: InputRequestType.Value,
-                               choices : Map[String, Int]) : InputRequest = {
+                               choices : Map[String, Int]): InputRequest = {
         if (choices.isEmpty) {
-            logger.error(inputRequests.toString())
+            game.printer.print(Channel.Debug, inputRequests.toString())
             throw new Exception("No valid answers supplied")
         }
         if (!inputRequests.contains(playerId)) {
-            logger.debug("Created request for player " + playerId + " for " + requestType
+            game.printer.print(Channel.Debug, "Created request for player " + playerId + " for " + requestType
                 + "with answers " + choices)
             inputRequests += ((playerId, new InputRequest(playerId, requestType, choices)))
         }
         inputRequests(playerId)
    }
 
-    def removeInputRequest(playerId : Int) : Unit = {
+    def removeInputRequest(playerId : Int): Unit = {
         inputRequests -= playerId
+    }
+
+    def clearPendingRequests(): Unit = {
+        inputRequests.clear()
     }
 
     def getBooleanAnswers : Map[String, Int] = {

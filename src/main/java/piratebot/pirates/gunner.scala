@@ -11,7 +11,7 @@ class Gunner(game: Game, player: Player) extends Pirate(game, player) {
         // NOTE: Yeah, it's kind of silly
         val doubloonsToCharge = Math.min(3, player.doubloons)
         player.doubloons -= doubloonsToCharge
-        logger.debug(tag + ": -" + doubloonsToCharge + " doubloons")
+        game.printer.print(Channel.Debug, tag + ": -" + doubloonsToCharge + " doubloons")
 
         if (game.inputManager.getAllDenPirates(player).nonEmpty) {
             val request = game.inputManager.postAndGetInputRequest(
@@ -23,7 +23,7 @@ class Gunner(game: Game, player: Player) extends Pirate(game, player) {
             } else {
                 val target = game.inputManager.getTargetPirateFromInput(request)
                 target.state = PirateState.Discard
-                logger.debug(tag + ": killed " + target.tag)
+                game.printer.print(Channel.Debug, tag + ": killed " + target.tag)
                 game.inputManager.removeInputRequest(request.playerId)
             }
         }

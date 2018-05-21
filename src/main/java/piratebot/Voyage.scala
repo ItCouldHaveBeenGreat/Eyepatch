@@ -1,11 +1,8 @@
 package main.java.piratebot
 
-import org.slf4j.LoggerFactory
-
 import scala.collection.mutable.ArrayBuffer
 
 class Voyage(val game: Game, val numPlayers : Int) {
-    private val logger = LoggerFactory.getLogger(classOf[Voyage])
     val totalRounds: Int = 6
     
     game.bootyBag.build
@@ -16,20 +13,20 @@ class Voyage(val game: Game, val numPlayers : Int) {
     game.playerManager.players.foreach( p => p.doubloons = 10)
     
     def makeProgress() : RetriableMethodResponse.Value = {
-        var response = currentRound.makeProgress()
+        val response = currentRound.makeProgress()
         if (response == RetriableMethodResponse.Complete) {
-            logger.info("Round " + roundsTaken + " complete")
+            game.printer.print(Channel.Debug, "Round " + roundsTaken + " complete")
             roundsTaken += 1
             if (roundsTaken >= totalRounds) {
                 endVoyage()
-                return RetriableMethodResponse.Complete
+                RetriableMethodResponse.Complete
             } else {
                 currentRound = new Round(game, bootySets(roundsTaken))
-                return RetriableMethodResponse.MadeProgress
+                RetriableMethodResponse.MadeProgress
             }
         } else {
             // Pass response up if PendingInput or MadeProgress
-            return response
+            response
         }
     }
     

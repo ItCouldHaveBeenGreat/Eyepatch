@@ -10,10 +10,10 @@ class GrannyWata(game: Game, player: Player) extends Pirate(game, player) {
         val grannyWatas = getAllGrannyWatasInDen
         if (grannyWatas.size > 1) {
             grannyWatas.foreach(gw => gw.state = PirateState.Discard)
-            logger.debug(tag + ": All " + name + " discarded")
+            game.printer.print(Channel.Debug, tag + ": All " + name + " discarded")
         } else {
             player.doubloons += 2
-            logger.debug(tag + ": +2 Doubloons")
+            game.printer.print(Channel.Debug, tag + ": +2 Doubloons")
         }
         RetriableMethodResponse.Complete
     }

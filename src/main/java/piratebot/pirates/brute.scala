@@ -9,7 +9,7 @@ class Brute(game: Game, player: Player) extends Pirate(game, player) {
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         val pirateToKill = round.dayStack.last
         round.killPirate(pirateToKill)
-        logger.debug(tag + ": killed " + pirateToKill.tag)
+        game.printer.print(Channel.Debug, tag + ": killed " + pirateToKill.tag)
         RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {

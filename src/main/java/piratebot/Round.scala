@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ArrayBuffer
 
-
 class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
-    private val logger = LoggerFactory.getLogger(classOf[Round])
-
     var state : RoundState.Value = RoundState.SolicitPirates
 
     var dayStack: ArrayBuffer[Pirate] = ArrayBuffer[Pirate]()
@@ -76,20 +73,23 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
         }
 
         if (pendingInput) {
-            logger.debug("Waiting for players to select main.pirates")
+            game.printer.print(Channel.Debug, "Waiting for players to select main.pirates")
             return RetriableMethodResponse.PendingInput
         } else {
             for (request <- requests) {
                 val pirateRank = game.inputManager.getPirateIdFromInput(request)
+                println("ORANGE: " + request.playerId)
+                println("ORANGE: " + request.inputType.toString)
+                println("ORANGE: " + request.choices.toString)
                 val pirateToAdd = game.playerManager.players(request.playerId).getPirate(pirateRank)
 
                 addPirate(pirateToAdd)
                 computeVisibility(game.playerManager.players(request.playerId))
-                logger.info("Player " + request.playerId + " played " + pirateToAdd.name)
+                game.printer.print(Channel.Debug, "Player " + request.playerId + " played " + pirateToAdd.name)
                 game.inputManager.removeInputRequest(request.playerId)
             }
         }
-        return RetriableMethodResponse.Complete
+        RetriableMethodResponse.Complete
     
     }
     
@@ -119,7 +119,7 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
     private def performDayActions() : RetriableMethodResponse.Value = {
         while (dayStack.nonEmpty) {
             val activePirate = dayStack.head
-            logger.debug("Round running day action for " + activePirate.tag)
+            game.printer.print(Channel.Debug, "Round running day action for " + activePirate.tag)
             val response = activePirate.dayAction(this)
 
             if (response != RetriableMethodResponse.Complete) {
@@ -137,7 +137,7 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
     private def performDuskActions() : RetriableMethodResponse.Value = {
          while (duskStack.nonEmpty) {
             val activePirate = duskStack.head
-            logger.debug("Round running dusk action for " + activePirate.tag)
+             game.printer.print(Channel.Debug, "Round running dusk action for " + activePirate.tag)
             val response = activePirate.duskAction(this)
             if (response != RetriableMethodResponse.Complete) {
                 return response // We're pending something; return
@@ -150,7 +150,7 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
             }
         }
 
-        logger.debug("Dusk over; all surviving main.pirates move to their dens")
+        game.printer.print(Channel.Debug, "Dusk over; all surviving main.pirates move to their dens")
         survivorStack.foreach( p => p.state = PirateState.Den)
         RetriableMethodResponse.Complete
     }

@@ -7,7 +7,7 @@ class CabinBoy(game: Game, player: Player) extends Pirate(game, player) {
     val name = "Cabin Boy"
 
     override def duskAction(round : Round): RetriableMethodResponse.Value = {
-        logger.debug(tag + ": Doesn't claim booty")
+        game.printer.print(Channel.Debug, tag + ": Doesn't claim booty")
         RetriableMethodResponse.Complete
     }
 

@@ -9,7 +9,7 @@ class StandardInputBot(val name: String) extends InputSource with Statistics {
         var inputChoice = -1
         // add playerId -> color mapping
         while (!request.choices.values.toList.contains(inputChoice)) {
-            println("Request for player " + request.playerId + " to choose " + request.inputType.toString +
+            println("Request for player " + request.playerId + ", " + getPlayerColor(request.playerId) + " to choose " + request.inputType.toString +
                 " with choices " + request.choices.toString())
             inputChoice = StdIn.readInt()
         }
@@ -25,6 +25,6 @@ class StandardInputBot(val name: String) extends InputSource with Statistics {
 
     override def endSession(): Unit = {
         println("Counters for " + name + ":")
-        printCounters
+        printCounters()
     }
 }

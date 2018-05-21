@@ -8,13 +8,13 @@ class Carpenter(game: Game, player: Player) extends Pirate(game, player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         player.doubloons = player.doubloons / 2 + player.doubloons % 2
-        logger.debug(tag + ": -50% Doubloons")
+        game.printer.print(Channel.Debug, tag + ": -50% Doubloons")
         return RetriableMethodResponse.Complete
     }
 
     override def endOfVoyageAction(): Unit = {
         player.doubloons += 10
-        logger.debug(tag + ": +10 Doubloons")
+        game.printer.print(Channel.Debug, tag + ": +10 Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

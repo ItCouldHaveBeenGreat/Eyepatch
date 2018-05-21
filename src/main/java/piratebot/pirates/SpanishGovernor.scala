@@ -12,7 +12,7 @@ class SpanishGovernor(game: Game, player: Player) extends Pirate(game, player) {
                 p.state = PirateState.Discard
             }
         }
-        logger.debug(tag + ": Discarded all characters in den")
+        game.printer.print(Channel.Debug, tag + ": Discarded all characters in den")
         RetriableMethodResponse.Complete
     }
     

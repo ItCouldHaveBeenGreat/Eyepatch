@@ -17,6 +17,6 @@ class RandomBot extends InputSource with Statistics {
     }
 
     override def endSession(): Unit = {
-        printCounters
+        printCounters()
     }
 }

@@ -9,12 +9,12 @@ class FrenchOfficer(game: Game, player: Player) extends Pirate(game, player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (player.doubloons <= 9) {
-            logger.debug(tag + ": +5 Doubloons")
+            game.printer.print(Channel.Debug, tag + ": +5 Doubloons")
             player.doubloons += 5
         } else {
-            logger.debug(tag + ": did nothing")
+            game.printer.print(Channel.Debug, tag + ": did nothing")
         }
-        return RetriableMethodResponse.Complete
+        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
         Array(4, 3, 6, 5, 1, 2)(player.playerId)

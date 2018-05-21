@@ -3,16 +3,16 @@ package main.java.piratebot.input_sources
 import scala.collection.mutable
 
 trait Statistics {
-  private val counters = mutable.HashMap[String, Int]()
+    private val counters = mutable.HashMap[String, Int]()
 
-  def addCounter(counterName: String, value: Int) = {
-    if (counters.contains(counterName)) {
-      counters.update(counterName, counters(counterName) + value)
-    } else {
-      counters.put(counterName, value)
+    def addCounter(counterName: String, value: Int): Unit = {
+        if (counters.contains(counterName)) {
+            counters.update(counterName, counters(counterName) + value)
+        } else {
+            counters.put(counterName, value)
+        }
     }
-  }
-  def printCounters = {
-    println(counters)
-  }
+    def printCounters(name: String = ""): Unit = {
+        println(name + ": " + counters)
+    }
 }

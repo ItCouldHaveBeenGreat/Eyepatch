@@ -8,13 +8,13 @@ class Quartermaster(game: Game, player: Player) extends Pirate(game, player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         player.doubloons += player.booty.values.sum
-        logger.debug(tag + ": +" + player.booty.values.sum + " Doubloons")
-        return RetriableMethodResponse.Complete
+        game.printer.print(Channel.Debug, tag + ": +" + player.booty.values.sum + " Doubloons")
+        RetriableMethodResponse.Complete
     }
 
     override def endOfVoyageAction(): Unit = {
         player.doubloons -= 8
-        logger.debug(tag + ": -8 Doubloons")
+        game.printer.print(Channel.Debug, tag + ": -8 Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

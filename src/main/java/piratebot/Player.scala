@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory
 import scala.collection.mutable
 
 class Player(val game: Game, val playerId : Int) {
-    private val logger = LoggerFactory.getLogger(classOf[InputManager])
-
     var points : Int = 0
     var doubloons : Int = 0
     val booty = mutable.HashMap(
@@ -68,11 +66,11 @@ class Player(val game: Game, val playerId : Int) {
         sellBooty()
         doubloons = Math.max(0, doubloons)
         points += doubloons
-        logger.info("Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
+        game.printer.print(Channel.Game, "Player " + playerId + " earned " + doubloons + " for a total of " + points + " points")
     }
 
     private def doEndOfVoyageActions(): Unit = {
-        logger.debug("Player " + playerId + " running end of voyage actions")
+        game.printer.print(Channel.Debug, "Player " + playerId + " running end of voyage actions")
         pirates.filter( p => p.state == PirateState.Den).foreach( p =>
             p.endOfVoyageAction()
         )
@@ -85,7 +83,7 @@ class Player(val game: Game, val playerId : Int) {
     }
 
     private def sellBooty(): Unit = {
-        logger.debug("Player " + playerId + " booty: " + booty)
+        game.printer.print(Channel.Debug, "Player " + playerId + " booty: " + booty)
         val gain = booty(Booty.Goods) * 1 +
                    booty(Booty.Jewels) * 3 +
                    booty(Booty.Chest) * 5 +
@@ -94,6 +92,6 @@ class Player(val game: Game, val playerId : Int) {
 
         doubloons += gain
         booty.keys.foreach(bootyType => booty(bootyType) = 0)
-        logger.debug("Player " + playerId + " sold their booty for " + gain + " doubloons")
+        game.printer.print(Channel.Debug, "Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
 }

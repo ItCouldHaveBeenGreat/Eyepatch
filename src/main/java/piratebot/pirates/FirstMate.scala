@@ -9,7 +9,7 @@ class FirstMate(game: Game, player: Player) extends Pirate(game, player) {
     override def endOfVoyageAction(): Unit = {
         val numDen = player.pirates.count( p => p.state == PirateState.Den)
         player.doubloons += numDen
-        logger.debug(tag + ": +" + numDen + " Doubloons")
+        game.printer.print(Channel.Debug, tag + ": +" + numDen + " Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

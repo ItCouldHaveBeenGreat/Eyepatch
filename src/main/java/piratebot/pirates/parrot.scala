@@ -20,7 +20,7 @@ class Parrot(game: Game, player: Player) extends Pirate(game, player) {
         val pirateToAdd = game.playerManager.players(request.playerId).getPirate(pirateRank)
         round.addPirate(pirateToAdd)
         round.killPirate(this)
-        logger.debug(tag + ": was replaced with " + pirateToAdd.tag)
+       game.printer.print(Channel.Debug, tag + ": was replaced with " + pirateToAdd.tag)
 
        RetriableMethodResponse.Complete
     }

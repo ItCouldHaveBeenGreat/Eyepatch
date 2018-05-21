@@ -10,8 +10,8 @@ class Bosun(game: Game, player: Player) extends Pirate(game, player) {
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         val numLowRank = player.pirates.count( p => p.state == PirateState.Den && p.rank < rank)
         player.doubloons += 2 * numLowRank
-        logger.debug(tag + ": +" + numLowRank * 2 + " Doubloons")
-        return RetriableMethodResponse.Complete
+        game.printer.print(Channel.Debug, tag + ": +" + numLowRank * 2 + " Doubloons")
+        RetriableMethodResponse.Complete
     }
     
     def getSubRank(player : Player) : Int = {

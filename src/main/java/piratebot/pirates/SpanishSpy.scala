@@ -10,7 +10,7 @@ class SpanishSpy(game: Game, player: Player) extends Pirate(game, player) {
         for (_ <- 1 to player.booty(Booty.SpanishOfficer)) {
             val bootyDrawn = game.bootyBag.draw
             player.booty(bootyDrawn) += 1
-            logger.debug(tag + ": Drew a " + bootyDrawn)
+            game.printer.print(Channel.Debug, tag + ": Drew a " + bootyDrawn)
         }
         player.booty(Booty.SpanishOfficer) = 0
         

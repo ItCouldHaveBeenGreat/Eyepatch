@@ -8,7 +8,7 @@ class Preacher(game: Game, player: Player) extends Pirate(game, player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (player.booty.values.sum <= 1) {
-            return RetriableMethodResponse.Complete
+            RetriableMethodResponse.Complete
         } else {
             val request = game.inputManager.postAndGetInputRequest(
                 player.playerId,
@@ -17,21 +17,28 @@ class Preacher(game: Game, player: Player) extends Pirate(game, player) {
                     .map(bootyType => bootyType.toString -> bootyType.id)
                     .toMap)
             if (request.answer.isEmpty) {
-                return RetriableMethodResponse.PendingInput
+                RetriableMethodResponse.PendingInput
             } else {
                 val bootyTypeToKeep = game.inputManager.getBootyFromInput(request)
-                player.booty.keys.foreach(bootyType => player.booty(bootyType) = 0)
-                player.booty(bootyTypeToKeep) = 1
-                logger.debug("Player " + player.playerId + " kept one " + bootyTypeToKeep)
+                player.booty.keys.foreach { bootyType =>
+                    if (bootyType.equals(bootyTypeToKeep)) {
+                        game.bootyBag.putBack(bootyType, player.booty(bootyType) - 1)
+                        player.booty(bootyTypeToKeep) = 1
+                    } else {
+                        game.bootyBag.putBack(bootyType, player.booty(bootyType))
+                        player.booty(bootyType) = 0
+                    }
+                }
+                game.printer.print(Channel.Debug, "Player " + player.playerId + " kept one " + bootyTypeToKeep)
                 game.inputManager.removeInputRequest(request.playerId)
-                return RetriableMethodResponse.Complete
+                RetriableMethodResponse.Complete
             }
         }
     }
 
     override def endOfVoyageAction(): Unit = {
         player.doubloons += 5
-        logger.debug(tag + ": +5 Doubloons")
+        game.printer.print(Channel.Debug, tag + ": +5 Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

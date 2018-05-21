@@ -11,7 +11,7 @@ class Treasurer(game: Game, player: Player) extends Pirate(game, player) {
             + player.booty(Booty.Jewels)
             + player.booty(Booty.Chest)
         player.doubloons += numCommodities
-        logger.debug(tag + ": +" + numCommodities + " Doubloons")
+        game.printer.print(Channel.Debug, tag + ": +" + numCommodities + " Doubloons")
     }
     
     def getSubRank(player : Player) : Int = {

@@ -3,8 +3,6 @@ package main.java.piratebot
 import org.slf4j.LoggerFactory
 
 abstract class Pirate(val game: Game, val player: Player) extends Ordered[Pirate] {
-    protected val logger = LoggerFactory.getLogger(classOf[Pirate])
-
     val rank : Int
     val name : String
     var known : Boolean = true
@@ -17,64 +15,95 @@ abstract class Pirate(val game: Game, val player: Player) extends Ordered[Pirate
     def dayAction(round : Round) : RetriableMethodResponse.Value = {
         RetriableMethodResponse.Complete
     }
+
     def duskAction(round : Round) : RetriableMethodResponse.Value = {
         claimBooty(round)
     }
+
     def nightAction : RetriableMethodResponse.Value = {
         RetriableMethodResponse.Complete
     }
+
     def endOfVoyageAction() : Unit = { }
     
 
     def claimBooty(round : Round) : RetriableMethodResponse.Value = {
         if (!hasChosenSaber) {
             if (round.booty.isEmpty) {
-                logger.debug("Player " + player.playerId + " had no booty to claim")
-                return RetriableMethodResponse.Complete
+                // CASE: no booty to claim
+                game.printer.print(Channel.Debug, "Player " + player.playerId + " had no booty to claim")
+                RetriableMethodResponse.Complete
+            } else if (round.booty.size == 1) {
+                // CASE: one booty to claim
+                claimBooty(round.booty.head, round)
             }
+            // CASE: choice of booty must me made
             val validAnswers = round.booty.map(b => b.toString -> b.id).toMap
             val request = game.inputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
             if (request.answer.isEmpty) {
-                return RetriableMethodResponse.PendingInput
+                RetriableMethodResponse.PendingInput
             } else {
-                val b = game.inputManager.getBootyFromInput(request)
+                val bootyToClaim = game.inputManager.getBootyFromInput(request)
                 game.inputManager.removeInputRequest(request.playerId)
-                
-                if (b == Booty.Saber) {
-                    hasChosenSaber = true
-                }
-    
-                if (b == Booty.SpanishOfficer) {
-                    round.killPirate(this)
-                }
-                
-                player.booty(b) = player.booty(b) + 1
-                round.booty -= b
-                logger.info("Player " + player.playerId + " claims " + b)
+                claimBooty(bootyToClaim, round)
             }
         }
-        
+
         if (hasChosenSaber) {
-            if (game.inputManager.getAdjacentDenPirates(player).nonEmpty) {
+            // CASE: saber was claimed and player must make an additional choice
+            val choicesToKill = game.inputManager.getAdjacentDenPirates(player)
+            if (choicesToKill.isEmpty) {
+                // CASE: No one to kill
+                RetriableMethodResponse.Complete
+            } else if (choicesToKill.size == 1) {
+                // CASE: Only one pirate to kill
+                // TODO: this is so clunky
+                val pirateToKill = game.playerManager
+                    .getAdjacentPlayers(player)
+                    .flatMap(p => p.pirates.filter(pirate => pirate.state == PirateState.Den))
+                    .head
+                saberPirate(pirateToKill)
+                RetriableMethodResponse.Complete
+            } else {
+                // CASE: A choice of pirate to kill must be made
                 val request = game.inputManager.postAndGetInputRequest(
                     player.playerId,
                     InputRequestType.KillPirateInAdjacentDen,
                     game.inputManager.getAdjacentDenPirates(player))
                 if (request.answer.isEmpty) {
-                    return RetriableMethodResponse.PendingInput
+                    RetriableMethodResponse.PendingInput
                 } else {
                     val target = game.inputManager.getTargetPirateFromInput(request)
-                    target.state = PirateState.Discard
-                    logger.info(tag + ": sabered " + target.tag)
-                    hasChosenSaber = false
+                    saberPirate(target)
                     game.inputManager.removeInputRequest(request.playerId)
+                    RetriableMethodResponse.Complete
                 }
             }
+        } else {
+            RetriableMethodResponse.Complete
+        }
+    }
+
+    def claimBooty(booty: Booty.Value, round: Round): Unit = {
+        if (booty == Booty.Saber) {
+            hasChosenSaber = true
         }
 
-        RetriableMethodResponse.Complete
+        if (booty == Booty.SpanishOfficer) {
+            round.killPirate(this)
+        }
+
+        player.booty(booty) = player.booty(booty) + 1
+        round.booty -= booty
+        game.printer.print(Channel.Game, "Player " + player.playerId + " claims " + booty)
     }
-    
+
+    def saberPirate(targetPirate: Pirate): Unit = {
+        targetPirate.state = PirateState.Discard
+        game.printer.print(Channel.Game, tag + ": saber'ed " + targetPirate.tag)
+        hasChosenSaber = false
+    }
+
     def publicState : PublicPirateState.Value = {
         if (!known) {
             PublicPirateState.Unknown

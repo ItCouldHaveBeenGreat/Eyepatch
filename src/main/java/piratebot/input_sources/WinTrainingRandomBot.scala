@@ -12,7 +12,7 @@ class WinTrainingRandomBot(consumer: TrainingDataConsumer) extends InputSource w
         decision
     }
 
-    override def endGame(player: Player, players: Seq[Player]) = {
+    override def endGame(player: Player, players: Seq[Player]): Unit = {
         // only upload data if we won
         if (player.points == players.maxBy( p => p.points ).points) {
             consumer.consume(getData)
@@ -22,7 +22,7 @@ class WinTrainingRandomBot(consumer: TrainingDataConsumer) extends InputSource w
         clearData
     }
 
-    override def endSession() = {
-        printCounters
+    override def endSession(): Unit = {
+        printCounters()
     }
 }

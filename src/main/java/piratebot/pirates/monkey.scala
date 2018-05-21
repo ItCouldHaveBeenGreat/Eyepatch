@@ -11,9 +11,9 @@ class Monkey(game: Game, player: Player) extends Pirate(game, player) {
         if (player.booty(Booty.CursedMask) > 0) {
             leftPlayer.booty(Booty.CursedMask) += player.booty(Booty.CursedMask)
             player.booty(Booty.CursedMask) = 0
-            logger.debug(tag + ": transferred all Cursed Masks to player " + leftPlayer.playerId)
+            game.printer.print(Channel.Debug, tag + ": transferred all Cursed Masks to player " + leftPlayer.playerId)
         } else {
-            logger.debug(tag + ": No Cursed Masks to transfer")
+            game.printer.print(Channel.Debug, tag + ": No Cursed Masks to transfer")
         }
        RetriableMethodResponse.Complete
     }

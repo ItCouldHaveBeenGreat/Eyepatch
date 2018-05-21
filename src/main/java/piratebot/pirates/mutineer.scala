@@ -13,9 +13,9 @@ class Mutineer(game: Game, player: Player) extends Pirate(game, player) {
             val toDiscard = lowestRank.get
             toDiscard.state = PirateState.Discard
             player.doubloons += 2
-            logger.debug(tag + ": Discarded " + toDiscard.name + "; +2 Doubloons")
+            game.printer.print(Channel.Debug, tag + ": Discarded " + toDiscard.name + "; +2 Doubloons")
         } else {
-            logger.debug(tag + ": Nobody to discard")
+            game.printer.print(Channel.Debug, tag + ": Nobody to discard")
         }
         RetriableMethodResponse.Complete
     }

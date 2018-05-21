@@ -8,7 +8,7 @@ class Surgeon(game: Game, player: Player) extends Pirate(game, player) {
 
     override def dayAction(round : Round): RetriableMethodResponse.Value = {
         if (game.inputManager.getPlayerDiscardFromPlayer(player).isEmpty) {
-            logger.debug(tag + ": No one to revive")
+            game.printer.print(Channel.Debug, tag + ": No one to revive")
             return RetriableMethodResponse.Complete
         }
         
@@ -36,7 +36,7 @@ class Surgeon(game: Game, player: Player) extends Pirate(game, player) {
             }
         } else {
             // if the graveyard is emptied, the player's hand returns to a fully known state
-            player.pirates.filter( p => p.state == PirateState.Hand ).map ( p =>
+            player.pirates.filter( p => p.state == PirateState.Hand ).foreach (p =>
                 p.known = true
             )
         }

@@ -15,7 +15,7 @@ class Merchant(game: Game, player: Player) extends Pirate(game, player) {
             // I kind of hate how this is using the input manager logic... should break out into booty util
             val sellableBooty = game.inputManager.getSellableBootyTypesFromPlayer(player)
             if (sellableBooty.isEmpty) {
-                logger.debug(tag + ": Has nothing to sell")
+                game.printer.print(Channel.Debug, tag + ": Has nothing to sell")
                 return RetriableMethodResponse.Complete
             }
             else if (sellableBooty.size == 1) {
@@ -45,22 +45,25 @@ class Merchant(game: Game, player: Player) extends Pirate(game, player) {
                     return RetriableMethodResponse.PendingInput
                 } else {
                     if (game.inputManager.getBooleanResponseFromInput(request)) {
+                        game.bootyBag.putBack(bootyTypeToSell.get, 3)
                         player.booty(bootyTypeToSell.get) -= 3
                         player.doubloons += 5
-                        logger.debug(tag + ": Sold 3 " + bootyTypeToSell.get + " for 5 doubloons")
+                        game.printer.print(Channel.Debug, tag + ": Sold 3 " + bootyTypeToSell.get + " for 5 doubloons")
                     } else {
+                        game.bootyBag.putBack(bootyTypeToSell.get, 2)
                         player.booty(bootyTypeToSell.get) -= 2
                         player.doubloons += 3
-                        logger.debug(tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
+                        game.printer.print(Channel.Debug, tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
                     }
                     game.inputManager.removeInputRequest(request.playerId)
                 }
             } else {
                 // sell two booty
                 // stupid repeated code stupid stupid
+                game.bootyBag.putBack(bootyTypeToSell.get, 2)
                 player.booty(bootyTypeToSell.get) -= 2
                 player.doubloons += 3
-                logger.debug(tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
+                game.printer.print(Channel.Debug, tag + ": Sold 2 " + bootyTypeToSell.get + " for 3 doubloons")
             }
         }
         bootyTypeToSell = None

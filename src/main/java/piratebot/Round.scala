@@ -59,7 +59,7 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
     private def solicitPirates() : RetriableMethodResponse.Value = {
         val requests : ArrayBuffer[InputRequest] = ArrayBuffer()
         for (p <- game.playerManager.players) {
-            requests += game.inputManager.postAndGetInputRequest(
+            requests += game.inputManager.postOrGetInputRequest(
                 p.playerId,
                 InputRequestType.PlayPirateFromHand,
                 game.inputManager.getPlayerHandFromPlayer(p))
@@ -78,9 +78,6 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
         } else {
             for (request <- requests) {
                 val pirateRank = game.inputManager.getPirateIdFromInput(request)
-                println("ORANGE: " + request.playerId)
-                println("ORANGE: " + request.inputType.toString)
-                println("ORANGE: " + request.choices.toString)
                 val pirateToAdd = game.playerManager.players(request.playerId).getPirate(pirateRank)
 
                 addPirate(pirateToAdd)

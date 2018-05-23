@@ -6,12 +6,12 @@ import main.java.piratebot._
 import scala.concurrent.duration._
 import scala.util.Random
 
-class MonteCarloBot(name: String) extends InputSource with Statistics {
+class MonteCarloBot(name: String, thinkingTimeInMilliseconds: Int = 5000) extends InputSource with Statistics {
 
     override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
         //logger.info("Beginning rollout for " + request.inputType.toString + ", " + request.playerId)
         val searchTree = new MonteCarloSearchTree(game, request.playerId, request.choices.values.toList, request.inputType)
-        searchTree.playOut(request.playerId, 500)
+        searchTree.playOut(request.playerId, thinkingTimeInMilliseconds)
         println(name + " did " + searchTree.rootNode.plays + " playouts")
         searchTree.getBestChoice
     }
@@ -66,7 +66,7 @@ class MonteCarloSearchTree(rootGame: Game, playerMakingChoice: Int, choices: Lis
                 val clonedGame = cloner.deepClone(rootGame)
                 // TODO: Move some of the cloning logic into the game object
                 clonedGame.totalVoyages = 0 // terminates game after one voyage
-                //clonedGame.printer.silence() // prevents output spam
+                clonedGame.printer.silence() // prevents output spam
                 clonedGame.inputManager.clearPendingRequests() // bot isn't allowed to know about these requests
                 playOut(rootNode, clonedGame, playerId)
             } catch {

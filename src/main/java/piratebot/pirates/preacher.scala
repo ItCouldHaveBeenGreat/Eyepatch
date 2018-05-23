@@ -10,7 +10,7 @@ class Preacher(game: Game, player: Player) extends Pirate(game, player) {
         if (player.booty.values.sum <= 1) {
             RetriableMethodResponse.Complete
         } else {
-            val request = game.inputManager.postAndGetInputRequest(
+            val request = game.inputManager.postOrGetInputRequest(
                 player.playerId,
                 InputRequestType.DiscardAllButOneBooty,
                 game.inputManager.getBootyTypesOwnedByPlayer(player)

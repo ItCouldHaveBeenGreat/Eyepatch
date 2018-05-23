@@ -26,17 +26,20 @@ class InputManager(game: Game) {
         }
     }
 
-    def postAndGetInputRequest(playerId: Int,
-                               requestType: InputRequestType.Value,
-                               choices : Map[String, Int]): InputRequest = {
+    def postOrGetInputRequest(playerId: Int,
+                              requestType: InputRequestType.Value,
+                              choices : Map[String, Int]): InputRequest = {
         if (choices.isEmpty) {
             game.printer.print(Channel.Debug, inputRequests.toString())
             throw new Exception("No valid answers supplied")
         }
         if (!inputRequests.contains(playerId)) {
             game.printer.print(Channel.Debug, "Created request for player " + playerId + " for " + requestType
-                + "with answers " + choices)
+                + " with answers " + choices)
             inputRequests += ((playerId, new InputRequest(playerId, requestType, choices)))
+        }
+        if (inputRequests(playerId).inputType != requestType) {
+            assert(false)
         }
         inputRequests(playerId)
    }

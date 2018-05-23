@@ -21,7 +21,7 @@ class Merchant(game: Game, player: Player) extends Pirate(game, player) {
             else if (sellableBooty.size == 1) {
                 bootyTypeToSell = Some(sellableBooty.head)
             } else {
-                val request = game.inputManager.postAndGetInputRequest(
+                val request = game.inputManager.postOrGetInputRequest(
                     player.playerId,
                     InputRequestType.SellBooty,
                     game.inputManager.getSellableBootyTypesFromPlayer(player)
@@ -37,7 +37,7 @@ class Merchant(game: Game, player: Player) extends Pirate(game, player) {
         }
         if (bootyTypeToSell.isDefined) {
             if (player.booty(bootyTypeToSell.get) >= 3) {
-                val request = game.inputManager.postAndGetInputRequest(
+                val request = game.inputManager.postOrGetInputRequest(
                     player.playerId,
                     InputRequestType.SellThreeBooty,
                     game.inputManager.getBooleanAnswers)

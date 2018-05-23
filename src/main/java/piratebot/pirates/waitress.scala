@@ -8,7 +8,7 @@ class Waitress(game: Game, player: Player) extends Pirate(game, player) {
 
     override def nightAction: RetriableMethodResponse.Value = {
         if (player.booty(Booty.TreasureMap) > 0) {
-            val request = game.inputManager.postAndGetInputRequest(
+            val request = game.inputManager.postOrGetInputRequest(
                 player.playerId,
                 InputRequestType.SellMap,
                 game.inputManager.getBooleanAnswers)

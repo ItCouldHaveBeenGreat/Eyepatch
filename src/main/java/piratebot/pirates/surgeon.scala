@@ -12,7 +12,7 @@ class Surgeon(game: Game, player: Player) extends Pirate(game, player) {
             return RetriableMethodResponse.Complete
         }
         
-        val request = game.inputManager.postAndGetInputRequest(
+        val request = game.inputManager.postOrGetInputRequest(
                 player.playerId,
                 InputRequestType.RevivePirateFromDiscard,
                 game.inputManager.getPlayerDiscardFromPlayer(player))

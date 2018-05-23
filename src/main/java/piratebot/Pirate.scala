@@ -32,20 +32,21 @@ abstract class Pirate(val game: Game, val player: Player) extends Ordered[Pirate
             if (round.booty.isEmpty) {
                 // CASE: no booty to claim
                 game.printer.print(Channel.Debug, "Player " + player.playerId + " had no booty to claim")
-                RetriableMethodResponse.Complete
+                return RetriableMethodResponse.Complete
             } else if (round.booty.size == 1) {
                 // CASE: one booty to claim
                 claimBooty(round.booty.head, round)
-            }
-            // CASE: choice of booty must me made
-            val validAnswers = round.booty.map(b => b.toString -> b.id).toMap
-            val request = game.inputManager.postAndGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
-            if (request.answer.isEmpty) {
-                RetriableMethodResponse.PendingInput
             } else {
-                val bootyToClaim = game.inputManager.getBootyFromInput(request)
-                game.inputManager.removeInputRequest(request.playerId)
-                claimBooty(bootyToClaim, round)
+                // CASE: choice of booty must be made
+                val validAnswers = round.booty.map(b => b.toString -> b.id).toMap
+                val request = game.inputManager.postOrGetInputRequest(player.playerId, InputRequestType.SelectBooty, validAnswers)
+                if (request.answer.isEmpty) {
+                    return RetriableMethodResponse.PendingInput
+                } else {
+                    val bootyToClaim = game.inputManager.getBootyFromInput(request)
+                    game.inputManager.removeInputRequest(request.playerId)
+                    claimBooty(bootyToClaim, round)
+                }
             }
         }
 
@@ -66,7 +67,7 @@ abstract class Pirate(val game: Game, val player: Player) extends Ordered[Pirate
                 RetriableMethodResponse.Complete
             } else {
                 // CASE: A choice of pirate to kill must be made
-                val request = game.inputManager.postAndGetInputRequest(
+                val request = game.inputManager.postOrGetInputRequest(
                     player.playerId,
                     InputRequestType.KillPirateInAdjacentDen,
                     game.inputManager.getAdjacentDenPirates(player))

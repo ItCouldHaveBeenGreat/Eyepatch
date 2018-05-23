@@ -7,7 +7,7 @@ class Parrot(game: Game, player: Player) extends Pirate(game, player) {
     val name = "Parrot"
 
    override def dayAction(round : Round): RetriableMethodResponse.Value = {
-        val request = game.inputManager.postAndGetInputRequest(
+        val request = game.inputManager.postOrGetInputRequest(
                 player.playerId,
                 InputRequestType.PlayPirateFromHand,
                 game.inputManager.getPlayerHandFromPlayer(player))

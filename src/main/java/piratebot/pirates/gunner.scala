@@ -14,7 +14,7 @@ class Gunner(game: Game, player: Player) extends Pirate(game, player) {
         game.printer.print(Channel.Debug, tag + ": -" + doubloonsToCharge + " doubloons")
 
         if (game.inputManager.getAllDenPirates(player).nonEmpty) {
-            val request = game.inputManager.postAndGetInputRequest(
+            val request = game.inputManager.postOrGetInputRequest(
                 player.playerId,
                 InputRequestType.KillPirateInAnyDen,
                 game.inputManager.getAllDenPirates(player))

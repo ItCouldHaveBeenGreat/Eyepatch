@@ -11,7 +11,7 @@ class Recruiter(game: Game, player: Player) extends Pirate(game, player) {
             game.printer.print(Channel.Debug, tag + ": Nobody to recruit")
             return RetriableMethodResponse.Complete
         }
-        val request = game.inputManager.postAndGetInputRequest(
+        val request = game.inputManager.postOrGetInputRequest(
                 player.playerId,
                 InputRequestType.RecruitPirateFromDen,
             game.inputManager.getPlayerDenFromPlayer(player))

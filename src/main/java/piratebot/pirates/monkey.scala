@@ -18,6 +18,6 @@ class Monkey(game: Game, player: Player) extends Pirate(game, player) {
        RetriableMethodResponse.Complete
     }
     def getSubRank(player : Player) : Int = {
-        Array(3, 2, 5, 4, 2, 1)(player.playerId)
+        Array(3, 2, 5, 4, 6, 1)(player.playerId)
     }
 }

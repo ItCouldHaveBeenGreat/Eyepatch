@@ -36,18 +36,22 @@ object Runner {
 
         }
 
-        val rounds = 100//args(0).toInt
+        val rounds = 1//args(0).toInt
         val configuration = PlayerConfiguration.RandomTest//PlayerConfiguration.withName(args(1))
 
         //val joyOfWind = new BranchingNeuralNetworkBot("JoyOfWind")
-        val crusadeOfDawn = new MonteCarloBot("Monte Carlo Bot", 500)
-        val crusadeOfDawn2 = new MonteCarloBot("Other Monte Carlo Bot", 500)
+        val crusadeOfDawn = new RecordingMonteCarloBot("Monte Carlo Bot", 1000)
+        val joyOfWind = new AlphaBot("JoyOfWind", 500)
+        val marchOfTime = new AlphaBot("MarchOfTime", 5000)
+        val vanillaMarchOfTime = new BranchingNeuralNetworkBot("MarchOfTime")
 
         val players = configuration match {
             case PlayerConfiguration.RandomTest => List(
                 crusadeOfDawn,
                 //new StandardInputBot("Thomas"),
-                crusadeOfDawn2,
+                //new BranchingNeuralNetworkBot("MarchOfTime"),
+                //new RandomBot(),
+                //new BranchingNeuralNetworkBot("JoyOfWind"),
                 new RandomBot(),
                 new RandomBot(),
                 new RandomBot(),

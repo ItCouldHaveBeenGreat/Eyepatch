@@ -87,7 +87,6 @@ class Round(game: Game, val booty : ArrayBuffer[Booty.Value]) {
             }
         }
         RetriableMethodResponse.Complete
-    
     }
     
     def addPirate(pirate : Pirate): Unit = {

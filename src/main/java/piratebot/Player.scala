@@ -94,4 +94,16 @@ class Player(val game: Game, val playerId : Int) {
         booty.keys.foreach(bootyType => booty(bootyType) = 0)
         game.printer.print(Channel.Debug, "Player " + playerId + " sold their booty for " + gain + " doubloons")
     }
+
+    def getPlayerColor(): String = {
+        playerId match {
+            case 0 => "Red"
+            case 1 => "Yellow"
+            case 2 => "Green"
+            case 3 => "Blue"
+            case 4 => "Black"
+            case 5 => "White"
+            case _ => throw new RuntimeException("Unknown color for player number " + playerId)
+        }
+    }
 }

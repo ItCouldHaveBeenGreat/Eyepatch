@@ -120,14 +120,14 @@ abstract class Pirate(val game: Game, val player: Player) extends Ordered[Pirate
         }
     }
     
-    def compare(that: Pirate) : Int = {
+    override def compare(that: Pirate) : Int = {
         if (rank == that.rank) {
-            return subRank - this.subRank
+            return this.subRank - that.subRank // subrank ascending
         }
-        rank - that.rank
+        this.rank - that.rank // rank ascending
     }
 
-    def tag : String = { name + "(" + player.playerId + ")" }
+    def tag : String = { name + "(" + player.getPlayerColor + ")" }
     
     protected def getSubRank(player : Player) : Int
 }

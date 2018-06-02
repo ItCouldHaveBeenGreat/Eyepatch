@@ -10,7 +10,6 @@ abstract class MoveRecordingInputSource(filename: String) extends InputSource {
 
         val store = new ObjectOutputStream(new FileOutputStream(filename))
         store.writeObject(state)
-        store.write
         store.close()
 
         val in = new ObjectInputStream(new FileInputStream(filename))

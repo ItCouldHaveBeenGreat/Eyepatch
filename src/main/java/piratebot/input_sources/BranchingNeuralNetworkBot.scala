@@ -18,7 +18,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class BranchingNeuralNetworkBot(val network_id : String, val shouldTrain = false) extends InputSource with Statistics {
+class BranchingNeuralNetworkBot(val network_id : String, val shouldTrain: Boolean = false) extends InputSource with Statistics {
 
     private val BOOTY_TYPE_OUTPUT_SIZE = Booty.maxId
     private val ANY_PIRATE_OUTPUT_SIZE = 30 * 6 + 1

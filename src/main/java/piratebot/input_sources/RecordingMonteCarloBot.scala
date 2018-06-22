@@ -2,7 +2,7 @@ package main.java.piratebot.input_sources
 
 import main.java.piratebot._
 
-class RecordingMonteCarloBot(name: String, thinkingTimeInMilliseconds: Int = 5000) extends MoveRecordingInputSource(name + ".data") with Statistics {
+class RecordingMonteCarloBot(name: String, thinkingTimeInMilliseconds: Int = 5000) extends MoveRecordingInputSource(name) with Statistics {
 
     override def makeRecordedDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
         //logger.info("Beginning rollout for " + request.inputType.toString + ", " + request.playerId)

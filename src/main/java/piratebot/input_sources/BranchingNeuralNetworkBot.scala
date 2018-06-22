@@ -37,7 +37,7 @@ class BranchingNeuralNetworkBot(val network_id : String, val shouldTrain: Boolea
         .toMap
 
     override def makeDecision(request: InputRequest, state: Seq[Int], game: Game) : Int = {
-        return getBestValidChoice(state, request.inputType, request.choices.values.toList)
+        getBestValidChoice(state, request.inputType, request.choices.values.toList)
         //return request.choices.values.toList(Random.nextInt(request.choices.values.size))
     }
 

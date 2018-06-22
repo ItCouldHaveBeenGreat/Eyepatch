@@ -36,11 +36,11 @@ object Runner {
 
         }
 
-        val rounds = 1//args(0).toInt
-        val configuration = PlayerConfiguration.RandomTest//PlayerConfiguration.withName(args(1))
+        val rounds = 5000 //args(0).toInt
+        val configuration = PlayerConfiguration.RandomTest //PlayerConfiguration.withName(args(1))
 
         //val joyOfWind = new BranchingNeuralNetworkBot("JoyOfWind")
-        val crusadeOfDawn = new RecordingMonteCarloBot("Monte Carlo Bot", 1000)
+        val crusadeOfDawn = new RecordingMonteCarloBot("MonteCarlo_1500ms_1k", 500)
         val joyOfWind = new AlphaBot("JoyOfWind", 500)
         val marchOfTime = new AlphaBot("MarchOfTime", 5000)
         val vanillaMarchOfTime = new BranchingNeuralNetworkBot("MarchOfTime")
@@ -50,7 +50,7 @@ object Runner {
                 crusadeOfDawn,
                 //new StandardInputBot("Thomas"),
                 //new BranchingNeuralNetworkBot("MarchOfTime"),
-                //new RandomBot(),
+                new RandomBot(),
                 //new BranchingNeuralNetworkBot("JoyOfWind"),
                 new RandomBot(),
                 new RandomBot(),
